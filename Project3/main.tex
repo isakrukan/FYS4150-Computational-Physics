@@ -71,93 +71,54 @@
     urlcolor={blue!80!black}}
 
 
-% ===========================================
+% ===================== Shortcuts/new commands ======================
+\renewcommand{\vec}[1]{\mathbf{#1}}
 
 
 \begin{document}
 
 \title{FYS4150 - Project 3\\[0.5em]
-  \small \href{https://github.com/isakrukan/FYS4150/tree/main/Project2}{\texttt{github.com/isakrukan/FYS4150/Project2}}
+  \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3}{\texttt{github.uio.no/icrukan/FYS4150/Project3}}
 }
-\author{Isak Cecil Onsager Rukan and Magnus Axelsen} % self-explanatory
+\author{Magnus Axelsen and Isak Cecil Onsager Rukan} % self-explanatory
 \date{\today}                             % self-explanatory
 \noaffiliation                            % ignore this, but keep it.
 \maketitle
 
-\section{Problem 1}
-Consider a time-dependent horizontal beam of length \(L\) and \(u(x)\) the displacement of the beam at position \(x\in[0,L]\). A force is applied at \(x=L\) directed towards \(x=0\). The beam is fastened, and so \(u(0)=u(L)=0\), but is allowed to rotate: \(u'(x)\neq 0\).
+\section{Introduction}
+... 
 
-This situation can be described by the second-order differential equation
+\section{Theory}
+\subsection{The Penning Trap}
+A penning trap is a device which `traps' an electrically charged particle inside a static (time-independent) electromagnetic field. How this is achieved can be understood through the Lorentz force,
 \begin{align}
-    \gamma \frac{d^2u(x)}{dx^2} = -Fu(x),
+    \vec{F} = q\vec{E} + q\vec{v}\times \vec{B},    \label{eq:Lorentz_force}
 \end{align}
-where \(\gamma\) is some constant. Introducing \(\hat{x}=x/L\) means that \(d\hat{x}^2 = dx^2/L^2\), and thus 
+which describes the force experienced by a particle of charge \(q\) inside an electromagnetic field. Here \(\vec{v}\) is the velocity of the particle, \(\vec{E}\) the electric field, and \(\vec{B}\) the magnetic field. For a positively charged particle, the Lorentz force will apply a force in the direction of the \(E\)-field, as well as a force perpendicular to the particle's velocity and the direction of the \(B\)-field. The idea of Penning trap is then to make a particle bounded, say vertically in the \(z\)-plane, by a particular setup of the \(E\)-field, and rotating in the \(xy\)-plane through the second term in \eqref{eq:Lorentz_force}.
+
+A Penning trap can be realized by a static and homogeneous \(B\)-field pointing in the \(z\)-direction, together with two positively charged electrodes placed above a negatively charged electrode, with the latter having a circular shape in the \(xy\)-plane. The setup is described in Fig.~\ref{fig:penning_trap} as a cross section in the \(zx\)- (or \(zy\)-)plane.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.09]{figs/Penning_Trap.pdf}
+    \caption{A positively charged particle is trapped within three electrodes, creating a Penning trap. The negatively charged electrode (b) has a circular-like shape, and the illustration shows a cross section of (b). The two electrodes placed above each other, both labelled (a), are positively charged, and an external homogeneous \(B\)-field is applied in the vertical direction. The illustration is created by Arian Kriesch and can be found in \href{https://en.wikipedia.org/wiki/File:Penning_Trap.svg}{Wikimedia Commons}.}
+    \label{fig:penning_trap}
+\end{figure}  
+Each electrode is held at an electric potential \(V_0\), and the distance between them \(d\), is referred to as the \emph{characteristic length}. The potential created by such electrodes can be described as 
 \begin{align}
-    \frac{d^2u(\hat{x})}{d\hat{x}^2} 
-    % = -\frac{L^2}{\gamma}Fu(\hat{x})
-    = -\lambda u(\hat{x}),
+    V(x,y,z) = \frac{V_0}{2d^2}\left(2z^2 - x^2 -y^2\right),
 \end{align}
-where we have defined \(\lambda = FL^2/\gamma\).
-
-\section{Problem 2}
-In \texttt{src/triDag.cpp} a tridiagonal matrix is implemented as a class that provides a method \texttt{compute\_eigenvalues} which computes the eigenvalues and eigenvectors of the matrix. In \texttt{tests/test.cpp}, we run \texttt{test\_TriDag}, which tests that the correct eigenvalues and eigenvectors are computed for a tridiagonal matrix of size \(N=6\).
-
-\section{Problem 3}
-In \texttt{src/utils.cpp} we have created a function called \texttt{max\_offdiag\_symmetric}, which takes in a matrix \(A\) and two integers, \(k\) and \(l\). This function assumes that \(A\) is a symmetric matrix, and returns the greatest off-diagonal element of \(A\) (in absolute value) and updates \(k\) and \(l\) by reference to be the row and column indices of this element, respectively. We test that this is implemented correctly using 
+and so the \(E\)-field becomes
 \begin{align}
-    A = \begin{pmatrix}
-        1 & 0 & 0 & 0.5 \\ 
-        0 & 1 & -0.7 & 0 \\ 
-        0 & -0.7 & 1 & 0 \\ 
-        0.5 & 0 & 0 & 1,
-    \end{pmatrix}
-\end{align} 
-for which \texttt{max\_offdiag\_symmetric} should return \(-0.7\) and set \((k,l)=(2,1)\).
+    \vec{E} = -\nabla V = \frac{V_0}{d^2}\left(x, y, -2z\right).
+\end{align}
+For the homogeneous \(B\)-field, we write 
+\begin{align}
+    \vec{B} = B_0\hat{e}_z = (0,0,B_0),
+\end{align}
+where \(B_0>0\) is the strength of the field. 
 
 
-\section{Problem 4}
-\subsection*{a)}
-The Jacobi algorithm is implemented in \texttt{src/jacobi\_eigensolver.cpp}.
-The program is broken down into a function \texttt{jacobi\_rotate()} performing one single Jacobi rotation, and a function \texttt{jacobi\_eigensolver()} repeatedly calling \texttt{jacobi\_rotate()} until the matrix is diagonal within some tolerance. 
 
-\subsection*{b)}
-A test function \texttt{test\_jacobi()} is implemented in \texttt{tests/test.cpp}.
-The function constructs a $6\times6$ tridiagonal matrix and compares the eigenvalues and eigenvectors computed by the Jacobi algorithm to the analytic solutions.
-
-
-\section{Problem 5}
-\subsection*{a)}
-We apply the Jacobi algorithm for different matrix sizes \(N\), and count the number of transformations required for the algorithm to converge.
-Assuming the the number of required iterations roughly follows a power law \(O(N^k)\), one can estimate the exponent \(k\) by linear regression on a log-log scale.
-The results are shown in figure \ref{fig:iterations}, and we find that \(k\approx 2.06\).
-\newline
-\newline
-\subsection*{b)}
-Whereas a tridiagonal matrix starts with \(O(N)\) off-diagonal elements, the corresponding number for a dense matrix will be \(O(N^2)\).
-Given that the tridiagonal case scales roughly as \(O(N^2)\), one may therefore expect that the additional factor of \(N\) in the number of off-diagonal elements leads to an additional factor of \(N\) in the number of required transformations.
-That is, one expects the dense case to scale as \(O(N^3)\).
-
-\begin{figure}
-    \centering
-    \includegraphics{Code/output/iterations.pdf}
-    \caption{Number of transformations required for the Jacobi algorithm to converge for different matrix sizes \(N\).}
-    \label{fig:iterations}
-\end{figure}
-
-\section{Problem 6}
-The three lowest eigenmodes of the beam, for different numbers of discretization steps, are shown in figure \ref{fig:eigenvectors}. 
-The analytic solutions are also included for comparison.
-Notably, the numerical solutions are quite accurate even when the number of discretization steps is relatively small.
-\begin{figure}
-    \centering
-    \includegraphics{Code/output/eigenvectors.pdf}
-    \caption{The three lowest eigenmodes of the beam, for different numbers of discretization steps.
-    Numerical solutions are given by the solid lines, with corresponding analytic solutions given by the dashed lines.}
-    \label{fig:eigenvectors}
-\end{figure}
-
-\section{Code Implementation}
-Details of the code implementation can be found in \href{https://github.com/isakrukan/FYS4150/blob/main/Project2/docs/doc.pdf}{doc.pdf.} (This is perhaps not exactly what this project needs, when it comes to code documentation that is. However, we have spent some time learning how to use \href{https://www.doxygen.nl/}{doxygen}, which creates \href{https://github.com/isakrukan/FYS4150/blob/main/Project2/docs/doc.pdf}{doc.pdf}, with the hopes that this can be beneficial in the upcoming projects.)
 
 
 
