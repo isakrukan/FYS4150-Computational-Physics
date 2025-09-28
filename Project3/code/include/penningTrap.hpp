@@ -6,12 +6,14 @@
  * 
  */
 class Particle{
-private:
 
-    float q;        ///< Electric charge [\f$ e \f$] (elementary charge).
-    float m;        ///< Mass [\f$ u \f$] (atomic mass unit).
-    arma::vec r;    ///< Position [\f$ \mu m \f$] (micrometer).
-    arma::vec v;    ///< Velocity [\f$ \mu m/(\mu s)  \f$] (micrometer per microsecond).
+    friend class PenningTrap;  ///< The particle will be located inside the Penning trap.
+
+private:
+    const float q;          ///< Electric charge [\f$ e \f$] (elementary charge).
+    const float m;          ///< Mass [\f$ u \f$] (atomic mass unit).
+    arma::vec r;            ///< Position [\f$ \mu m \f$] (micrometer).
+    arma::vec v;            ///< Velocity [\f$ \mu m/(\mu s)  \f$] (micrometer per microsecond).
 
 public:
 
@@ -37,18 +39,31 @@ public:
 class PenningTrap{
 
 private:
-    friend class Particle;  ///< A particle located inside the Penning trap.
-
 
     float k_e = 1.38935333 * 1e5; ///< Coulomb constant [\f$ u (\mu m)^3 (\mu s)^{-2}e^{-2} $\f] 
     float B_0;      ///< Magnetic field strength [\f$ u/(\mu s)e^{-1} $\f] (atomic mass unit per microsend per electric charge).
     float V_0;      ///< Applied potential [\f$ u/(\mu s)^2e^{-1} $\f] (atomic mass unit per microsend squared per electric charge).
     float d;        ///< Characteristic dimension [\f$ \mu m $\f] (micrometer).
 
-    int n;          ///> Number of particles inside Penning trap.
+    int n;    ///< Number of particles inside Penning trap.
     std::vector<Particle> particles; ///< Collection of particles inside Penning trap.
 
 public:
+
+    /**
+     * @brief Default construction of the Penning trap with \f$ B_0 = 9.65\cdot 10^1 u/(\mu s) e\f$, \f$ V_0 = 2.41\cdot 10^6 u(\mu m)^2/(\mu s)^2 e^{-1}\f$ and \f$ d=500\mu m\f$.
+     * 
+     * @param B_0 Magnetic field strength [\f$ u/(\mu s)e^{-1} $\f] (atomic mass unit per microsend per electric charge).
+     * @param V_0 Applied potential [\f$ u/(\mu s)^2e^{-1} $\f] (atomic mass unit per microsend squared per electric charge).
+     * @param d Characteristic dimension [\f$ \mu m $\f] (micrometer).
+     */
+    PenningTrap(float B_0=9.65*1e1, float V_0=2.41*1e6, float d=500);
+
+    /**
+     * @param i i-th particle in the Penning trap.
+     * @return The i-th @ref Particle "Particle" in the Penning trap. 
+     */
+    Particle& operator[](int i);
 
     /**
      * @brief The electric field at position \f$ r = (x,y,z)\f$.
@@ -77,5 +92,22 @@ public:
      * @return arma::vec 
      */
     arma::vec F(int i);
+
+    /**
+     * @brief Adds a new particle to the Penning trap.
+     * 
+     * @param q Electric charge [\f$ e \f$] (elementary charge).
+     * @param m Mass [\f$ u \f$] (atomic mass unit).
+     * @param r Position [\f$ \mu m \f$] (micrometer).
+     * @param v Velocity [\f$ \mu m \mu^{-1} s^{-1}  \f$] (micrometer per microsecond).
+     */
+    void add_particle(float q, float m, arma::vec &r, arma::vec &v);
+
+    /**
+     * @brief Adds a new particle to the Penning trap.
+     * 
+     * @param particle Instance of @ref Particle "Particle".
+     */
+    void add_particle(Particle particle);
 
 };
