@@ -38,8 +38,12 @@
 
 
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
-\documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
+% \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
+\documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
+% \documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
 % If you want a single-column, remove "reprint"
+% \raggedbottom
+
 
 % Allows special characters (including æøå)
 \usepackage[utf8]{inputenc}
@@ -74,6 +78,8 @@
 % ===================== Shortcuts/new commands ======================
 \renewcommand{\vec}[1]{\mathbf{#1}}
 
+\newcommand{\eqdef}{\mathrel{\mathop:}=}
+\newcommand{\eqdefback}{\mathrel{=\mathop:}}
 
 \begin{document}
 
@@ -92,9 +98,9 @@
 \subsection{The Penning Trap}
 A penning trap is a device which `traps' an electrically charged particle inside a static (time-independent) electromagnetic field. How this is achieved can be understood through the Lorentz force,
 \begin{align}
-    \vec{F} = q\vec{E} + q\vec{v}\times \vec{B},    \label{eq:Lorentz_force}
+    \vec{F}_{L} = q\vec{E} + q\vec{v}\times \vec{B},    \label{eq:Lorentz_force}
 \end{align}
-which describes the force experienced by a particle of charge \(q\) inside an electromagnetic field. Here \(\vec{v}\) is the velocity of the particle, \(\vec{E}\) the electric field, and \(\vec{B}\) the magnetic field. For a positively charged particle, the Lorentz force will apply a force in the direction of the \(E\)-field, as well as a force perpendicular to the particle's velocity and the direction of the \(B\)-field. The idea of Penning trap is then to make a particle bounded, say vertically in the \(z\)-plane, by a particular setup of the \(E\)-field, and rotating in the \(xy\)-plane through the second term in \eqref{eq:Lorentz_force}.
+which describes the force experienced by a particle of charge \(q\) inside an electromagnetic field. Here \(\vec{v}\) is the velocity of the particle, \(\vec{E}\) the electric field, and \(\vec{B}\) the magnetic field. For a positively charged particle, the Lorentz force will apply a force in the direction of the \(E\)-field, as well as a force perpendicular to the particle's velocity and the direction of the \(B\)-field. The idea of a Penning trap is then to make a particle bounded, say vertically in the \(z\)-plane, by a particular setup of the \(E\)-field, and rotating in the \(xy\)-plane through the second term in \eqref{eq:Lorentz_force}.
 
 A Penning trap can be realized by a static and homogeneous \(B\)-field pointing in the \(z\)-direction, together with two positively charged electrodes placed above a negatively charged electrode, with the latter having a circular shape in the \(xy\)-plane. The setup is described in Fig.~\ref{fig:penning_trap} as a cross section in the \(zx\)- (or \(zy\)-)plane.
 \begin{figure}[h!]
@@ -103,29 +109,133 @@ A Penning trap can be realized by a static and homogeneous \(B\)-field pointing 
     \caption{A positively charged particle is trapped within three electrodes, creating a Penning trap. The negatively charged electrode (b) has a circular-like shape, and the illustration shows a cross section of (b). The two electrodes placed above each other, both labelled (a), are positively charged, and an external homogeneous \(B\)-field is applied in the vertical direction. The illustration is created by Arian Kriesch and can be found in \href{https://en.wikipedia.org/wiki/File:Penning_Trap.svg}{Wikimedia Commons}.}
     \label{fig:penning_trap}
 \end{figure}  
-Each electrode is held at an electric potential \(V_0\), and the distance between them \(d\), is referred to as the \emph{characteristic length}. The potential created by such electrodes can be described as 
+Each electrode is held at an electric potential \(V_0\), with a distance between them \(d\), referred to as the \emph{characteristic length}. The potential created by such electrodes can be described as 
 \begin{align}
     V(x,y,z) = \frac{V_0}{2d^2}\left(2z^2 - x^2 -y^2\right),
 \end{align}
-and so the \(E\)-field becomes
+which means that the \(E\)-field takes the form
 \begin{align}
-    \vec{E} = -\nabla V = \frac{V_0}{d^2}\left(x, y, -2z\right).
+    \vec{E} = -\nabla V = \frac{V_0}{d^2}\left(x, y, -2z\right).    \label{eq:E_field}
 \end{align}
 For the homogeneous \(B\)-field, we write 
 \begin{align}
-    \vec{B} = B_0\hat{e}_z = (0,0,B_0),
+    \vec{B} = B_0\hat{e}_z = (0,0,B_0), \label{eq:B_field}
 \end{align}
 where \(B_0>0\) is the strength of the field. 
 
+The motion of a particle inside the Penning trap can be described be Newton's second law,
+\begin{align}
+    m\ddot{\vec{r}} = \vec{F}_{L} + \sum_i \vec{F}_i, \label{eq:motion_Newton}
+\end{align}
+where \(m\) is the mass of the particle and \(\vec{r}=(x,y,z)\) with \(\ddot{\vec{r}}\) denoting the second time-derivative of \(\vec{r}\). The term \(\sum_i F_i\) corresponds to all the Coulomb forces from the other particles inside the Penning trap. (We are neglecting the contribution to the \(B\)-field from the moving particles inside the Penning trap. This is reasonable as long as we consider the non-relativistic case: \(|\vec{r}|\ll c\), where \(c\) is the speed of light.) The Coulomb force between two particles at position \(r_1\) and \(r_2\), as experience by the particle at \(r_1\) is given by 
+\begin{align}
+    F_{2} = k_e \frac{q_1q_2}{m_1} \frac{r_1 - r_2}{|r_1 - r_2|^3},
+\end{align}
+where \(m_1\) is the mass of the particle at position \(x_1\), \(k_e\) the Coulomb constant and \(q_{i}\) the charge of the particle at position \(x_i\), \(i=1,2\). We will consider the case of multiple particles in section \ref{sec:multiple_particles}.
+
+\subsection{A Single Particle inside the Penning Trap}
+For a single particle where the second term in \eqref{eq:motion_Newton} is absent, inserting \eqref{eq:Lorentz_force} into \eqref{eq:motion_Newton} and using the expressions for the \(E\)- and \(B\)-fields in \eqref{eq:E_field} and \eqref{eq:B_field} gives 
+\begin{align}
+    \ddot{r} 
+    &= \frac{q}{m}\vec{E} + \frac{q}{m}\vec{v}\times \vec{B}
+    \notag \\
+    &= \frac{qV_0}{md^2}\left(x, y, -2z\right) + \frac{qB_0}{m}\left(\dot{y}, -\dot{x}, 0\right).
+\end{align}
+Componentwise, the expression above can be rearrange to the form 
+\begin{subequations}    \label{eq:eom_componentwise}
+\begin{align}
+    \ddot{x} - \omega_0 \dot{y} - \frac{1}{2}\omega_z^2x &=0, \label{eq:dot_x}\\ 
+    \ddot{y} + \omega_0 \dot{x} - \frac{1}{2}\omega_z^2y &=0, \label{eq:dot_y}\\ 
+    \ddot{z} + \omega_z^2z &= 0, \label{eq:dot_z}
+\end{align}
+\end{subequations}
+where we have defined 
+\begin{align}
+    \omega_0 \eqdef \frac{qB_0}{m}, \quad \omega_z^2 \eqdef \frac{2qV_0}{md^2}. \label{eq:def:omega_0_omega_z}
+\end{align}
+Let \(f(t)\) be the complex function given by 
+\begin{align}
+    f(t)=x(t) + iy(t).
+\end{align}
+The two equations \eqref{eq:dot_x} and \eqref{eq:dot_y} can then be combined into a single equation, namely
+\begin{align}
+    \ddot{f}(t) + i\omega_0 \dot{f}(t) -\frac{1}{2}\omega_z^2 f(t) &= 0.    \label{eq:f_t}
+\end{align}
+(Concretely, \eqref{eq:f_t} is the result of adding \(i\) times \eqref{eq:dot_y} to \eqref{eq:dot_x}.) This differential equation is of the form of a damped harmonic oscillator, which has the general solution 
+\begin{align}
+    f(t) = A_{+}e^{-i(\omega_+ t + \phi_+)} + A_{-}e^{-i(\omega_- + \omega_-)},
+\end{align}
+where \(\phi_{\pm}\) are some constant phases, \(A_{\pm}\) some positive amplitudes, and 
+\begin{align}
+    \omega_{\pm} = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}.
+\end{align}
+
+For the single particle to remain bounded within the Penning trap, we should require that \(|f(t)|\) stays bounded for all \(t\). Otherwise, the particle's trajectory in the \(x\) and/or \(y\)-plane, given by \(\text{Re}(f)\) and \(\text{Re}(f)\), respectively, will eventually escape into infinity. This amount to requiring that \(\omega_0^2 \geq 2\omega_z^2\). To see this, consider \(|f(t)|^2\), which takes the form
+\begin{align}
+    |f(t)|^2 &= A_+^2e^{2t\text{Im}(\omega_+)} + A_-^2e^{2t\text{Im}(\omega_-)} 
+    \notag \\
+    &+ 2A_{+}A_{-}\cos(t\sqrt{2r_{\omega}}\cos\frac{\theta}{2} - \phi_{\Delta}),  \label{eq:bound_f_squared}
+\end{align}
+where we have written \(\phi_{\Delta} = \phi_+ - \phi_-\), \(r_{\omega} = |\omega_2^2 - 2\omega_z^2|\) and 
+\begin{align}
+    \theta = 
+    \begin{cases}
+        0, &\omega_0^2 \geq 2\omega_z^2, \\
+        \pi, &\omega_0^2 < 2\omega_z^2,    
+    \end{cases}
+\end{align}
+such that \(\omega_{\pm} = \omega_0/2 \pm r_\omega e^{i\theta}\).
+Clearly, if \(\text{Im}(\omega_\pm)> 0\), then \eqref{eq:bound_f_squared} blows up as \(t\rightarrow \infty\) . Hence, we must have \(\text{Im}(\omega_\pm)> 0\), i.e. \(\theta = 0\), which is true if \(\omega_0^2 \geq 2\omega_z^2\). In terms of the original quantities which \(\omega_0\) and \(\omega_z^2\) are defined by (see \eqref{eq:def:omega_0_omega_z}), this means that we must have 
+\begin{align}
+    qB_0 \geq 4m \frac{V_0}{d^2},
+\end{align}
+in order for the single particle to not escape into infinity.
+
+Furthermore, the expression for \(|f(t)|^2\) now takes the form 
+\begin{align}
+    |f(t)|^2 = A_+^2 + A_-^2 + 2A_+A_-\cos(t\sqrt{2r_{\omega}} - \phi_{\Delta}),
+\end{align}
+and so we may bound \(|f(t)|\) as (since \({\cos(t)\in[-1,1]}\))
+\begin{align}
+    A_+ + A_- \leq |f(t)| \leq |A_+ - A_-|.
+\end{align}
+
+\subsection{Specific Analytical Solution}
+As a sanity check for our numerical implementation of the Penning trap (see section \ref{sec:???}) we consider the following specific analytic solution to the Penning trap with a single particle. Let 
+\begin{subequations}
+\begin{alignat}{2}
+    x(0) &= x_0, &\quad  \dot{x}(0) &= 0, \\
+    y(0) &= 0,   &\quad  \dot{y}(0) &= v_0, \\ 
+    z(0) &= z_0, &\quad  \dot{z}(0) &= 0,
+\end{alignat}
+\end{subequations}
+then \eqref{eq:dot_z} has the solution 
+\begin{align}
+    z(t) = z_0\cos(\omega_z t),
+\end{align}
+while we find \(\phi_{\pm} = 0\) and 
+\begin{align}
+    A_{\pm} = \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
+\end{align}
 
 
-
-
-
+\subsection{Multiple Particles inside the Penning Trap} \label{sec:multiple_particles}
+We now consider \(n\) particles with charges \(\{q_i\}_{i\in[1,n]}\) and masses \(\{m_i\}_{i\in[1,n]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we know have
+\begin{subequations}
+    \begin{align}
+        \ddot{x}_i - \omega_{0,i}\dot{y}_i - \frac{1}{2}\omega_{z,i}^2x_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{x}_{ij} &= 0, \\
+        \ddot{y}_i + \omega_{0,i}\dot{x}_i - \frac{1}{2}\omega_{z,i}^2y_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{y}_{ij} &= 0, \\ 
+        \ddot{z}_i + \omega_{z,i}^2z_i - k_e \frac{q_i}{m_i}\sum_{j\neq i}q_j \hat{z}_{ij} &= 0.
+    \end{align}
+\end{subequations}
+where \(\hat{x}_{ij} = (x_i - x_j)/|r_i-r_j|^3\) and \(\hat{y}_{ij}, \hat{z}_{ij}\) defined on the corresponding form.
+Instead of trying to solve this analytically, we will compute this numerically. 
+% \cite{uioFYS3150H25}
 \onecolumngrid
 % \bibliographystyle{apalike}
-\bibliographystyle{unsrt}
-\bibliography{ref}
+% \bibliographystyle{unsrt}
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
 
 
 \end{document}
