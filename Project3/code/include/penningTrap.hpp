@@ -1,3 +1,6 @@
+#ifndef __penningTrap_hpp__
+#define __penningTrap_hpp__
+
 #include <armadillo>
 #include <vector>
 
@@ -7,12 +10,13 @@
  */
 class Particle{
 
-    friend class PenningTrap;  ///< The particle will be located inside the Penning trap.
+    friend class PenningTrap; ///< The particle will be located inside the Penning trap.
+    friend class Solver;
+    arma::vec &r;            ///< Position [\f$ \mu m \f$] (micrometer).
 
 private:
     const float q;          ///< Electric charge [\f$ e \f$] (elementary charge).
     const float m;          ///< Mass [\f$ u \f$] (atomic mass unit).
-    arma::vec r;            ///< Position [\f$ \mu m \f$] (micrometer).
     arma::vec v;            ///< Velocity [\f$ \mu m/(\mu s)  \f$] (micrometer per microsecond).
 
 public:
@@ -37,7 +41,7 @@ public:
  * 
  */
 class PenningTrap{
-
+    friend class Solver;
 private:
 
     float k_e = 1.38935333 * 1e5; ///< Coulomb constant [\f$ u (\mu m)^3 (\mu s)^{-2}e^{-2} $\f] 
@@ -111,3 +115,5 @@ public:
     void add_particle(Particle particle);
 
 };
+
+#endif

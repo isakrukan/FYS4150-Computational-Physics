@@ -11,8 +11,8 @@ Particle::Particle(float q, float m, arma::vec &r, arma::vec &v)
 
 //******** Penning Trap ********
 
-PenningTrap::PenningTrap(float B_0=9.65*1e1, float V_0=2.41*1e6, float d=500)
-                        : n(n), B_0(B_0), V_0(V_0), d(d){
+PenningTrap::PenningTrap(float B_0, float V_0, float d)
+                        : n(0), B_0(B_0), V_0(V_0), d(d){
                         }
 
 void PenningTrap::add_particle(Particle particle){
@@ -27,8 +27,8 @@ void PenningTrap::add_particle(float q, float m, arma::vec &r, arma::vec &v){
 }
 
 Particle& PenningTrap::operator[](int i){
-    if(i >= n || i <= 0){
-        throw std::invalid_argument("Index " + std::to_string(i) + "must be within [0, " + std::to_string(n) + "].");
+    if(i >= n || i < 0){
+        throw std::invalid_argument("Index " + std::to_string(i) + " must be within [0, " + std::to_string(n) + "].");
     }
 
     return particles[i]; // The i-th particle.
@@ -50,7 +50,7 @@ arma::vec PenningTrap::B(arma::vec &r){
 arma::vec PenningTrap::F(int i){
 
     // Checking that i\in[0,n-1]
-    if (i >= n || i == 0){
+    if (i >= n || i < 0){
         throw std::invalid_argument("i = " + std::to_string(i) + "must be within [0, " + std::to_string(n) + "].");
     }
     arma::vec Force = arma::vec(3).fill(0);
