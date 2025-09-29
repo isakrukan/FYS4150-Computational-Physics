@@ -10,12 +10,13 @@ class Particle{
     friend class PenningTrap;  ///< The particle will be located inside the Penning trap.
 
 private:
+
+public:
+
     const float q;          ///< Electric charge [\f$ e \f$] (elementary charge).
     const float m;          ///< Mass [\f$ u \f$] (atomic mass unit).
     arma::vec r;            ///< Position [\f$ \mu m \f$] (micrometer).
     arma::vec v;            ///< Velocity [\f$ \mu m/(\mu s)  \f$] (micrometer per microsecond).
-
-public:
 
     /**
      * @brief Construct a new Particle object and assigns the properties of a particle in the obvious way.
@@ -108,6 +109,6 @@ public:
      * 
      * @param particle Instance of @ref Particle "Particle".
      */
-    void add_particle(Particle particle);
+    void add_particle(Particle &particle);
 
 };

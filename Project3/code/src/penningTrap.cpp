@@ -15,7 +15,7 @@ PenningTrap::PenningTrap(float B_0=9.65*1e1, float V_0=2.41*1e6, float d=500)
                         : n(n), B_0(B_0), V_0(V_0), d(d){
                         }
 
-void PenningTrap::add_particle(Particle particle){
+void PenningTrap::add_particle(Particle &particle){
     particles.push_back(particle);
 
     n ++; // The Penning trap now contains one more particle;
