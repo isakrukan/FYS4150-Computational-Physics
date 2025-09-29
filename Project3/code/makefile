@@ -1,4 +1,4 @@
-SRC 		:= penningTrap.o solver.o
+SRC 		:= penningTrap.o solver.o arg_parser.o
 BUILD 		:= build
 
 # Distinguishing between mac/linux and windows:
@@ -36,6 +36,7 @@ outfolder:
 compile:
 	@$(call compile_func, src/penningTrap.cpp, penningTrap.o)
 	@$(call compile_func, src/solver.cpp, solver.o)
+	@$(call compile_func, src/arg_parser.cpp, arg_parser.o)
 	@$(call compile_func, main.cpp, main.o)
 
 link:
