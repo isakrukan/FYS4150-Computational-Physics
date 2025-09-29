@@ -6,7 +6,7 @@
 #include "penningTrap.hpp"
 
 /**
- * Struct to hold command-line arguments
+ * @brief Struct to hold command-line arguments
  */
 struct Args
 {
@@ -16,7 +16,7 @@ struct Args
 };
 
 /**
- * \brief Function for parsing command-line arguments
+ * @brief Function for parsing command-line arguments
  * @param argc Number of command-line arguments
  * @param argv Array of command-line argument strings
  * @return Args struct containing the parsed values
