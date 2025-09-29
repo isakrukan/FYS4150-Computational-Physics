@@ -112,7 +112,7 @@ public:
      * 
      * @param particle Instance of @ref Particle "Particle".
      */
-    void add_particle(Particle particle);
+    void add_particle(Particle &particle);
 
 };
 

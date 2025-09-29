@@ -73,5 +73,6 @@
         "xtree": "cpp",
         "xutility": "cpp"
     },
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.errorSquiggles": "enabled",
+    "github-enterprise.uri": "https://github.uio.no/"
 }
