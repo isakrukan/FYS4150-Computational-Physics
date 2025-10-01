@@ -31,17 +31,15 @@ public:
     
 private:
     PenningTrap &trap;
- 
+
     /**
      * @brief The force experienced by particle 'i' due to the external field and Coulomb forces.
-     * 
+     *
      * @param i Particle index.
      * @param t Time \f$ \mu s\f$ (microseconds).
-     * @param x Position vector.
-     * @param v Velocity vector.
      * @return arma::vec force on particle @ref i "i".
      */
-    arma::vec f(int i, float t, arma::vec x, arma::vec v);
+    arma::vec f(int i, float t);
 };
 
 #endif
