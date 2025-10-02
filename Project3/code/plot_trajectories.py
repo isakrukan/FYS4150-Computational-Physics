@@ -38,7 +38,7 @@ data = np.loadtxt('out/r1-single-n4000.txt')
 plt.figure(figsize=(6,4))
 plot_trajectories(Particle_1 = data[:,[0,3]],
                   xlabel = r'$t\ \ [\mu s]$',
-                  ylabel = r'$y\ \ [\mu m]$')
+                  ylabel = r'$z\ \ [\mu m]$')
 plt.savefig('out/single-tz-n4000.pdf')
 
 ################################
@@ -49,7 +49,7 @@ data2 = np.loadtxt('out/r2-single-n4000.txt')
 
 plt.figure(figsize=(6,6))
 
-plot_trajectories(Particle_1 = data[:,1:3],
+plot_trajectories(Particle_1 = data1[:,1:3],
                   Particle_2 = data2[:,1:3],
                   xlabel = r'$x\ \ [\mu m]$',
                   ylabel = r'$y\ \ [\mu m]$')
