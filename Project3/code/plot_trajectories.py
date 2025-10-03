@@ -30,9 +30,9 @@ def plot_trajectories(**kwargs):
     plt.legend()
     
 
-###################
-# Single particle
-##################
+##########################
+# Single particle tz plot
+##########################
 data = np.loadtxt('out/r1-single-n4000.txt')
 
 plt.figure(figsize=(6,4))
@@ -41,36 +41,40 @@ plot_trajectories(Particle_1 = data[:,[0,3]],
                   ylabel = r'$z\ \ [\mu m]$')
 plt.savefig('out/single-tz-n4000.pdf')
 
-################################
-# Two non-interacting particles
-################################
-data1 = np.loadtxt('out/r1-single-n4000.txt')
-data2 = np.loadtxt('out/r2-single-n4000.txt')
+for n_steps in [4000]:
+    for type in ['interacting', 'noninteracting']:
+        
+        if type == 'interacting':
+            data1 = np.loadtxt(f'out/r1-interacting-n{n_steps}.txt')
+            data2 = np.loadtxt(f'out/r2-interacting-n{n_steps}.txt')
+            data1v = np.loadtxt(f'out/v1-interacting-n{n_steps}.txt')
+            data2v = np.loadtxt(f'out/v2-interacting-n{n_steps}.txt')
+        else:
+            data1 = np.loadtxt(f'out/r1-single-n{n_steps}.txt')
+            data2 = np.loadtxt(f'out/r2-single-n{n_steps}.txt')
+            data1v = np.loadtxt(f'out/v1-single-n{n_steps}.txt')
+            data2v = np.loadtxt(f'out/v2-single-n{n_steps}.txt')        
 
-plt.figure(figsize=(6,6))
+        #############################
+        # Plot trajectories xy-plane
+        ##############################
+        plt.figure(figsize=(6,6))
+        plot_trajectories(Particle_1 = data1[:,1:3],
+                            Particle_2 = data2[:,1:3],
+                            xlabel = r'$x\ \ [\mu m]$',
+                            ylabel = r'$y\ \ [\mu m]$')
+        plt.gca().set_aspect('equal', adjustable='box')
+        plt.savefig(f'out/{type}-xy-n{n_steps}.pdf')
 
-plot_trajectories(Particle_1 = data1[:,1:3],
-                  Particle_2 = data2[:,1:3],
-                  xlabel = r'$x\ \ [\mu m]$',
-                  ylabel = r'$y\ \ [\mu m]$')
-
-plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('out/noninteracting-xy-n4000.pdf')
-
-
-############################
-# Two interacting particles
-############################
-
-data1 = np.loadtxt('out/r1-interacting-n4000.txt')
-data2 = np.loadtxt('out/r2-interacting-n4000.txt')
-plt.figure(figsize=(6,6))
-
-plot_trajectories(Particle_1 = data1[:,1:3], 
-                  Particle_2 = data2[:,1:3],
-                  xlabel = r'$x\ \ [\mu m]$',
-                  ylabel = r'$y\ \ [\mu m]$')
-
-plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('out/interacting-xy-n4000.pdf')
-
+        #####################################
+        # Plot x & z phase space trajectories
+        #####################################
+        for idx, label in [(1, 'x'), (3, 'z')]:
+            temp_1 = np.array([data1[:,idx], data1v[:,idx]]).T
+            temp_2 = np.array([data2[:,idx], data2v[:,idx]]).T
+            plt.figure(figsize=(6,6))
+            plot_trajectories(Particle_1 = temp_1, 
+                                Particle_2 = temp_2,
+                                xlabel = r'$' +      label   + r'\ \ [\mu m/\mu s]$',
+                                ylabel = r'$' + f'v_{label}' + r'\ \ [\mu m/\mu s]$')
+            plt.savefig(f'out/phasespace-{label}-{type}-n{n_steps}.pdf')
