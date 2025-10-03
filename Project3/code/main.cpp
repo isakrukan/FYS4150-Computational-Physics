@@ -65,7 +65,7 @@ void simulate_double_particles(double T, unsigned int n_steps, arma::vec r1, arm
     {
         t_mat(i) = i * dt;
         solver.evolve_RK4(dt, t_mat(i));
-        
+
         r1_mat.row(i) = r1.t();
         r2_mat.row(i) = r2.t();
         v1_mat.row(i) = v1.t();
@@ -92,7 +92,6 @@ void simulate_double_particles(double T, unsigned int n_steps, arma::vec r1, arm
 
 int main(int argc, char *argv[])
 {
-
     Args args = parse_args(argc, argv);
 
     // Problem 8
@@ -101,9 +100,23 @@ int main(int argc, char *argv[])
     arma::vec r2 = {25, 25, 0};
     arma::vec v2 = {0, 40, 5};
 
-    simulate_single_particle(args.T, args.n_steps, r1, v1, "1");
-    simulate_single_particle(args.T, args.n_steps, r2, v2, "2");
-    simulate_double_particles(args.T, args.n_steps, r1, v1, r2, v2);
+    PenningTrap interacting_trap;
+    interacting_trap.add_particle(1, 40, r1, v1);
+    interacting_trap.add_particle(1, 40, r2, v2);
+    Solver interacting_solver(interacting_trap);
+    interacting_solver.evolve(args.T, args.n_steps); // Uses RK4 by default
+    interacting_solver.save("problem8_interacting");
+
+    PenningTrap non_interacting_trap;
+    non_interacting_trap.add_particle(1, 40, r1, v1);
+    non_interacting_trap.add_particle(1, 40, r2, v2);
+    Solver non_interacting_solver(non_interacting_trap);
+    non_interacting_solver.evolve(args.T, args.n_steps); // Uses RK4 by default
+    interacting_solver.save("problem8_non_interacting");
+
+    // simulate_single_particle(args.T, args.n_steps, r1, v1, "1");
+    // simulate_single_particle(args.T, args.n_steps, r2, v2, "2");
+    // simulate_double_particles(args.T, args.n_steps, r1, v1, r2, v2);
 
     return 0;
 }

@@ -1,5 +1,7 @@
 
 #include "solver.hpp"
+#include <stdexcept>
+#include <iterator> // To find index of element in list (see Solver::evolve)
 
 Solver::Solver(PenningTrap &trap) : trap(trap) {}
     
@@ -81,4 +83,68 @@ void Solver::evolve_FE(float dt, float t)
         trap[i].v += dt * total_force(i, t);
         trap[i].r += dt * trap[i].v;
     }
+}
+
+
+void Solver::evolve(float T, int n_steps, std::string method){
+    
+    /* 
+        Checking what method to use and if it exists. Here, 'it' either becomes the pointer to the element where an equal element to 
+        method exists in possible_solvers, or the next memory address after possible_solvers. If the latter, the method is not implemented
+        (yet) and an error is thrown. 
+    */ 
+    std::vector<std::string>::iterator it =  std::find(
+                                                possible_solvers.begin(),
+                                                possible_solvers.end(),
+                                                method); 
+
+    bool method_exists =  it != possible_solvers.end();
+
+    if(!method_exists){
+        std::string possible_solvers_string = "[";
+        for (int i=0; i<possible_solvers.size()-1; i++){
+            possible_solvers_string += possible_solvers[i] + ", ";
+        }
+        possible_solvers_string += possible_solvers_string[possible_solvers.size()-1] + "]";
+
+        throw std::invalid_argument("I don't know what " + method + " is. Possible solvers are: " + possible_solvers_string);
+    }
+
+    // The method does exist, and this is its index 
+    int index_solver = std::distance(possible_solvers.begin(), it);
+    evolver evolve_method = evolvers[index_solver]; // Becomes a pointer to the method RK4, FE, or ...
+
+    int numb_particles = trap.n;
+    float dt = T / n_steps;
+    arma::vec t_vector = arma::linspace(0.0, T, n_steps + 1);
+    particles_positions = arma::cube(numb_particles, n_steps+1, 3);
+    particles_velocities = arma::cube(numb_particles, n_steps+1, 3);
+
+    // Initial conditions:
+    for (int n=0; n<numb_particles; n++){
+        particles_positions.tube(n,0) = trap.particles[n].r;
+        particles_velocities.tube(n,0) = trap.particles[n].v;
+    }
+
+    std::cout << particles_positions[0,0,0] << ", " << particles_positions[0,0,1] << ", " << particles_positions[0,0,2] << std::endl;
+    
+    for (int i=1; i<n_steps+1; i++){
+        (this->*evolve_method)(dt, t_vector[i]); // Dereferencing the pointer evolve_method and call to this object.
+
+        // Storing positions and velocities.
+        for (int n=0; n<numb_particles; n++){
+            particles_positions.tube(n,i) = trap.particles[n].r;
+            particles_velocities.tube(n,i) = trap.particles[n].v;
+        }
+    }
+
+    evolved = true; // The Penning trap has evolved in time.
+}
+
+void Solver::save(std::string identifier, std::string outdir){
+    std::string positions_filename = outdir + identifier + "_r" + ".h5";
+    std::string velocities_filename = outdir + identifier + "_v" + ".h5";
+
+    particles_positions.save(positions_filename, arma::hdf5_binary);
+    particles_velocities.save(velocities_filename, arma::hdf5_binary);
 }
