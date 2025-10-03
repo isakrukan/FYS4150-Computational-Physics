@@ -89,4 +89,4 @@
 .bak 
 .mtc
 build/
-aux/
+**/aux/
