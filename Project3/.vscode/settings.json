@@ -71,7 +71,14 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "condition_variable": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "string_view": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "github-enterprise.uri": "https://github.uio.no/"
