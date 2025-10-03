@@ -5,7 +5,7 @@ Solver::Solver(PenningTrap &trap) : trap(trap) {}
     
 arma::vec Solver::total_force(int i, float t)
 {
-    arma::vec E_field = trap.E(trap[i].r);
+    arma::vec E_field = trap.E(trap[i].r, t);
     arma::vec B_field = trap.B(trap[i].r);
     arma::vec F_coulomb = trap.F(i);
 
@@ -15,7 +15,7 @@ arma::vec Solver::total_force(int i, float t)
     return F_tot / trap[i].m;
 }
 
-void Solver::evolve_RK4(float dt)
+void Solver::evolve_RK4(float dt, float t)
 {
     // Temporary storage of positions and velocities.
     int n = trap.n;
@@ -37,14 +37,14 @@ void Solver::evolve_RK4(float dt)
     for (int i = 0; i < n; i++)
     {
         k_r1[i] = dt * trap[i].v;
-        k_v1[i] = dt * total_force(i, 0);
+        k_v1[i] = dt * total_force(i, t);
     }
     
     for (int i = 0; i < n; i++)
     {
         trap[i].v = v_temp[i] + 0.5 * k_v1[i];
         trap[i].r = r_temp[i] + 0.5 * k_r1[i];
-        k_v2[i] = dt * total_force(i, 0);
+        k_v2[i] = dt * total_force(i, t);
         k_r2[i] = dt * trap[i].v;
     }
     
@@ -52,7 +52,7 @@ void Solver::evolve_RK4(float dt)
     {
         trap[i].v = v_temp[i] + 0.5 * k_v2[i];
         trap[i].r = r_temp[i] + 0.5 * k_r2[i];
-        k_v3[i] = dt * total_force(i, 0);
+        k_v3[i] = dt * total_force(i, t);
         k_r3[i] = dt * trap[i].v;
     }
     
@@ -61,7 +61,7 @@ void Solver::evolve_RK4(float dt)
         trap[i].r = r_temp[i] + k_r3[i];
         trap[i].v = v_temp[i] + k_v3[i];
         k_r4[i] = dt * trap[i].v;
-        k_v4[i] = dt * total_force(i, 0);
+        k_v4[i] = dt * total_force(i, t);
     }
 
     // Update positions and velocities
@@ -72,13 +72,13 @@ void Solver::evolve_RK4(float dt)
     }
 }
 
-void Solver::evolve_FE(float dt)
+void Solver::evolve_FE(float dt, float t)
 {
 
     for (int i = 0; i < trap.n; i++)
     {
         // Forward Euler update:
-        trap[i].v += dt * total_force(i, 0);
+        trap[i].v += dt * total_force(i, t);
         trap[i].r += dt * trap[i].v;
     }
 }

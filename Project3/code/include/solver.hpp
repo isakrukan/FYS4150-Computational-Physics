@@ -24,15 +24,17 @@ public:
      * @brief Evolves the particles inside the Penning trap in time using the Runge-Kutta 4 method.
      * 
      * @param dt Time step.
+     * @param t Time [\f$\mu s\f$] (microseconds)
      */
-    void evolve_RK4(float dt);
+    void evolve_RK4(float dt, float t);
     
     /**
      * @brief Evolves the particles inside the Penning trap in time using the Forward Euler method.
      * 
      * @param dt Time step.
+     * @param t Time [\f$\mu s\f$] (microseconds)
      */
-    void evolve_FE(float dt);
+    void evolve_FE(float dt, float t);
     
 private:
     PenningTrap &trap; ///< See @ref PenningTrap "PenningTrap".
@@ -44,7 +46,7 @@ private:
      * @param t Time \f$ \mu s\f$ (microseconds).
      * @return arma::vec force on particle @ref i "i".
      */
-    arma::vec total_force(int i);
+    arma::vec total_force(int i, float t);
 };
 
 #endif

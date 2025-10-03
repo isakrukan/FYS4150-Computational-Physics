@@ -22,9 +22,10 @@ void simulate_single_particle(double T, unsigned int n_steps, arma::vec r, arma:
 
     for (int i = 1; i < n_steps + 1; i++)
     {
-        solver.evolve_RK4(dt);
         
         t_mat(i) = i * dt;
+        solver.evolve_RK4(dt, t_mat(i));
+
         r_mat.row(i) = r.t();
         v_mat.row(i) = v.t();
     }
@@ -62,12 +63,13 @@ void simulate_double_particles(double T, unsigned int n_steps, arma::vec r1, arm
 
     for (int i = 1; i < n_steps + 1; i++)
     {
-        solver.evolve_RK4(dt);
+        t_mat(i) = i * dt;
+        solver.evolve_RK4(dt, t_mat(i));
+        
         r1_mat.row(i) = r1.t();
         r2_mat.row(i) = r2.t();
         v1_mat.row(i) = v1.t();
         v2_mat.row(i) = v2.t();
-        t_mat(i) = i * dt;
     }
 
     std::string r_file_1 = outdir + "r1-interacting-n" + std::to_string(n_steps) + ".txt";

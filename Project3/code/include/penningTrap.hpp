@@ -3,6 +3,7 @@
 
 #include <armadillo>
 #include <vector>
+#include <functional>
 
 /**
  * @brief Representation of a particle with charge @ref q "q" and mass @ref m "m" located at @ref r "r" with a velocity @ref v "v". 
@@ -43,12 +44,13 @@ public:
  */
 class PenningTrap{
     friend class Solver;
-    
+
 private:
 
     float k_e = 1.38935333 * 1e5; ///< Coulomb constant [\f$ u (\mu m)^3 (\mu s)^{-2}e^{-2} $\f] 
     float B_0;      ///< Magnetic field strength [\f$ u/(\mu s)e^{-1} $\f] (atomic mass unit per microsend per electric charge).
     float V_0;      ///< Applied potential [\f$ u/(\mu s)^2e^{-1} $\f] (atomic mass unit per microsend squared per electric charge).
+    std::function<float(float)> V_0_callable; ///< Callable version of @ref V_0 "V_0" for adding time dependence.      
     float d;        ///< Characteristic dimension [\f$ \mu m $\f] (micrometer).
 
     int n;    ///< Number of particles inside Penning trap.
@@ -65,6 +67,16 @@ public:
      */
     PenningTrap(float B_0=9.65*1e1, float V_0=2.41*1e6, float d=500);
 
+
+    /**
+     * @brief Default construction of the Penning trap with \f$ B_0 = 9.65\cdot 10^1 u/(\mu s) e\f$, \f$ V_0 = 2.41\cdot 10^6 u(\mu m)^2/(\mu s)^2 e^{-1}\f$ and \f$ d=500\mu m\f$.
+     * 
+     * @param V_0_func Applied potential [\f$ u/(\mu s)^2e^{-1} $\f] (atomic mass unit per microsend squared per electric charge).
+     * @param B_0 Magnetic field strength [\f$ u/(\mu s)e^{-1} $\f] (atomic mass unit per microsend per electric charge).
+     * @param d Characteristic dimension [\f$ \mu m $\f] (micrometer).
+     */
+    PenningTrap(std::function<float(float)> V_0_func, float B_0=9.65*1e1, float d=500);
+
     /**
      * @param i i-th particle in the Penning trap.
      * @return The i-th @ref Particle "Particle" in the Penning trap. 
@@ -79,9 +91,10 @@ public:
      * \f]
      * 
      * @param r Position [\f$ \mu m \f$ ] (micrometer). 
+     * @param t Time [\f$ \mu s\f$] (microseconds)
      * @return \f$ \vec{E}\f$
      */
-    arma::vec E(arma::vec &r);
+    arma::vec E(arma::vec &r, float t);
 
     /**
      * @brief The magnetic field at position \f$ r = (x,y,z)\f$, given by \f$\vec{B} = B_0 \hat{e}_z = (0,0,B_0)\f$.

@@ -13,6 +13,16 @@ Particle::Particle(float q, float m, arma::vec &r, arma::vec &v)
 
 PenningTrap::PenningTrap(float B_0, float V_0, float d)
                         : n(0), B_0(B_0), V_0(V_0), d(d){
+                            
+                            // Creating callable version of V_0:
+                            V_0_callable = [V_0](float /*t*/){
+                                return V_0;
+                            };
+                        }
+
+PenningTrap::PenningTrap(std::function<float(float)> V_0_func, float B_0, float d)
+                        : n(0), B_0(B_0), d(d){
+                            V_0_callable = V_0_func;
                         }
 
 void PenningTrap::add_particle(Particle &particle){
@@ -35,8 +45,8 @@ Particle& PenningTrap::operator[](int i){
 }
 
 
-arma::vec PenningTrap::E(arma::vec &r){
-    arma::vec E_field = {V_0 / (d*d) * r[0], V_0 / (d*d) * r[1], - 2*V_0 / (d*d) * r[2]};
+arma::vec PenningTrap::E(arma::vec &r, float t){
+    arma::vec E_field = {V_0_callable(t) / (d*d) * r[0], V_0_callable(t) / (d*d) * r[1], - 2*V_0_callable(t) / (d*d) * r[2]};
 
     return E_field;
 } 
