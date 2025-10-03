@@ -58,7 +58,7 @@
 \usepackage{xcolor}           % set colors
 \usepackage{hyperref}         % automagic cross-referencing
 \usepackage{listings}         % display code
-\usepackage{subfigure}        % imports a lot of cool and useful figure commands
+\usepackage{subcaption}        % imports a lot of cool and useful figure commands
 % \usepackage{float}
 %\usepackage[section]{placeins}
 \usepackage{algorithm}
@@ -230,8 +230,112 @@ We now consider \(n\) particles with charges \(\{q_i\}_{i\in[1,n]}\) and masses 
 \end{subequations}
 where \(\hat{x}_{ij} = (x_i - x_j)/|r_i-r_j|^3\) and \(\hat{y}_{ij}, \hat{z}_{ij}\) defined on the corresponding form.
 Instead of trying to solve this analytically, we will compute this numerically. 
+
+\section{Results}
+The motion in the $z$-direction of a single particle inside the Penning trap is shown in figure \ref{fig:single-tz}. 
+Additionally, figure \ref{fig:interacting-xy} shows the trajectories of two interacting particles in the $xy$-plane.
+Removing the Coulomb interaction between the particles does not have a significant impact on these trajectories.
+A comparison with the non-interacting case can be found in appendix \ref{sec:appendix_plots}.
+The phase space plots for the $z$-direction of two single two (non-)interacting particles are shown in figures \ref{fig:phase_space_z_noninteracting} and \ref{fig:phase_space_z_interacting}, respectively.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/single-tz-RK4-n4000.pdf}
+    \caption{Caption. Single particle.}
+    \label{fig:single-tz}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/interacting-xy-RK4-n4000.pdf}
+    \caption{Caption. Interacting.}
+    \label{fig:interacting-xy}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/phasespace-z-noninteracting-RK4-n4000.pdf}
+    \caption{Caption. Phase space z.}
+    \label{fig:phase_space_z_noninteracting}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/phasespace-z-interacting-RK4-n4000.pdf}
+    \caption{Caption. Phase space z.}
+    \label{fig:phase_space_z_interacting}
+\end{figure}
+
+\section{Discussion}
+\subsection{Relative errors}
+
+
 % \cite{uioFYS3150H25}
+
+\newpage
+\clearpage
 \onecolumngrid
+\appendix
+\section{Plots}\label{sec:appendix_plots}
+\subsection{Space space plots}
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/noninteracting-xy-RK4-n4000.pdf}
+        \caption{Phase space x (interacting).}
+        \label{fig:xy_noninteracting_appendix}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/interacting-xy-RK4-n4000.pdf}
+        \caption{Phase space x (non-interacting).}
+        \label{fig:xy_interacting_appendix}
+    \end{subfigure}
+    \caption{Comparison of phase space x for interacting and non-interacting cases.}
+    \label{fig:xy_comparison}
+\end{figure}
+
+\subsection{Phase space plots}
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/phasespace-x-interacting-RK4-n4000.pdf}
+        \caption{Phase space x (interacting).}
+        \label{fig:phase_space_x_interacting_appendix}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/phasespace-x-noninteracting-RK4-n4000.pdf}
+        \caption{Phase space x (non-interacting).}
+        \label{fig:phase_space_x_noninteracting_appendix}
+    \end{subfigure}
+    \caption{Comparison of phase space x for interacting and non-interacting cases.}
+    \label{fig:phase_space_x_comparison}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-interacting-RK4-n4000.pdf}
+        \caption{Phase space z (interacting).}
+        \label{fig:phase_space_z_interacting}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-noninteracting-RK4-n4000.pdf}
+        \caption{Phase space z (non-interacting).}
+        \label{fig:phase_space_z_noninteracting}
+    \end{subfigure}
+    \caption{Comparison of phase space z for interacting and non-interacting cases.}
+    \label{fig:phase_space_z_comparison}
+\end{figure}
 % \bibliographystyle{apalike}
 % \bibliographystyle{unsrt}
 \bibliographystyle{apsrev4-2}

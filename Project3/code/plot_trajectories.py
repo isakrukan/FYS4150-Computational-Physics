@@ -19,12 +19,18 @@ def plot_trajectories(**kwargs):
     if 'ylabel' in kwargs:
         plt.ylabel(kwargs.pop('ylabel'))
 
+    i = 0
     for key, data in kwargs.items():
     
         x = data[:,0]
         y = data[:,1]
 
         label = key.replace('_', ' ')
+        plt.scatter(x[0], y[0], color=f"C{i}", zorder=10)  # Mark the start point
+        plt.scatter(x[0], y[0], color=f"w", s=50, linewidths=1.5, zorder=9)  # Mark the end point
+        plt.scatter(x[-1], y[-1], marker="x", color=f"C{i}", zorder=10)  # Mark the end point
+        plt.scatter(x[-1], y[-1], marker="x", color=f"w", s=50, linewidths=2.5, zorder=9)  # Mark the end point
+        i += 1
         plt.plot(x, y, label=label)
 
     plt.legend()
@@ -33,27 +39,27 @@ def plot_trajectories(**kwargs):
 ##########################
 # Single particle tz plot
 ##########################
-data = np.loadtxt('out/r1-single-n4000.txt')
+data = np.loadtxt('out/r1-single-RK4-n4000.txt')
 
 plt.figure(figsize=(6,4))
 plot_trajectories(Particle_1 = data[:,[0,3]],
                   xlabel = r'$t\ \ [\mu s]$',
                   ylabel = r'$z\ \ [\mu m]$')
-plt.savefig('out/single-tz-n4000.pdf')
+plt.savefig('out/single-tz-RK4-n4000.pdf')
 
 for n_steps in [4000]:
     for type in ['interacting', 'noninteracting']:
         
         if type == 'interacting':
-            data1 = np.loadtxt(f'out/r1-interacting-n{n_steps}.txt')
-            data2 = np.loadtxt(f'out/r2-interacting-n{n_steps}.txt')
-            data1v = np.loadtxt(f'out/v1-interacting-n{n_steps}.txt')
-            data2v = np.loadtxt(f'out/v2-interacting-n{n_steps}.txt')
+            data1 = np.loadtxt(f'out/r1-interacting-RK4-n{n_steps}.txt')
+            data2 = np.loadtxt(f'out/r2-interacting-RK4-n{n_steps}.txt')
+            data1v = np.loadtxt(f'out/v1-interacting-RK4-n{n_steps}.txt')
+            data2v = np.loadtxt(f'out/v2-interacting-RK4-n{n_steps}.txt')
         else:
-            data1 = np.loadtxt(f'out/r1-single-n{n_steps}.txt')
-            data2 = np.loadtxt(f'out/r2-single-n{n_steps}.txt')
-            data1v = np.loadtxt(f'out/v1-single-n{n_steps}.txt')
-            data2v = np.loadtxt(f'out/v2-single-n{n_steps}.txt')        
+            data1 = np.loadtxt(f'out/r1-single-RK4-n{n_steps}.txt')
+            data2 = np.loadtxt(f'out/r2-single-RK4-n{n_steps}.txt')
+            data1v = np.loadtxt(f'out/v1-single-RK4-n{n_steps}.txt')
+            data2v = np.loadtxt(f'out/v2-single-RK4-n{n_steps}.txt')        
 
         #############################
         # Plot trajectories xy-plane
@@ -64,7 +70,7 @@ for n_steps in [4000]:
                             xlabel = r'$x\ \ [\mu m]$',
                             ylabel = r'$y\ \ [\mu m]$')
         plt.gca().set_aspect('equal', adjustable='box')
-        plt.savefig(f'out/{type}-xy-n{n_steps}.pdf')
+        plt.savefig(f'out/{type}-xy-RK4-n{n_steps}.pdf')
 
         #####################################
         # Plot x & z phase space trajectories
@@ -77,4 +83,4 @@ for n_steps in [4000]:
                                 Particle_2 = temp_2,
                                 xlabel = r'$' +      label   + r'\ \ [\mu m/\mu s]$',
                                 ylabel = r'$' + f'v_{label}' + r'\ \ [\mu m/\mu s]$')
-            plt.savefig(f'out/phasespace-{label}-{type}-n{n_steps}.pdf')
+            plt.savefig(f'out/phasespace-{label}-{type}-RK4-n{n_steps}.pdf')
