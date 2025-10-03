@@ -5,7 +5,7 @@
 
 const std::string outdir = "out/";
 
-void simulate_single_particle(double T, uint n_steps, arma::vec r, arma::vec v, const std::string &id)
+void simulate_single_particle(double T, unsigned int n_steps, arma::vec r, arma::vec v, const std::string &id)
 {
     arma::mat t_mat(n_steps + 1, 1);
     arma::mat r_mat(n_steps + 1, 3);
@@ -39,7 +39,7 @@ void simulate_single_particle(double T, uint n_steps, arma::vec r, arma::vec v, 
     v_mat.save(v_file, arma::raw_ascii);
 }
 
-void simulate_double_particles(double T, uint n_steps, arma::vec r1, arma::vec v1, arma::vec r2, arma::vec v2)
+void simulate_double_particles(double T, unsigned int n_steps, arma::vec r1, arma::vec v1, arma::vec r2, arma::vec v2)
 {
 
     arma::mat t_mat(n_steps + 1, 1);
@@ -85,6 +85,8 @@ void simulate_double_particles(double T, uint n_steps, arma::vec r1, arma::vec v
     v1_mat.save(v_file_1, arma::raw_ascii);
     v2_mat.save(v_file_2, arma::raw_ascii);
 };
+
+
 
 int main(int argc, char *argv[])
 {

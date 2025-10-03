@@ -23,14 +23,19 @@ public:
     /**
      * @brief Evolves the particles inside the Penning trap in time using the Runge-Kutta 4 method.
      * 
-     * @param dt 
+     * @param dt Time step.
      */
     void evolve_RK4(float dt);
     
+    /**
+     * @brief Evolves the particles inside the Penning trap in time using the Forward Euler method.
+     * 
+     * @param dt Time step.
+     */
     void evolve_FE(float dt);
     
 private:
-    PenningTrap &trap;
+    PenningTrap &trap; ///< See @ref PenningTrap "PenningTrap".
 
     /**
      * @brief The force experienced by particle 'i' due to the external field and Coulomb forces.
@@ -39,7 +44,7 @@ private:
      * @param t Time \f$ \mu s\f$ (microseconds).
      * @return arma::vec force on particle @ref i "i".
      */
-    arma::vec f(int i, float t);
+    arma::vec total_force(int i);
 };
 
 #endif

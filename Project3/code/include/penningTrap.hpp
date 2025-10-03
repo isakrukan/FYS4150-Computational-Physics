@@ -43,6 +43,7 @@ public:
  */
 class PenningTrap{
     friend class Solver;
+    
 private:
 
     float k_e = 1.38935333 * 1e5; ///< Coulomb constant [\f$ u (\mu m)^3 (\mu s)^{-2}e^{-2} $\f] 

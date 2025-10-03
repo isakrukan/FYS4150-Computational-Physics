@@ -10,7 +10,7 @@
  */
 struct Args
 {
-    uint n_steps = 4000;
+    unsigned int n_steps = 4000;
     int seed = 0.0;
     double T = 50.0;
 };
