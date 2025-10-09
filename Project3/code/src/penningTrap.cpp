@@ -4,7 +4,7 @@
 #include <string>
 
 //******** Particle ********
-Particle::Particle(float q, float m, arma::vec &r, arma::vec &v) 
+Particle::Particle(float q, float m, arma::vec r, arma::vec v) 
                 : q(q), m(m), r(r), v(v){
 
                 }
@@ -31,7 +31,7 @@ void PenningTrap::add_particle(Particle &particle){
     n ++; // The Penning trap now contains one more particle;
 }
 
-void PenningTrap::add_particle(float q, float m, arma::vec &r, arma::vec &v){
+void PenningTrap::add_particle(float q, float m, arma::vec r, arma::vec v){
     Particle particle = Particle(q, m, r, v);
     add_particle(particle);
 }
@@ -47,7 +47,7 @@ Particle& PenningTrap::operator[](int i){
 
 arma::vec PenningTrap::E(arma::vec &r, float t){
     arma::vec E_field = {V_0_callable(t) / (d*d) * r[0], V_0_callable(t) / (d*d) * r[1], - 2*V_0_callable(t) / (d*d) * r[2]};
-
+    
     return E_field;
 } 
 
@@ -57,7 +57,7 @@ arma::vec PenningTrap::B(arma::vec &r){
     return B_field;
 } 
 
-arma::vec PenningTrap::F(int i){
+arma::vec PenningTrap::F_interaction(int i){
 
     // Checking that i\in[0,n-1]
     if (i >= n || i < 0){
@@ -65,14 +65,29 @@ arma::vec PenningTrap::F(int i){
     }
     arma::vec Force = arma::vec(3).fill(0);
 
-    float prefactor = k_e * particles[i].q / particles[i].m;
+    float prefactor = k_e * particles[i].q;
+    float norm;
     for (int j=0; j<n; j++){
         if (i != j){
 
-            float norm = arma::norm(particles[i].r - particles[j].r, 2);
+            norm = arma::norm(particles[i].r - particles[j].r, 1);
             Force += particles[j].q * (particles[i].r - particles[j].r) / std::pow(norm, 3);
         }
     }
-
     return prefactor * Force;
+}
+
+arma::vec PenningTrap::F(int i, float t)
+{
+    arma::vec E_field = E(particles[i].r, t);
+    arma::vec B_field = B(particles[i].r);
+    arma::vec F_coulomb(3, arma::fill::zeros);
+    if (interacting){
+        F_coulomb = F_interaction(i);
+    }   
+
+    // Total force on particle i:
+    arma::vec F_tot = particles[i].q * (E_field + arma::cross(particles[i].v, B_field)) + F_coulomb;
+
+    return F_tot;
 }

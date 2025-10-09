@@ -7,6 +7,11 @@
 *.o
 *.obj
 
+# Ignoring all pdfs except a couple
+*.pdf 
+!*main.pdf
+!*doc.pdf 
+
 # Precompiled Headers
 *.gch
 *.pch
