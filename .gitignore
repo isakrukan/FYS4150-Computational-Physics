@@ -95,3 +95,6 @@
 .mtc
 build/
 **/aux/
+
+# Ignore python virtual environments
+**/.venv/
