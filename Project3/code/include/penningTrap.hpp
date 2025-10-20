@@ -144,6 +144,12 @@ public:
      */
     void add_particle(Particle &particle);
 
+    /**
+     * @brief Counts the number of particles located within |r| < d.
+     *
+     * @return int Number of particles inside the trap.
+     */
+    int count_inside();
 };
 
 #endif

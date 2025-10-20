@@ -1,5 +1,6 @@
-SRC 		:= penningTrap.o solver.o arg_parser.o
+SRC 		:= penningTrap.o solver.o arg_parser.o utils.o
 BUILD 		:= build
+CXXFLAGS 	:= -O2
 
 # Distinguishing between mac/linux and windows:
 UNAME 		:= $(strip $(OS))
@@ -30,7 +31,7 @@ endef
 endif 
 
 define compile_func
-	g++ -c $1 -DARMA_USE_HDF5 $(INCL) $(LIB) -o $2
+	g++ -c $1 -DARMA_USE_HDF5 $(INCL) $(LIB)  -o $2
 endef 
 
 OS_message:
@@ -43,10 +44,11 @@ compile:
 	@$(call compile_func, src/penningTrap.cpp, penningTrap.o)
 	@$(call compile_func, src/solver.cpp, solver.o)
 	@$(call compile_func, src/arg_parser.cpp, arg_parser.o)
+	@$(call compile_func, src/utils.cpp, utils.o)
 	@$(call compile_func, main.cpp, main.o)
 
 link:
-	g++ main.o $(SRC) $(LIB) -larmadillo -lhdf5 -o $(BUILD)/main	
+	g++ main.o $(CXXFLAGS) $(SRC) $(LIB) -larmadillo -lhdf5 -o $(BUILD)/main	
 
 clean:
 	-$(DELETE) *.o

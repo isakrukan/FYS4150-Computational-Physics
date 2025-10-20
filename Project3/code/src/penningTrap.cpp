@@ -46,13 +46,27 @@ Particle& PenningTrap::operator[](int i){
 
 
 arma::vec PenningTrap::E(arma::vec &r, float t){
-    arma::vec E_field = {V_0_callable(t) / (d*d) * r[0], V_0_callable(t) / (d*d) * r[1], - 2*V_0_callable(t) / (d*d) * r[2]};
-    
+    arma::vec E_field;
+
+    if (arma::norm(r) > d){
+        E_field = {0, 0, 0};
+    }
+    else{
+        E_field = {V_0_callable(t) / (d*d) * r[0], V_0_callable(t) / (d*d) * r[1], - 2*V_0_callable(t) / (d*d) * r[2]};
+    }
+
     return E_field;
 } 
 
 arma::vec PenningTrap::B(arma::vec &r){
-    arma::vec B_field = {0, 0 , B_0};
+    arma::vec B_field;
+
+    if (arma::norm(r) > d){
+        B_field = {0, 0 , 0};
+    }
+    else{
+        B_field = {0, 0 , B_0};
+    }
 
     return B_field;
 } 
@@ -90,4 +104,17 @@ arma::vec PenningTrap::F(int i, float t)
     arma::vec F_tot = particles[i].q * (E_field + arma::cross(particles[i].v, B_field)) + F_coulomb;
 
     return F_tot;
+}
+
+int PenningTrap::count_inside()
+{
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (arma::norm(particles[i].r) < d)
+        {
+            count++;
+        }
+    }
+    return count;
 }

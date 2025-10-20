@@ -11,8 +11,13 @@
 struct Args
 {
     unsigned int n_steps = 4000;
-    int seed = 0.0;
+    int seed = 1234;
     double T = 50.0;
+    int n_particles = 2;
+    bool problem_8 = false;
+    bool problem_9 = false;
+    double amplitude = 0.1;
+    int n_freq = 10;
 };
 
 /**

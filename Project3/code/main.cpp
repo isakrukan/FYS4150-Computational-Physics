@@ -2,7 +2,8 @@
 #include "solver.hpp"
 #include "arg_parser.hpp"
 #include <iostream>
-
+#include "utils.hpp"
+#include <iomanip>
 
 void problem8(Args args){
     //// Problem 8
@@ -50,11 +51,73 @@ void problem8(Args args){
     }
 }
 
+
+void problem9(const Args &args)
+{
+
+    double f = args.amplitude;
+    double d = 500;
+    std::ostringstream f_str;
+    f_str << std::fixed << std::setprecision(1) << f; // e.g. "0.10"
+
+    // remove the dot from the string
+    std::string fclean = f_str.str();
+    fclean.erase(std::remove(fclean.begin(), fclean.end(), '.'), fclean.end());
+
+    std::string outdir = "out/";
+    std::string info = "n_escaped-p" + std::to_string(args.n_particles) + "-f" + fclean + "-RK4-int-n" + std::to_string(args.n_steps);
+    std::string filename = outdir + info + ".h5";
+
+    arma::mat data;
+
+    try
+    {
+        arma::hdf5_name data_hdf5 = arma::hdf5_name(filename, "escape_data");
+        data.load(data_hdf5);
+    }
+    catch (...)
+    {
+        data.set_size(2, 0); // 2 rows, 0 cols initially
+    }
+
+    arma::vec omega_values = arma::linspace(0.2, 2.5, args.n_freq);
+    for (double omega : omega_values)
+    {
+        bool exists = check_exists(data, omega);
+
+        if (exists)
+        {
+            std::cout << "Skipping ω=" << omega << " (already in dataset)\n";
+            continue;
+        }
+        else
+        {
+            std::cout << "Running ω=" << omega << "\n";
+            int escape_count = single_run_problem9(f, omega, d, args);
+            arma::vec new_col = {omega, static_cast<double>(escape_count)};
+            data.insert_cols(data.n_cols, new_col);
+        }
+    }
+
+    // Sort columns by frequency (row 0)
+    arma::uvec sort_idx = arma::sort_index(data.row(0));
+    data = data.cols(sort_idx);
+
+    // Save data back to file
+    arma::hdf5_name data_hdf5 = arma::hdf5_name(filename, "escape_data", arma::hdf5_opts::replace);
+    data.save(data_hdf5, arma::hdf5_binary);
+}
+
 int main(int argc, char *argv[])
 {
     Args args = parse_args(argc, argv);
-    problem8(args);
+
+    if (args.problem_8) {
+        problem8(args);
+    }
+    if (args.problem_9) {
+        problem9(args);
+    }
 
     return 0;
-
 }
