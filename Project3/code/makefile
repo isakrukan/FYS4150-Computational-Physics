@@ -19,6 +19,11 @@ $(info I can't update my mac but I love it so much)
 INCL 		:= -I./include
 LIB 		:=
 DELETE		:= rm -f
+
+INCL	+= -I/usr/include/hdf5/serial
+LIB		+= -lhdf5_serial -lhdf5_serial_hl -L/usr/lib/x86_64-linux-gnu/hdf5/serial
+
+
 define MKDIR 
 	mkdir -p "$(1)"
 endef 

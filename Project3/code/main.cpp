@@ -38,12 +38,15 @@ void problem8(Args args){
     // Single particle, various specific time steps n 
     std::vector<int> n = {4000, 8000, 16000, 32000};
 
-    for (int i=0; i<n.size(); i++){
-        PenningTrap single_particle;
-        single_particle.add_particle(1, 40, r1, v1);
-        Solver single_solver_(single_particle);
-        single_solver_.evolve(T, n[i]); // Uses RK4 by default
-        single_solver_.save();
+    for (std::string method : {"RK4", "FE"}) 
+    {
+        for (int i=0; i<n.size(); i++){
+            PenningTrap single_particle;
+            single_particle.add_particle(1, 40, r1, v1);
+            Solver single_solver_(single_particle);
+            single_solver_.evolve(T, n[i], method); // Uses RK4 by default
+            single_solver_.save();
+        }
     }
 }
 

@@ -50,7 +50,7 @@ public:
      * @brief Saves the computed evolution of the Penning trap.
      * 
      */
-    void save(std::string additional_info="", std::string outdir="out/");
+    void save(std::string additional_info="", std::string outdir="out/", float T=50);
     
 private:
     PenningTrap &trap; ///< See @ref PenningTrap "PenningTrap".

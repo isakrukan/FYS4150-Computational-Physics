@@ -131,21 +131,27 @@ void Solver::evolve(float T, int n_steps, std::string method){
     evolved = true; // The Penning trap has evolved in time.
 }
 
-void Solver::save(std::string additional_info, std::string outdir){
+void Solver::save(std::string additional_info, std::string outdir, float T){
     int n_steps = particles_positions.n_cols;
+    arma::mat particles_time = arma::linspace(0.0, T, n_steps);
+    
     std::string numb_particles = "p" + std::to_string(trap.n);
     std::string interacting = "nonint"; std::string time_steps = std::to_string(n_steps);
-
+    
     if (trap.interacting){
         interacting = "int";
     }
-
     std::string identifier = numb_particles + "-" + current_method + "-" + interacting + "-n" + time_steps;
-    std::string positions_filename = outdir + additional_info + identifier + "-r" + ".h5";
-    std::string velocities_filename = outdir + additional_info + identifier + "-v" + ".h5";
+    std::string filename = outdir + additional_info + identifier + ".h5";
 
-    particles_positions.save(positions_filename, arma::hdf5_binary);
-    particles_velocities.save(velocities_filename, arma::hdf5_binary);
 
-    std::cout << "Successfully stored " << positions_filename << " and " << velocities_filename << std::endl;
+    arma::hdf5_name time_hdf5 = arma::hdf5_name(filename, "times");
+    arma::hdf5_name positions_hdf5 = arma::hdf5_name(filename, "positions", arma::hdf5_opts::append);
+    arma::hdf5_name velocities_hdf5 = arma::hdf5_name(filename, "velocities", arma::hdf5_opts::append);
+
+    particles_time.save(time_hdf5, arma::hdf5_binary);
+    particles_positions.save(positions_hdf5, arma::hdf5_binary);
+    particles_velocities.save(velocities_hdf5, arma::hdf5_binary);
+
+    std::cout << "Successfully stored " << filename << std::endl;
 }

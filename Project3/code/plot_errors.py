@@ -1,3 +1,4 @@
+import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -33,12 +34,12 @@ def analytical_solution(t, r_0, v_0, B0=9.65*1e1, V0=2.41*1e6):
     return x, y, z
 
 
-def rel_error(data, r_0, v_0):
+def rel_error(dataset, r_0, v_0):
     """
     Computes the relative error between the numerical and analytical solutions.
     """
-    t_numerical = data[:,0]
-    z_numerical = data[:,3]
+    t_numerical = dataset['times'][0,:]
+    z_numerical = dataset['positions'][2,:,0].T
 
     _, _, z_analytical = analytical_solution(t_numerical, r_0, v_0)
 
@@ -52,9 +53,10 @@ t = np.linspace(0, 50, 1000)  # Time array [μs]
 for method in ['FE', 'RK4']:
     plt.figure(figsize=(6,4))
     for n_steps in [4000, 8000, 16000, 32000]:
-        data = np.loadtxt(f'out/r1-single-{method}-n{n_steps}.txt')
-        error = rel_error(data, r_0, v_0)
-        plt.plot(data[:,0], error, label=f'n_steps={n_steps}')
+
+        with h5py.File(f'out/p1-{method}-int-n{n_steps}.h5', 'r') as dataset:
+            error = rel_error(dataset, r_0, v_0)
+            plt.plot(dataset['times'][0,:], error, label=f'n_steps={n_steps}')
 
     plt.xlabel(r'$t\ \ [\mu s]$')
     plt.ylabel(r'Relative error in $z$')

@@ -1,3 +1,4 @@
+import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -39,34 +40,32 @@ def plot_trajectories(**kwargs):
 ##########################
 # Single particle tz plot
 ##########################
-data = np.loadtxt('out/r1-single-RK4-n4000.txt')
+dataset = h5py.File('out/p1-RK4-int-n4000.h5', 'r')
 
+
+tz = np.array([dataset['times'][0,:], dataset['positions'][2,:,0]]).T
 plt.figure(figsize=(6,4))
-plot_trajectories(Particle_1 = data[:,[0,3]],
+plot_trajectories(Particle_1 = tz,
                   xlabel = r'$t\ \ [\mu s]$',
                   ylabel = r'$z\ \ [\mu m]$')
 plt.savefig('out/single-tz-RK4-n4000.pdf')
 
 for n_steps in [4000]:
-    for type in ['interacting', 'noninteracting']:
-        
-        if type == 'interacting':
-            data1 = np.loadtxt(f'out/r1-interacting-RK4-n{n_steps}.txt')
-            data2 = np.loadtxt(f'out/r2-interacting-RK4-n{n_steps}.txt')
-            data1v = np.loadtxt(f'out/v1-interacting-RK4-n{n_steps}.txt')
-            data2v = np.loadtxt(f'out/v2-interacting-RK4-n{n_steps}.txt')
-        else:
-            data1 = np.loadtxt(f'out/r1-single-RK4-n{n_steps}.txt')
-            data2 = np.loadtxt(f'out/r2-single-RK4-n{n_steps}.txt')
-            data1v = np.loadtxt(f'out/v1-single-RK4-n{n_steps}.txt')
-            data2v = np.loadtxt(f'out/v2-single-RK4-n{n_steps}.txt')        
-
+    for type in ['int', 'nonint']:
+        with h5py.File(f'out/p2-RK4-{type}-n{n_steps}.h5', 'r') as dataset:
+            # Positions and velocities of particle 1 and 2 respectively
+            r1 = dataset['positions'][:,:,0].T
+            v1 = dataset['velocities'][:,:,0].T
+            r2 = dataset['positions'][:,:,1].T
+            v2 = dataset['velocities'][:,:,1].T
+            
         #############################
         # Plot trajectories xy-plane
         ##############################
+        
         plt.figure(figsize=(6,6))
-        plot_trajectories(Particle_1 = data1[:,1:3],
-                            Particle_2 = data2[:,1:3],
+        plot_trajectories(Particle_1 = r1[:, 0:2],
+                            Particle_2 = r2[:, 0:2],
                             xlabel = r'$x\ \ [\mu m]$',
                             ylabel = r'$y\ \ [\mu m]$')
         plt.gca().set_aspect('equal', adjustable='box')
@@ -75,12 +74,14 @@ for n_steps in [4000]:
         #####################################
         # Plot x & z phase space trajectories
         #####################################
-        for idx, label in [(1, 'x'), (3, 'z')]:
-            temp_1 = np.array([data1[:,idx], data1v[:,idx]]).T
-            temp_2 = np.array([data2[:,idx], data2v[:,idx]]).T
+        for idx, label in [(0, 'x'), (2, 'z')]:
+            temp_1 = np.array([r1[:,idx], v1[:, idx]]).T
+            temp_2 = np.array([r2[:,idx], v2[:, idx]]).T
+
             plt.figure(figsize=(6,6))
             plot_trajectories(Particle_1 = temp_1, 
                                 Particle_2 = temp_2,
                                 xlabel = r'$' +      label   + r'\ \ [\mu m/\mu s]$',
                                 ylabel = r'$' + f'v_{label}' + r'\ \ [\mu m/\mu s]$')
             plt.savefig(f'out/phasespace-{label}-{type}-RK4-n{n_steps}.pdf')
+        
