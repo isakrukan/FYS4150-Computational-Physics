@@ -232,13 +232,20 @@ where \(\hat{x}_{ij} = (x_i - x_j)/|r_i-r_j|^3\) and \(\hat{y}_{ij}, \hat{z}_{ij
 Instead of trying to solve this analytically, we will compute this numerically. 
 
 \section{Results}
+\subsection{Trajectories}
 The motion in the $z$-direction of a single particle inside the Penning trap is shown in figure \ref{fig:single-tz}. 
-Additionally, figure \ref{fig:interacting-xy} shows the trajectories of two interacting particles in the $xy$-plane.
-Removing the Coulomb interaction between the particles does not have a significant impact on these trajectories.
-A comparison with the non-interacting case can be found in appendix \ref{sec:appendix_plots}.
-The phase space plots for the $z$-direction of two single two (non-)interacting particles are shown in figures \ref{fig:phase_space_z_noninteracting} and \ref{fig:phase_space_z_interacting}, respectively.
+Next, we consider two particles inside the Penning trap, and compare results with and without a Coulomb interaction between them.
+A comparison of the trajectories in the $xy$-plane is shown in figure \ref{fig:xy_comparison}.
+From the figure, we see that the Coloumb interaction has a subtle, but noticeable effect on the trajectories.
+Likewise, a comparison between phase space plots in the $z$-direction is shown in figure \ref{fig:phasespace_z_comparison}.
+In this case, the effect of the Coulomb interaction is much more noticeable.
+Concretely, the interaction causes the two perfectly circular phase space trajectories to spiral and deform.
 
 
+Additional plots of the phase space in the $x$-direction are shown in section \ref{sec:appendix_plots} of the appendix.
+% ------------------------
+% single particle tz plot
+% ------------------------
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/results/single-tz-RK4-n4000.pdf}
@@ -246,28 +253,80 @@ The phase space plots for the $z$-direction of two single two (non-)interacting 
     \label{fig:single-tz}
 \end{figure}
 
-\begin{figure}
+% ------------------------
+% Position space xy plots 
+% ------------------------
+\begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.5]{figs/results/interacting-xy-RK4-n4000.pdf}
-    \caption{Caption. Interacting.}
-    \label{fig:interacting-xy}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/nonint-xy-RK4-n4000.pdf}
+        \caption{Position space xy (interacting).}
+        \label{fig:xy_nonint}
+    \end{subfigure}
+    \vfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/int-xy-RK4-n4000.pdf}
+        \caption{Position space xy (non-interacting).}
+        \label{fig:xy_int}
+    \end{subfigure}
+    \caption{Comparison of trajectories in the xy plane for2 interacting and non-interacting cases.}
+    \label{fig:xy_comparison}
 \end{figure}
 
-\begin{figure}
+% ---------------------
+% Phase space z plots
+% ---------------------
+\begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.5]{figs/results/phasespace-z-noninteracting-RK4-n4000.pdf}
-    \caption{Caption. Phase space z.}
-    \label{fig:phase_space_z_noninteracting}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-nonint-RK4-n4000.pdf}
+        \caption{Phase space z (interacting).}
+        \label{fig:phasespace_z_nonint}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-int-RK4-n4000.pdf}
+        \caption{Phase space z (non-interacting).}
+        \label{fig:phasespace_z_int}
+    \end{subfigure}
+    \caption{Comparison of phase space z for interacting and non-interacting cases.}
+    \label{fig:phasespace_z_comparison}
 \end{figure}
 
+\subsection{Resonance phenomena}
+Tracking the number of escaped particles as a function of the frequency of an applied oscillating electric field, we obtain the plot shown in figure \ref{fig:resonance_plot}.
+In particular, we see that there are three prominent valleys, roughly centered around $\omega \sim 0.4, 0.7, 1.4, 2.2 \mu s^{-1}$, where (nearly) all particles escape the Penning trap.
 \begin{figure}
     \centering
-    \includegraphics[scale=0.5]{figs/results/phasespace-z-interacting-RK4-n4000.pdf}
-    \caption{Caption. Phase space z.}
-    \label{fig:phase_space_z_interacting}
+    \includegraphics[scale=0.5]{figs/results/trapped_fraction.pdf}
+    \caption{Caption. Resonance plot.}
+    \label{fig:resonance_plot}
 \end{figure}
+
 
 \section{Discussion}
+\subsection{Relative errors}
+We now move on to considering the relative error between the numerical and analytical solutions for a single particle inside the Penning trap. 
+Plots of the relative errors for the RK4 and FE methods are shown in figures \ref{fig:single-error-RK4} and \ref{fig:single-error-FE}, respectively.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/relerror-RK4.pdf}
+    \caption{Caption. Single particle errors - RK4.}
+    \label{fig:single-error-RK4}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/relerror-FE.pdf}
+    \caption{Caption. Single particle errors - FE.}
+    \label{fig:single-error-FE}
+\end{figure}
+
 \subsection{Relative errors}
 
 
@@ -278,39 +337,20 @@ The phase space plots for the $z$-direction of two single two (non-)interacting 
 \onecolumngrid
 \appendix
 \section{Plots}\label{sec:appendix_plots}
-\subsection{Position space plots}
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[scale=0.5]{figs/results/noninteracting-xy-RK4-n4000.pdf}
-        \caption{Phase space x (interacting).}
-        \label{fig:xy_noninteracting_appendix}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[scale=0.5]{figs/results/interacting-xy-RK4-n4000.pdf}
-        \caption{Phase space x (non-interacting).}
-        \label{fig:xy_interacting_appendix}
-    \end{subfigure}
-    \caption{Comparison of phase space x for interacting and non-interacting cases.}
-    \label{fig:xy_comparison}
-\end{figure}
 
 \subsection{Phase space plots}
 \begin{figure}[h!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-x-interacting-RK4-n4000.pdf}
+        \includegraphics[scale=0.5]{figs/results/phasespace-x-int-RK4-n4000.pdf}
         \caption{Phase space x (interacting).}
         \label{fig:phase_space_x_interacting_appendix}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-x-noninteracting-RK4-n4000.pdf}
+        \includegraphics[scale=0.5]{figs/results/phasespace-x-nonint-RK4-n4000.pdf}
         \caption{Phase space x (non-interacting).}
         \label{fig:phase_space_x_noninteracting_appendix}
     \end{subfigure}
@@ -318,24 +358,6 @@ The phase space plots for the $z$-direction of two single two (non-)interacting 
     \label{fig:phase_space_x_comparison}
 \end{figure}
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-z-interacting-RK4-n4000.pdf}
-        \caption{Phase space z (interacting).}
-        \label{fig:phase_space_z_interacting}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-z-noninteracting-RK4-n4000.pdf}
-        \caption{Phase space z (non-interacting).}
-        \label{fig:phase_space_z_noninteracting}
-    \end{subfigure}
-    \caption{Comparison of phase space z for interacting and non-interacting cases.}
-    \label{fig:phase_space_z_comparison}
-\end{figure}
 % \bibliographystyle{apalike}
 % \bibliographystyle{unsrt}
 \bibliographystyle{apsrev4-2}
