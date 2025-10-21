@@ -5,7 +5,7 @@ bool check_exists(const arma::mat &data, double omega)
     for (arma::uword i = 0; i < data.n_cols; ++i)
     {
         if (std::abs(data(0, i) - omega) < 1e-12)
-        { // handle floating precision
+        { // handle doubleing precision
             return true;
         }
     }

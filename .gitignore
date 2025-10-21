@@ -12,6 +12,10 @@
 !*main.pdf
 !*doc.pdf 
 
+# Keep all PDFs under results/
+!/results/
+!/results/*.pdf
+
 # Precompiled Headers
 *.gch
 *.pch

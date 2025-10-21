@@ -5,7 +5,7 @@
 
 Solver::Solver(PenningTrap &trap) : trap(trap) {}
 
-void Solver::evolve_RK4(float dt, float t){
+void Solver::evolve_RK4(double dt, double t){
     // Temporary storage of positions and velocities.
     int n = trap.n;
 
@@ -20,11 +20,10 @@ void Solver::evolve_RK4(float dt, float t){
         v_original[i] = trap[i].v;
     }
 
-    // Compute k's
-    // NOTE: fix time dependence, have set t=0 here
+    // Compute k's (div_masses is computed when calling Solver::evolve())
     for (int i=0; i<n; i++){
         k_r1[i] = dt * trap[i].v;
-        k_v1[i] = dt * trap.F(i, t) / trap[i].m;
+        k_v1[i] = dt * trap.F(i, t) * div_masses[i];
     }
     for (int i=0; i<n; i++){    // Updating the positions and velocities
         trap[i].v = v_original[i] + 0.5 * k_v1[i];
@@ -33,7 +32,7 @@ void Solver::evolve_RK4(float dt, float t){
 
     for (int i=0; i<n; i++){
         k_r2[i] = dt * (v_original[i] + 0.5 * k_v1[i]);
-        k_v2[i] = dt * trap.F(i, t + 0.5 * dt) / trap[i].m;
+        k_v2[i] = dt * trap.F(i, t + 0.5 * dt) * div_masses[i];
     }
     for (int i=0; i<n; i++){    // Updating the positions and velocities
         trap[i].v = v_original[i] + 0.5 * k_v2[i];
@@ -42,7 +41,7 @@ void Solver::evolve_RK4(float dt, float t){
     
     for (int i=0; i<n; i++){
         k_r3[i] = dt *(v_original[i] + 0.5 * k_v2[i]);
-        k_v3[i] = dt * trap.F(i, t + 0.5 * dt) / trap[i].m;
+        k_v3[i] = dt * trap.F(i, t + 0.5 * dt) * div_masses[i];
     }
     for (int i=0; i<n; i++){    // Updating the positions and velocities
         trap[i].v = v_original[i] + k_v3[i];
@@ -51,7 +50,7 @@ void Solver::evolve_RK4(float dt, float t){
     
     for (int i=0; i<n; i++){
         k_r4[i] = dt * (v_original[i] + k_v3[i]);
-        k_v4[i] = dt * trap.F(i, t + dt) / trap[i].m;
+        k_v4[i] = dt * trap.F(i, t + dt) * div_masses[i];
     }
 
     // Update positions and velocities
@@ -61,7 +60,7 @@ void Solver::evolve_RK4(float dt, float t){
     }
 }
 
-void Solver::evolve_FE(float dt, float t){
+void Solver::evolve_FE(double dt, double t){
 
     std::vector<arma::vec> Forces(trap.n);
     for (int i=0; i<trap.n; i++){
@@ -75,7 +74,7 @@ void Solver::evolve_FE(float dt, float t){
 }
 
 
-void Solver::evolve(float T, int n_steps, std::string method){
+void Solver::evolve(double T, int n_steps, std::string method){
     
     /* 
         Checking what method to use and if it exists. Here, 'it' either becomes the pointer to the element where an equal element to 
@@ -105,17 +104,19 @@ void Solver::evolve(float T, int n_steps, std::string method){
     current_method = possible_solvers[index_solver]; // To be used in e.g. Solver::save
 
     int numb_particles = trap.n;
-    float dt = T / n_steps;
+    double dt = T / n_steps;
 
     // Setting up time array and 3D 'cube' of (particles, steps, 3)
     arma::vec t_vector = arma::linspace(0.0, T, n_steps);
     particles_positions = arma::cube(numb_particles, n_steps, 3);
     particles_velocities = arma::cube(numb_particles, n_steps, 3);
 
-    // Initial conditions:
+    // Initial conditions and 1/m vector filling:
+    div_masses.resize(numb_particles);
     for (int n=0; n<numb_particles; n++){
         particles_positions.tube(n,0) = trap.particles[n].r;
         particles_velocities.tube(n,0) = trap.particles[n].v;
+        div_masses[n] = 1.0 / trap[n].m;
     }
 
     for (int i=1; i<n_steps; i++){
@@ -131,7 +132,7 @@ void Solver::evolve(float T, int n_steps, std::string method){
     evolved = true; // The Penning trap has evolved in time.
 }
 
-void Solver::save(std::string additional_info, std::string outdir, float T){
+void Solver::save(std::string additional_info, std::string outdir, double T){
     int n_steps = particles_positions.n_cols;
     arma::mat particles_time = arma::linspace(0.0, T, n_steps);
     
