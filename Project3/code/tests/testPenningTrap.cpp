@@ -17,8 +17,6 @@ int test_Particle(){
 int test_PenningTrap(){
 
     float eps = 1e-15;
-
-    float eps = 1e-15;
     float q = 1.0;
     float m1 = 1.0072764665789; float m2 = m1*2;
     arma::vec r = {20, 0, 20};

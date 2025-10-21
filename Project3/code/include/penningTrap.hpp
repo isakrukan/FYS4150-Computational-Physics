@@ -16,8 +16,8 @@ class Particle{
     
 private:
     
-    const float q;           ///< Electric charge [\f$ e \f$] (elementary charge).
-    const float m;           ///< Mass [\f$ u \f$] (atomic mass unit).
+    const double q;           ///< Electric charge [\f$ e \f$] (elementary charge).
+    const double m;           ///< Mass [\f$ u \f$] (atomic mass unit).
     arma::vec r;            ///< Position [\f$ \mu m \f$] (micrometer).
     arma::vec v;            ///< Velocity [\f$ \mu m/(\mu s)  \f$] (micrometer per microsecond).
     
@@ -31,7 +31,7 @@ public:
      * @param r Position [\f$ \mu m \f$] (micrometer).
      * @param v Velocity [\f$ \mu m \mu^{-1} s^{-1}  \f$] (micrometer per microsecond).
      */
-    Particle(float q, float m, arma::vec r, arma::vec v);
+    Particle(double q, double m, arma::vec r, arma::vec v);
 };
 
 /**
@@ -48,11 +48,11 @@ class PenningTrap{
 private:
 
     // Private variables:
-    float k_e = 1.38935333 * 1e5; ///< Coulomb constant [\f$ u (\mu m)^3 (\mu s)^{-2}e^{-2} \f$] 
-    float B_0;      ///< Magnetic field strength [\f$ u/(\mu s)e^{-1} \f$] (atomic mass unit per microsend per electric charge).
-    float V_0;      ///< Applied potential [\f$ u/(\mu s)^2e^{-1} \f$] (atomic mass unit per microsend squared per electric charge).
-    std::function<float(float)> V_0_callable; ///< Callable version of @ref V_0 "V_0" for adding time dependence.      
-    float d;        ///< Characteristic dimension [\f$ \mu m \f$] (micrometer).
+    double k_e = 1.38935333 * 1e5; ///< Coulomb constant [\f$ u (\mu m)^3 (\mu s)^{-2}e^{-2} \f$] 
+    double B_0;      ///< Magnetic field strength [\f$ u/(\mu s)e^{-1} \f$] (atomic mass unit per microsend per electric charge).
+    double V_0;      ///< Applied potential [\f$ u/(\mu s)^2e^{-1} \f$] (atomic mass unit per microsend squared per electric charge).
+    std::function<double(double)> V_0_callable; ///< Callable version of @ref V_0 "V_0" for adding time dependence.      
+    double d;        ///< Characteristic dimension [\f$ \mu m \f$] (micrometer).
 
     int n;    ///< Number of particles inside Penning trap.
     std::vector<Particle> particles; ///< Collection of particles inside Penning trap.
@@ -70,7 +70,7 @@ public:
      * @param V_0 Applied potential [\f$ u/(\mu s)^2e^{-1} \f$] (atomic mass unit per microsend squared per electric charge).
      * @param d Characteristic dimension [\f$ \mu m \f$] (micrometer).
      */
-    PenningTrap(float B_0=9.65*1e1, float V_0=2.41*1e6, float d=500);
+    PenningTrap(double B_0=9.65*1e1, double V_0=2.41*1e6, double d=500);
 
 
     /**
@@ -80,7 +80,7 @@ public:
      * @param B_0 Magnetic field strength [\f$ u/(\mu s)e^{-1} \f$] (atomic mass unit per microsend per electric charge).
      * @param d Characteristic dimension [\f$ \mu m \f$] (micrometer).
      */
-    PenningTrap(std::function<float(float)> V_0_func, float B_0=9.65*1e1, float d=500);
+    PenningTrap(std::function<double(double)> V_0_func, double B_0=9.65*1e1, double d=500);
 
     ///// Public Methods //// 
     /**
@@ -100,7 +100,7 @@ public:
      * @param t Time [\f$ \mu s\f$] (microseconds)
      * @return \f$ \vec{E}\f$
      */
-    arma::vec E(arma::vec &r, float t);
+    arma::vec E(arma::vec &r, double t);
 
     /**
      * @brief The magnetic field at position \f$ r = (x,y,z)\f$, given by \f$\vec{B} = B_0 \hat{e}_z = (0,0,B_0)\f$.
@@ -125,7 +125,7 @@ public:
      * @param t Time \f$ \mu s\f$ (microseconds).
      * @return arma::vec 
      */
-    arma::vec F(int i, float t);
+    arma::vec F(int i, double t);
 
     /**
      * @brief Adds a new particle to the Penning trap.
@@ -135,7 +135,7 @@ public:
      * @param r Position [\f$ \mu m \f$] (micrometer).
      * @param v Velocity [\f$ \mu m \mu^{-1} s^{-1}  \f$] (micrometer per microsecond).
      */
-    void add_particle(float q, float m, arma::vec r, arma::vec v);
+    void add_particle(double q, double m, arma::vec r, arma::vec v);
 
     /**
      * @brief Adds a new particle to the Penning trap.

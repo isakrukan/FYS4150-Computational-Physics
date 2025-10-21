@@ -10,17 +10,17 @@
  */
 struct Args
 {
-    unsigned int n_steps = 4000;
-    int seed = 1234;
-    double T = 50.0;
-    int n_particles = 2;
-    bool problem_8 = false;
-    bool problem_9 = false;
-    bool interacting = true;
-    double amplitude = 0.1;
-    double freq_min = 0.2;
-    double freq_max = 2.5;
-    int n_freq = 10;
+    unsigned int n_steps = 4000;    ///< Number of steps for Penning trap simulation.
+    int seed = 1234;                ///< See for random positions of Penning trap.
+    double T = 50.0;                ///< Time duration of Penning trap simulation.
+    int n_particles = 2;            ///< Number of particles in Penning trap.
+    bool problem_8 = false;         ///< For running problem 8.
+    bool problem_9 = false;         ///< For running problem 9.
+    bool interacting = true;        ///< Whether the Penning trap includes interactions or not.
+    double amplitude = 0.1;         ///< Amplitude in time-dependent potential.
+    double freq_min = 0.2;          ///< Minimum frequency in time-dependent potential.
+    double freq_max = 2.5;          ///< Maximum frequency in time-dependent potential.
+    int n_freq = 10;                ///< Number of frequencies to run the simulation.
 };
 
 /**
