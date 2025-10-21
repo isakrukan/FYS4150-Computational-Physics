@@ -98,3 +98,7 @@ build/
 
 # Ignore python virtual environments
 **/.venv/
+
+# Pycache
+**/__pycache__/
+*.py[cod]
