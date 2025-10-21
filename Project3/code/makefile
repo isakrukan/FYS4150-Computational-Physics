@@ -45,7 +45,7 @@ endef
 
 endif 
 
-define run_problem_8
+define problem_8
 	$(BUILD)/main$(EXE) --problem_8 $(1)
 endef
 

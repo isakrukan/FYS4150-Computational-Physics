@@ -5,7 +5,7 @@
 #include "utils.hpp"
 #include <iomanip>
 
-void problem8(Args args){
+void problem8(const Args &args){
     //// Problem 8
     arma::vec r1 = {20, 0, 20}; // [mu m]
     arma::vec v1 = {0, 25, 0}; // [mu m/mu s]

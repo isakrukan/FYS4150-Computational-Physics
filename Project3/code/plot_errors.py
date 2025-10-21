@@ -57,7 +57,7 @@ if __name__ == "__main__":
     for method in ['FE', 'RK4']:
         plt.figure(figsize=(6,4))
         for n_steps in [4000, 8000, 16000, 32000]:
-
+            # print(f'out/p1-{method}-int-n{n_steps}.h5')
             with h5py.File(f'out/p1-{method}-int-n{n_steps}.h5', 'r') as dataset:
                 error = rel_error(dataset, r_0, v_0)
                 plt.plot(dataset['times'][0,:], error, label=f'n_steps={n_steps}')

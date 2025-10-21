@@ -55,24 +55,33 @@
 
 %%%%%%%%%%% Important packages %%%%%%%%%%%
 \usepackage{coffeestains}
-\usepackage{typewriter}
-\providecommand\ttgreybolda{0.6}
-\providecommand\ttgreyboldb{0.3}
-\providecommand\ttrotatebold{12}
-\providecommand\ttdownbold{20000}
-\providecommand\ttrightbold{35000}
-\providecommand\ttoverprintbolda{1}
-\providecommand\ttoverprintboldb{1}
-\providecommand\ttoverprintboldc{1}
-\providecommand\ttgreynormala{0.3}
-\providecommand\ttgreynormalb{0.5}
-\providecommand\ttrotatenormal{8}
-\providecommand\ttrightnormal{20000}
-\providecommand\ttdownnormal{20000}
-\providecommand\ttoverprintnormal{1}
-\providecommand\ttbasefont{cmuntt.otf}
-\providecommand\ttmathfont{\ttbasefont}
-\providecommand\ttfontsize{12pt}
+% \AddToHookNext{shipout/background}{%
+%   \coffeestainA{0.8}{1}{-25}{5cm}{1.5cm}%
+% }
+
+% \AddToHookNext{shipout/background}{%
+%   \coffeestainC{1}{1}{180}{0}{-5mm}%
+% }
+
+% \directlua{package.path = package.path .. ";./?.lua;./?/init.lua"}
+% \usepackage{typewriter}
+% \providecommand\ttgreybolda{0.6}
+% \providecommand\ttgreyboldb{0.3}
+% \providecommand\ttrotatebold{12}
+% \providecommand\ttdownbold{20000}
+% \providecommand\ttrightbold{35000}
+% \providecommand\ttoverprintbolda{1}
+% \providecommand\ttoverprintboldb{1}
+% \providecommand\ttoverprintboldc{1}
+% \providecommand\ttgreynormala{0.3}
+% \providecommand\ttgreynormalb{0.5}
+% \providecommand\ttrotatenormal{8}
+% \providecommand\ttrightnormal{20000}
+% \providecommand\ttdownnormal{20000}
+% \providecommand\ttoverprintnormal{1}
+% \providecommand\ttbasefont{cmuntt.otf}
+% \providecommand\ttmathfont{\ttbasefont}
+% \providecommand\ttfontsize{12pt}
 
 %%%%%%%%%%% Important packages %%%%%%%%%%%
 
@@ -87,7 +96,7 @@
 %\usepackage[section]{placeins}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
-\usepackage{subfigure}
+% \usepackage{subfigure}
 \usepackage{tikz}
 \usetikzlibrary{quantikz}
 % defines the color of hyperref objects
@@ -147,6 +156,18 @@ For the homogeneous \(B\)-field, we write
 \end{align}
 where \(B_0>0\) is the strength of the field. 
 
+% \coffeestainA{0.9}{0.85}{-25}{5cm}{1.3cm}
+% \coffeestainB{0.7}{1}{-30}{18 pt}{-135 pt}
+% \coffeestainC{1}{1}{180}{0}{-5 mm}
+% \coffeestainA{1}{1}{180}{0}{-5mm}
+
+\AddToHookNext{shipout/background}{%
+  \coffeestainC{1}{1}{180}{0}{-5mm}%
+}
+% \coffeestainB{alpha}{scale}{angle}{xoff}{yoff}
+% \coffeestainC{alpha}{scale}{angle}{xoff}{yoff}
+% \coffeestainD{alpha}{scale}{angle}{xoff}{yoff}
+
 The motion of a particle inside the Penning trap can be described be Newton's second law,
 \begin{align}
     m\ddot{\vec{r}} = \vec{F}_{L} + \sum_i \vec{F}_i, \label{eq:motion_Newton}
@@ -194,6 +215,11 @@ where \(\phi_{\pm}\) are some constant phases, \(A_{\pm}\) some positive amplitu
     \omega_{\pm} = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}.
 \end{align}
 
+\AddToHookNext{shipout/background}{%
+  \coffeestainA{0.8}{1}{-25}{5cm}{1.5cm}%
+}
+
+
 For the single particle to remain bounded within the Penning trap, we should require that \(|f(t)|\) stays bounded for all \(t\). Otherwise, the particle's trajectory in the \(x\) and/or \(y\)-plane, given by \(\text{Re}(f)\) and \(\text{Re}(f)\), respectively, will eventually escape into infinity. This amount to requiring that \(\omega_0^2 \geq 2\omega_z^2\). To see this, consider \(|f(t)|^2\), which takes the form
 \begin{align}
     |f(t)|^2 &= A_+^2e^{2t\text{Im}(\omega_+)} + A_-^2e^{2t\text{Im}(\omega_-)} 
@@ -224,8 +250,84 @@ and so we may bound \(|f(t)|\) as (since \({\cos(t)\in[-1,1]}\))
     A_+ + A_- \leq |f(t)| \leq |A_+ - A_-|.
 \end{align}
 
+
+\subsection{Multiple Particles inside the Penning Trap} \label{sec:multiple_particles}
+We now consider \(n\) particles with charges \(\{q_i\}_{i\in[1,n]}\) and masses \(\{m_i\}_{i\in[1,n]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we know have
+\begin{subequations}    \label{eq:particles_eqm}
+    \begin{align}
+        \ddot{x}_i - \omega_{0}\dot{y}_i - \frac{1}{2}\omega_{z,i}^2x_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{x}_{ij} &= 0, \\
+        \ddot{y}_i + \omega_{0}\dot{x}_i - \frac{1}{2}\omega_{z,i}^2y_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{y}_{ij} &= 0, \\ 
+        \ddot{z}_i + \omega_{z}^2z_i - k_e \frac{q_i}{m_i}\sum_{j\neq i}q_j \hat{z}_{ij} &= 0.
+    \end{align}
+\end{subequations}
+where \(\hat{x}_{ij} = (x_i - x_j)/|r_i-r_j|^3\) and \(\hat{y}_{ij}, \hat{z}_{ij}\) defined on the corresponding form.
+Instead of trying to solve this analytically, we will compute this numerically. 
+
+\section{Method}
+The equations of motion in \eqref{eq:particles_eqm} do not have an analytic solution for \(n>1\) particles. We have thus solved these by numerical integration. Specifically, we have consider two numerical integration methods: Runge-Kutta 4 (RK4) and Forward-Euler (FE). In the following we explain how these methods work and how we have implemented them. We have used RK4 for our main results, and used FE for a few comparisons between the two methods.
+
+\subsection{Numerical Integration}
+In \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project2}{Project 2}, we solved a second order differential equation numerically using a tridiagonal matrix. This involved approximating the derivative to first order, that is, we discretized the approximation
+\begin{align}
+    \dot{r}(t) \approx \frac{r(t+h) - r(t)}{h}. \label{eq:derivative_approximation}
+\end{align}  
+This approximation is essentially what FE evolves around as well. Consider the equations of motion in \eqref{eq:particles_eqm}, which we can write compactly as 
+\begin{align}
+    \ddot{r}_{i}(t) = f(t, r_i, \dot{r}_i),
+\end{align}
+where 
+\begin{align}
+    f(t, r_i, \dot{r}_i) = \left(\frac{1}{2}\omega_{z}^2x_i, \omega_0\dot{y}_i, 0\right) + k_e \frac{q_i}{m_i}\sum_{j\neq i}q_j\hat{r}_{ij}. \label{eq:fi}
+\end{align}
+Next, we discretize in time by writing 
+\begin{align}
+    v_{m,i} = \dot{r}_i(t_m), \quad r_{m,i} = r_i(t_m), \label{eq:general_our_discret}
+\end{align} 
+where \(m=1, ..., M\), for some integer \(M>0\). The time array is assumed to be equispaced over a time interval \([0,T]\), i.e. \(t_m = mh\), where \(h=T/M\). 
+Approximating the derivative using \eqref{eq:derivative_approximation} and rearranging results in the FE method \footnote{The Euler-Cromer method looks almost exactly the same, only with \(v_{n,i}\) in \eqref{eq:r_FE} substituted with \(v_{n+1,i}\). }: 
+\begin{subequations}    \label{eq:FE_general_algorithm}
+    \begin{align}
+        v_{m+1,i} &= v_{m,i} + hf(t_m,  r_{m,i}, v_{m,i}), \\ 
+        r_{m+1,i} &= r_{m,i} + hv_{m,i}. \label{eq:r_FE}
+    \end{align}
+\end{subequations}
+For Runge-Kutta methods, the idea is to further approximate the slope between \(t_n\) and \(t_{n+1}\), by computing intermediate steps and taking their weighted average. In particular, RK4 computes four of these intermediate steps, \(k_1, \ k_2, \ k_3\) and \(k_4\). Since \eqref{eq:general_our_discret} is a second order differential equation, we two set of such \(k\)'s:
+\begin{subequations}
+    \begin{align}
+     k_{1,r} &= hv_{m,i}, \\ 
+     k_{1,v} &= hf(t_m, r_{m,i}, v_{m,i}), \\ 
+     k_{2,r} &= h(v_{m,i} + \frac{1}{2}k_{1,v}), \\ 
+     k_{2,v} &= hf(t_m+\frac{1}{2}h, r_{m,i} + \frac{1}{2}k_{1,r}, v_{m,i} + \frac{1}{2}k_{1,v}), \\
+     k_{3,r} &= h(v_{m,i} + \frac{1}{2}k_{2,v}), \\ 
+     k_{3,v} &= hf(t_m+\frac{1}{2}h, r_{m,i} + \frac{1}{2}k_{2,r}, v_{m,i} + \frac{1}{2}k_{2,v}), \\
+     k_{4,r} &= h(v_{m,i} + \frac{1}{2}k_{3,v}), \\ 
+     k_{4,v} &= hf(t_m+\frac{1}{2}h, r_{m,i} + \frac{1}{2}k_{3,r}, v_{m,i} k_{3,v}).
+    \end{align}
+    % and 
+    % \begin{align} 
+    %  r_{i+1} &= r_i + \frac{1}{6}(k_{1,r} + 2k_{2,r} + 2k_{3,r} + k_{4,r}), \\ 
+    %  v_{i+1} &= v_i + \frac{1}{6}(k_{1,v} + 2k_{2,v} + 2k_{3,v} + k_{4,v}), \\ 
+    % \end{align}
+\end{subequations}
+For the scenario we consider here, with \(n\) particles inside the Penning trap, the RK4 method involves computing 
+
+
+We will specialize the RK4 method to the scenario of \(n\) particles inside the Penning trap. Since the last term in \eqref{eq:fi} is dependent on the current position and velocities of the other particles, we need to update all particles position and velocity for each intermediate step.
+
+For RK4, this takes the form 
+\begin{subequations}
+    \begin{align}
+        k_1 &= hf(t_i)
+    \end{align}
+\end{subequations} 
+
+reshuffling these expressions and taking a weighted averaged weight to obtain a better estimate which only depends on the current time index, thus not needing an actual increase in the number of discretization steps. 
+
+For RK4, this involves the computation of four additional slopes before updating \(r_{n+1,i}\) and \(v_{n+1,i}\). 
+
+
 \subsection{Specific Analytical Solution}
-As a sanity check for our numerical implementation of the Penning trap (see section \ref{sec:???}) we consider the following specific analytic solution to the Penning trap with a single particle. Let 
+As a sanity check for our numerical implementation of the Penning trap we consider the following analytic solution to the Penning trap containing a single particle. Let 
 \begin{subequations}
 \begin{alignat}{2}
     x(0) &= x_0, &\quad  \dot{x}(0) &= 0, \\
@@ -241,19 +343,6 @@ while we find \(\phi_{\pm} = 0\) and
 \begin{align}
     A_{\pm} = \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
 \end{align}
-
-
-\subsection{Multiple Particles inside the Penning Trap} \label{sec:multiple_particles}
-We now consider \(n\) particles with charges \(\{q_i\}_{i\in[1,n]}\) and masses \(\{m_i\}_{i\in[1,n]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we know have
-\begin{subequations}
-    \begin{align}
-        \ddot{x}_i - \omega_{0,i}\dot{y}_i - \frac{1}{2}\omega_{z,i}^2x_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{x}_{ij} &= 0, \\
-        \ddot{y}_i + \omega_{0,i}\dot{x}_i - \frac{1}{2}\omega_{z,i}^2y_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{y}_{ij} &= 0, \\ 
-        \ddot{z}_i + \omega_{z,i}^2z_i - k_e \frac{q_i}{m_i}\sum_{j\neq i}q_j \hat{z}_{ij} &= 0.
-    \end{align}
-\end{subequations}
-where \(\hat{x}_{ij} = (x_i - x_j)/|r_i-r_j|^3\) and \(\hat{y}_{ij}, \hat{z}_{ij}\) defined on the corresponding form.
-Instead of trying to solve this analytically, we will compute this numerically. 
 
 \section{Results}
 \subsection{Trajectories}

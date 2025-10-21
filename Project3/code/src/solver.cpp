@@ -68,7 +68,7 @@ void Solver::evolve_FE(double dt, double t){
     }
     for (int i=0; i<trap.n; i++){
         // Forward Euler update:
-        trap[i].v += dt * Forces[i] / trap[i].m;
+        trap[i].v += dt * Forces[i] * div_masses[i];
         trap[i].r += dt * trap[i].v;
     }
 }
