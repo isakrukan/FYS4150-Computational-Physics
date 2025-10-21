@@ -41,14 +41,22 @@ pip install -r requirements.txt
 in the root folder.
 
 ## Usage
+### Compiling and running entire project using make
+The entire project may be compiled and run using
+```bash
+make complete_project 
+```
+This includes generating data for all parts of problem 8 and 9, as well as generating plots using the python scripts.
 
-### Compiling & running the main program
+Output from problem 9, which would normally print to the terminal, will in this case be directed to a logfile `problem9.log`.
+
+### Compiling & running the main program manually
 1. Compile:
     ```bash
     make all
     ```
 
-2. Run the main program, using the optional arguments you want: 
+2. The main program can also be run manually, using the following optional arguments: 
     ```
     Usage:
         ./build/main [options]

@@ -43,8 +43,13 @@ def plot_trapped(filename, amplitudes=[0.1,0.4,0.7], frequency_range=None, lines
 
 
 if __name__ == "__main__":
+    import os
 
     OUTDIR = 'plots/'
+    if not os.path.exists(OUTDIR):
+        os.makedirs(OUTDIR)
+        
+        
     plt.figure(figsize=(6,4))
     plot_trapped('out/n_escaped-p100-f$(FWILD)-RK4-int-n4000.h5')
     plt.savefig(OUTDIR + 'trapped_fraction.pdf')
