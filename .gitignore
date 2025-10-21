@@ -78,7 +78,14 @@
 *.nlo
 *.nls
 *.out
+
+
+### Out files:
 # *.pdf
+.h5
+
+
+
 *.pyg
 *.run.xml
 *.snm
