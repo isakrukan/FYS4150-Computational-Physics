@@ -9,7 +9,7 @@ CXXFLAGS 	:= -DARMA_USE_HDF5 -O2
 LDFLAGS 	:= -larmadillo
 PY			:= 
 EXE			:= 
-
+LOGFILE 	:= problem9.log
 
 #------------------------------
 # OS specific settings
@@ -50,8 +50,14 @@ define run_problem_8
 endef
 
 define problem_9
-	$(BUILD)/main$(EXE) --problem_9 --n_steps 4000 --n_particles 100 --n_freq 101 $(1)
+	$(BUILD)/main$(EXE) --problem_9 --n_steps 4000 --n_particles 100 --n_freq 101 $(1) >> $(LOGFILE)
 endef
+
+define LOGTIME
+	@echo "Log time: $$(date)" $(LOG_APPEND)
+endef
+
+
 
 #------------------------------
 # Makefile rules
@@ -83,6 +89,7 @@ run_problem_8:
 
 run_problem_9:
 	@echo "Running Problem 9 simulations..."
+
 	$(call problem_9,--amplitude 0.1)
 	$(call problem_9,--amplitude 0.4)
 	$(call problem_9,--amplitude 0.7)

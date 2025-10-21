@@ -4,6 +4,7 @@
 #include <iostream>
 #include "utils.hpp"
 #include <iomanip>
+#include <chrono>
 
 void problem8(Args args){
     //// Problem 8
@@ -94,20 +95,28 @@ void problem9(const Args &args)
     arma::vec omega_values = arma::linspace(args.freq_min, args.freq_max, args.n_freq);
     for (double omega : omega_values)
     {
+        // Get current time for logging
+        auto now = std::chrono::system_clock::now();
+        auto now_c = std::chrono::system_clock::to_time_t(now);
+        auto time_str = std::put_time(std::localtime(&now_c), "%H:%M:%S");
+        
+        // Check if this omega already exists in the dataset
         bool exists = check_exists(data, omega);
-
+        
         if (exists)
         {
-            std::cout << "Skipping omega=" << omega << " (already in dataset)\n";
+            std::cout << "[" << time_str << "] Skipping omega=" << omega << " (already in dataset)" << std::endl;
             continue;
         }
         else
         {
-            std::cout << "Running omega=" << omega << "\n";
+            std::cout << "[" << time_str << "] Running omega=" << omega << std::endl;
             int escape_count = single_run_problem9(f, omega, d, args);
             arma::vec new_col = {omega, static_cast<double>(escape_count)};
             data.insert_cols(data.n_cols, new_col);
         }
+
+        
     }
 
 
