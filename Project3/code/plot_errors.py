@@ -1,7 +1,4 @@
-import h5py
 import numpy as np
-import matplotlib.pyplot as plt
-plt.style.use('ggplot')
 
 q = 1     # Charge [e] (elementary charge)
 m = 40    # Mass [u] (atomic mass unit)
@@ -46,20 +43,27 @@ def rel_error(dataset, r_0, v_0):
     return np.abs(z_numerical - z_analytical) / np.abs(z_analytical)
 
 
-r_0 = np.array([20, 0, 20])  # Initial position [um]
-v_0 = np.array([0, 25, 0])    # Initial velocity
-t = np.linspace(0, 50, 1000)  # Time array [μs]
+if __name__ == "__main__":
+    import h5py
+    import matplotlib.pyplot as plt
+    plt.style.use('ggplot')
 
-for method in ['FE', 'RK4']:
-    plt.figure(figsize=(6,4))
-    for n_steps in [4000, 8000, 16000, 32000]:
+    OUTDIR = 'plots/'
+ 
+    r_0 = np.array([20, 0, 20])  # Initial position [um]
+    v_0 = np.array([0, 25, 0])    # Initial velocity
+    t = np.linspace(0, 50, 1000)  # Time array [μs]
 
-        with h5py.File(f'out/p1-{method}-int-n{n_steps}.h5', 'r') as dataset:
-            error = rel_error(dataset, r_0, v_0)
-            plt.plot(dataset['times'][0,:], error, label=f'n_steps={n_steps}')
+    for method in ['FE', 'RK4']:
+        plt.figure(figsize=(6,4))
+        for n_steps in [4000, 8000, 16000, 32000]:
 
-    plt.xlabel(r'$t\ \ [\mu s]$')
-    plt.ylabel(r'Relative error in $z$')
-    plt.yscale('log')
-    plt.legend()
-    plt.savefig(f'out/relerror-{method}.pdf')
+            with h5py.File(f'out/p1-{method}-int-n{n_steps}.h5', 'r') as dataset:
+                error = rel_error(dataset, r_0, v_0)
+                plt.plot(dataset['times'][0,:], error, label=f'n_steps={n_steps}')
+
+        plt.xlabel(r'$t\ \ [\mu s]$')
+        plt.ylabel(r'Relative error in $z$')
+        plt.yscale('log')
+        plt.legend()
+        plt.savefig(OUTDIR + f'relerror-{method}.pdf')

@@ -16,7 +16,10 @@ struct Args
     int n_particles = 2;
     bool problem_8 = false;
     bool problem_9 = false;
+    bool interacting = true;
     double amplitude = 0.1;
+    double freq_min = 0.2;
+    double freq_max = 2.5;
     int n_freq = 10;
 };
 

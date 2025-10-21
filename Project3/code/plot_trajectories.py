@@ -42,14 +42,14 @@ if __name__ == "__main__":
     ##########################
 
     dataset = h5py.File('out/p1-RK4-int-n4000.h5', 'r')
-
+    OUTDIR = 'plots/'
 
     tz = np.array([dataset['times'][0,:], dataset['positions'][2,:,0]]).T
     plt.figure(figsize=(6,4))
     plot_trajectories(Particle_1 = tz,
                     xlabel = r'$t\ \ [\mu s]$',
                     ylabel = r'$z\ \ [\mu m]$')
-    plt.savefig('out/single-tz-RK4-n4000.pdf')
+    plt.savefig(OUTDIR + 'single-tz-RK4-n4000.pdf')
 
     for n_steps in [4000]:
         for type in ['int', 'nonint']:
@@ -70,7 +70,7 @@ if __name__ == "__main__":
                                 xlabel = r'$x\ \ [\mu m]$',
                                 ylabel = r'$y\ \ [\mu m]$')
             plt.gca().set_aspect('equal', adjustable='box')
-            plt.savefig(f'out/{type}-xy-RK4-n{n_steps}.pdf')
+            plt.savefig(OUTDIR + f'{type}-xy-RK4-n{n_steps}.pdf')
 
             #####################################
             # Plot x & z phase space trajectories
@@ -84,5 +84,5 @@ if __name__ == "__main__":
                                     Particle_2 = temp_2,
                                     xlabel = r'$' +      label   + r'\ \ [\mu m/\mu s]$',
                                     ylabel = r'$' + f'v_{label}' + r'\ \ [\mu m/\mu s]$')
-                plt.savefig(f'out/phasespace-{label}-{type}-RK4-n{n_steps}.pdf')
+                plt.savefig(OUTDIR + f'phasespace-{label}-{type}-RK4-n{n_steps}.pdf')
             

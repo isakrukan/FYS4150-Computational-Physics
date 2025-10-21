@@ -21,6 +21,7 @@ int single_run_problem9(double f, double omega, double d, const Args &args)
     { return V_0 * (1 + f * std::cos(omega * t)); };
 
     PenningTrap trap(V, 9.65e1, d);
+    trap.interacting = args.interacting;
 
     for (int i = 0; i < args.n_particles; i++)
     {

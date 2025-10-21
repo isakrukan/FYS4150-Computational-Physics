@@ -60,16 +60,24 @@ void problem9(const Args &args)
     std::ostringstream f_str;
     f_str << std::fixed << std::setprecision(1) << f; // e.g. "0.10"
 
-    // remove the dot from the string
+    // Filename for the created/loaded dataset
     std::string fclean = f_str.str();
     fclean.erase(std::remove(fclean.begin(), fclean.end(), '.'), fclean.end());
-
     std::string outdir = "out/";
-    std::string info = "n_escaped-p" + std::to_string(args.n_particles) + "-f" + fclean + "-RK4-int-n" + std::to_string(args.n_steps);
+    std::string info = "n_escaped-p" + std::to_string(args.n_particles) + "-f" + fclean + "-RK4";
+    if (args.interacting) {
+        info += "-int";
+    }
+    else {
+        info += "-nonint";
+    }
+    info += "-n" + std::to_string(args.n_steps);
+
     std::string filename = outdir + info + ".h5";
 
     arma::mat data;
 
+    // Try to load existing data. If fails, create empty dataset.
     try
     {
         arma::hdf5_name data_hdf5 = arma::hdf5_name(filename, "escape_data");
@@ -80,7 +88,10 @@ void problem9(const Args &args)
         data.set_size(2, 0); // 2 rows, 0 cols initially
     }
 
-    arma::vec omega_values = arma::linspace(0.2, 2.5, args.n_freq);
+
+
+    // Compute frequencies not already in the dataset
+    arma::vec omega_values = arma::linspace(args.freq_min, args.freq_max, args.n_freq);
     for (double omega : omega_values)
     {
         bool exists = check_exists(data, omega);
@@ -99,7 +110,8 @@ void problem9(const Args &args)
         }
     }
 
-    // Sort columns by frequency (row 0)
+
+    // Sort dataset columns by the frequency values in column 0 
     arma::uvec sort_idx = arma::sort_index(data.row(0));
     data = data.cols(sort_idx);
 
