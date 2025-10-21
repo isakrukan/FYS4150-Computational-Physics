@@ -7,6 +7,8 @@ LIB			:=
 INCL 		:= -I./include
 CXXFLAGS 	:= -DARMA_USE_HDF5 -O2 
 LDFLAGS 	:= -larmadillo
+PY			:= 
+EXE			:= 
 
 
 #------------------------------
@@ -21,7 +23,10 @@ ifeq ($(UNAME),Windows_NT)
 $(info I am sorry for using Windows)
 INCL 		+= -I"C:/vcpkg/installed/x64-mingw-dynamic/include"
 LIB 		:= -L"C:/vcpkg/installed/x64-mingw-dynamic/lib"
+LDFLAGS   	+= -lhdf5 -lhdf5_hl
 DELETE		:= del /Q
+PY 			+= py 
+EXE			:= .exe
 
 define MKDIR 
 	if not exist "$(1)" mkdir "$(1)"
@@ -32,12 +37,21 @@ $(info I can't update my mac but I love it so much)
 CXXFLAGS += $(shell pkg-config --cflags hdf5)
 LDFLAGS  += $(shell pkg-config --libs hdf5)
 DELETE		:= rm -f
+PY 			+= python3
 
 define MKDIR 
 	mkdir -p "$(1)"
 endef 
 
 endif 
+
+define run_problem_8
+	$(BUILD)/main$(EXE) --problem_8 $(1)
+endef
+
+define problem_9
+	$(BUILD)/main$(EXE) --problem_9 --n_steps 4000 --n_particles 100 --n_freq 101 $(1)
+endef
 
 #------------------------------
 # Makefile rules
@@ -61,3 +75,31 @@ clean:
 
 all: outfolder compile link clean
 
+.PHONY: run_problem_8 run_problem_9 py_plots complete_project
+
+run_problem_8:
+	@echo "Running Problem 8 simulations..."
+	$(call problem_8)
+
+run_problem_9:
+	@echo "Running Problem 9 simulations..."
+	$(call problem_9,--amplitude 0.1)
+	$(call problem_9,--amplitude 0.4)
+	$(call problem_9,--amplitude 0.7)
+
+	$(call problem_9,--amplitude 0.1 --freq_range 1.0 1.7)
+	$(call problem_9,--amplitude 0.4 --freq_range 1.0 1.7)
+	$(call problem_9,--amplitude 0.7 --freq_range 1.0 1.7)
+
+	$(call problem_9,--amplitude 0.1 --freq_range 1.0 1.7 --non-interacting)
+	$(call problem_9,--amplitude 0.4 --freq_range 1.0 1.7 --non-interacting)
+	$(call problem_9,--amplitude 0.7 --freq_range 1.0 1.7 --non-interacting)
+
+py_plots:
+	$(PY) plot_errors.py
+	$(PY) plot_trajectories.py
+	$(PY) plot_trapped.py
+
+# Build first (via 'all'), then run everything and plot
+complete_project: all run_problem_8 run_problem_9 py_plots
+	@echo "Complete project finished."

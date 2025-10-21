@@ -98,12 +98,12 @@ void problem9(const Args &args)
 
         if (exists)
         {
-            std::cout << "Skipping ω=" << omega << " (already in dataset)\n";
+            std::cout << "Skipping omega=" << omega << " (already in dataset)\n";
             continue;
         }
         else
         {
-            std::cout << "Running ω=" << omega << "\n";
+            std::cout << "Running omega=" << omega << "\n";
             int escape_count = single_run_problem9(f, omega, d, args);
             arma::vec new_col = {omega, static_cast<double>(escape_count)};
             data.insert_cols(data.n_cols, new_col);
