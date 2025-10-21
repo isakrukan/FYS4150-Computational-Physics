@@ -102,3 +102,6 @@ build/
 # Pycache
 **/__pycache__/
 *.py[cod]
+
+# Do not ignore python requirements txt
+!**/requirements.txt
