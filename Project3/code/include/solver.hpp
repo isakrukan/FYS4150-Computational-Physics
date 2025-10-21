@@ -65,6 +65,7 @@ private:
     arma::cube particles_inside_outside; ///< Whether particles are inside Penning trap or not at a given time index (particle,time,0 or 1).
 
     bool evolved = false; ///< To keep track of whether or not the Penning trap has been evolved in time.
+    std::vector<double> div_masses;  ///< To compute 1/m[i] once, instead of at (e.g.) every k in RK4.
 };
 
 #endif

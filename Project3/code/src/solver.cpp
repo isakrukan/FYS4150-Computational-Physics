@@ -20,11 +20,10 @@ void Solver::evolve_RK4(double dt, double t){
         v_original[i] = trap[i].v;
     }
 
-    // Compute k's
-    // NOTE: fix time dependence, have set t=0 here
+    // Compute k's (div_masses is computed when calling Solver::evolve())
     for (int i=0; i<n; i++){
         k_r1[i] = dt * trap[i].v;
-        k_v1[i] = dt * trap.F(i, t) / trap[i].m;
+        k_v1[i] = dt * trap.F(i, t) * div_masses[i];
     }
     for (int i=0; i<n; i++){    // Updating the positions and velocities
         trap[i].v = v_original[i] + 0.5 * k_v1[i];
@@ -33,7 +32,7 @@ void Solver::evolve_RK4(double dt, double t){
 
     for (int i=0; i<n; i++){
         k_r2[i] = dt * (v_original[i] + 0.5 * k_v1[i]);
-        k_v2[i] = dt * trap.F(i, t + 0.5 * dt) / trap[i].m;
+        k_v2[i] = dt * trap.F(i, t + 0.5 * dt) * div_masses[i];
     }
     for (int i=0; i<n; i++){    // Updating the positions and velocities
         trap[i].v = v_original[i] + 0.5 * k_v2[i];
@@ -42,7 +41,7 @@ void Solver::evolve_RK4(double dt, double t){
     
     for (int i=0; i<n; i++){
         k_r3[i] = dt *(v_original[i] + 0.5 * k_v2[i]);
-        k_v3[i] = dt * trap.F(i, t + 0.5 * dt) / trap[i].m;
+        k_v3[i] = dt * trap.F(i, t + 0.5 * dt) * div_masses[i];
     }
     for (int i=0; i<n; i++){    // Updating the positions and velocities
         trap[i].v = v_original[i] + k_v3[i];
@@ -51,7 +50,7 @@ void Solver::evolve_RK4(double dt, double t){
     
     for (int i=0; i<n; i++){
         k_r4[i] = dt * (v_original[i] + k_v3[i]);
-        k_v4[i] = dt * trap.F(i, t + dt) / trap[i].m;
+        k_v4[i] = dt * trap.F(i, t + dt) * div_masses[i];
     }
 
     // Update positions and velocities
@@ -112,10 +111,12 @@ void Solver::evolve(double T, int n_steps, std::string method){
     particles_positions = arma::cube(numb_particles, n_steps, 3);
     particles_velocities = arma::cube(numb_particles, n_steps, 3);
 
-    // Initial conditions:
+    // Initial conditions and 1/m vector filling:
+    div_masses.resize(numb_particles);
     for (int n=0; n<numb_particles; n++){
         particles_positions.tube(n,0) = trap.particles[n].r;
         particles_velocities.tube(n,0) = trap.particles[n].v;
+        div_masses[n] = 1.0 / trap[n].m;
     }
 
     for (int i=1; i<n_steps; i++){
