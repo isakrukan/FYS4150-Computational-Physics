@@ -37,12 +37,17 @@ def plot_trajectories(**kwargs):
     plt.legend()
     
 if __name__ == "__main__":
+    import os
+
+    OUTDIR = 'plots/'
+    if not os.path.exists(OUTDIR):
+        os.makedirs(OUTDIR)
+        
     ##########################
     # Single particle tz plot
     ##########################
 
     dataset = h5py.File('out/p1-RK4-int-n4000.h5', 'r')
-    OUTDIR = 'plots/'
 
     tz = np.array([dataset['times'][0,:], dataset['positions'][2,:,0]]).T
     plt.figure(figsize=(6,4))

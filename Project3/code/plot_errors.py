@@ -1,5 +1,4 @@
 import numpy as np
-
 q = 1     # Charge [e] (elementary charge)
 m = 40    # Mass [u] (atomic mass unit)
 d = 500   # Characteristic dimension [μm]
@@ -46,9 +45,12 @@ def rel_error(dataset, r_0, v_0):
 if __name__ == "__main__":
     import h5py
     import matplotlib.pyplot as plt
+    import os
     plt.style.use('ggplot')
 
     OUTDIR = 'plots/'
+    if not os.path.exists(OUTDIR):
+        os.makedirs(OUTDIR)
  
     r_0 = np.array([20, 0, 20])  # Initial position [um]
     v_0 = np.array([0, 25, 0])    # Initial velocity
