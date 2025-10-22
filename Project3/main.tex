@@ -501,14 +501,13 @@ Additional plots of the phase space in the $x$-direction are shown in section \r
 Tracking the number of escaped particles as a function of the frequency of an applied oscillating electric field, we obtain the plot shown in Fig.~\ref{fig:resonance_plot}.
 In particular, we see that there are three prominent valleys where all (or nearly all) particles escape the Penning trap.
 This clearly indicates some form of resonance, where the applied frequency matches some natural frequency of the system.
-We also zoom in on the most prominent resonance, around \(\omega = 1.4 \mathrm{MHz}\), and see how the behavior changes with and without the Coulomb interaction.
-The result of this is shown in Fig.~\ref{fig:resonance_zoomed}.
-We see that this behavior heavily depends on the amplitude $f$ of the applied oscillation.
-In particular, removing the Coulomb interaction most heavily affects the smallest amplitude $f=0.1$, where the resonance valley becomes completely absent.
-For the middle amplitude $f=0.4$, the resonance valley is still present, but significantly less pronounced.
-Finally, for the largest amplitude $f=0.7$, the resonance valley is only slightly affected by removing the Coulomb interaction.
-
-
+These phenomena also seem to heavily depend on the amplitude $f$ of the applied oscillating field.
+Indeed, as $f$ is decreased, the valleys become less pronounced and eventually disappear.
+Lastly, we want to compare how the Coulomb interaction affects the resonant frequencies.
+For this, we zoom in on the most prominent resonant frequency, around \(\omega = 1.4 \mathrm{MHz}\).
+Plotting the results for both the interacting and non-interacting cases, we obtain figure \ref{fig:resonance_zoomed}.
+In particular, we see that the resonant frequencies seem to be shifted slightly to the left when Coulomb interactions are taken into account.
+Although hard to tell, it might look like this shift becomes smaller as we increase the amplitude $f$.
 
 \begin{figure}
     \centering
@@ -520,7 +519,7 @@ Finally, for the largest amplitude $f=0.7$, the resonance valley is only slightl
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/results/trapped_fraction_zoomed.pdf}
-    \caption{Resonance zoom. Dashed lines correspond to the interacting case, while solid lines correspond to the non-interacting case.}
+    \caption{Resonance zoom. Dashed lines correspond to the non-interacting case, while solid lines correspond to the interacting case.}
     \label{fig:resonance_zoomed}
 \end{figure}
 
@@ -544,7 +543,13 @@ Plots of the relative errors for the RK4 and FE methods are shown in figures \re
     \label{fig:single-error-FE}
 \end{figure}
 
-\subsection{Relative errors}
+\subsection{Resonance phenomena}
+Although a detailed analysis of the observed resonance phenomena may go beyond the scope of this project, we can try to gain some qualitative understanding of the main features.
+In particular, we observe that the resonant frequencies seem to be shifted slightly when Coulomb interactions are taken into account.
+This behavior can be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential acting on each particle.
+Naturally, these modifications to the potential will also modify the resonant frequencies of the system.
+
+
 
 
 % \cite{uioFYS3150H25}
