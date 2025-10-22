@@ -50,7 +50,7 @@ This includes generating data for all parts of problem 8 and 9, as well as gener
 
 Output from problem 9, which would normally print to the terminal, will in this case be directed to a logfile `problem9.log`.
 
-### Compiling & running the main program manually
+### Compiling separately & running the main program manually
 1. Compile:
     ```bash
     make all
@@ -85,7 +85,7 @@ Output from problem 9, which would normally print to the terminal, will in this 
     - Whether interactions are turned on/off
     - Amplitude of time dependent part of potential (Problem 9 only)
 
-    Note especially that in problem 9, running the program will by attempt to update existing data if available.
+    Note especially that in problem 9, running the program will by default attempt to update existing data if available.
     Therefore, existing points in the dataset will **NOT** be recomputed or overriden.
 
 ### Plotting scripts
