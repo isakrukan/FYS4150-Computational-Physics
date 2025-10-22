@@ -50,8 +50,8 @@ This includes generating data for all parts of problem 8 and 9, as well as gener
 
 Output from problem 9, which would normally print to the terminal, will in this case be directed to a logfile `problem9.log`.
 
-### Compiling separately & running the main program manually
-1. Compile:
+### Running the main program manually
+1. Compile using:
     ```bash
     make all
     ```
