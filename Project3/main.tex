@@ -130,10 +130,10 @@
 \noaffiliation                            % ignore this, but keep it.
 
 \begin{abstract}
-    Using the fourth-order Runge-Kutta method, we simulate the motion of $\mathrm{Ca}^+$ particles inside a Penning trap.
-    Comparisons are also made with the simpler Forward-Euler method, which is found to be significantly less accurate.
+    Using the fourth-order Runge-Kutta method, we simulate the motion of particles inside a Penning trap.
+    We also compare with the simpler Forward-Euler method, which we find to be significantly less accurate.
     Additionally, we perturb the static electric potential of the Penning trap by adding a time-dependent oscillating term.
-    Simulating the motion of $N=100$ $\mathrm{Ca}^+$ particles while varying the frequency of the oscillating term, we identify several resonant frequencies where a significant fraction of the particles escape the trap.
+    Simulating the motion of $N=100$ particles while varying the frequency of the oscillating term, we identify several resonant frequencies where a significant fraction of the particles escape the trap.
     We also find that the Coulomb interaction between the particles has a noticeable effect on the resonant frequencies, shifting them slightly compared to the non-interacting case.
 \end{abstract}
 \maketitle
@@ -165,7 +165,12 @@ Many areas of modern physics and technology rely on confining particles to certa
 
 The idea of trapping particles itself is interesting from a fundamental point of view. According to quantum mechanics, a perfect particle trap is not completely realizable, due to the effects of quantum tunneling.\footnote{Quantum tunneling refers to the effect where a particle will always have a non-zero probability of passing through a potential barrier. It is a fundamental consequence of the probabilistic nature of quantum mechanics, see for instance~\cite{griffithsQM}.} Yet, as already mentioned, there are several working particle traps which, at least practically, do in fact trap particles. This is of course because the quantum tunneling effect is almost negligible for high enough energies scales (potentials).~\cite{griffithsQM} 
 
-Most particle-trap devices rely on a clever setup of strong electric and magnetic fields. A famous such device is the Penning trap, named after the physicist F.M Penning, by Hans Dehmelt which created the first trap for electrons in 1959~\cite{decaroli2021iontraps}. In this project, we consider a classical model for the Penning trap, giving an overview of the theory behind how it works, and performing numerical simulations. We simulate the case of one, two and up to 100 particles, turning on and off Coulomb interactions.
+Most particle-trap devices rely on a clever setup of strong electric and magnetic fields. A famous such device is the Penning trap, named after the physicist F.M Penning, by H. Dehmelt which created the first trap for electrons in 1959~\cite{decaroli2021iontraps}. In this project, we consider a classical model for the Penning trap, giving an overview of the theory behind how it works, and performing numerical simulations. We simulate the case of one, two and up to 100 particles, turning on and off Coulomb interactions. 
+
+If the Penning trap's potential is allowed to oscillate in time, a so-called `resonance phenomena' can occur.\cite{uioFYS3150H25} 
+% This phenomena will lead to the ejection of certain particles based on the driven frequency of the time-dependent potential.
+We will investigate this phenomena and relate our results to the natural frequencies we find in our analytic solution to the equations of motion for a single particle inside the Penning trap. 
+When presenting the theory of a Penning trap, we will find these natural frequencies to be dependent on the particle species mass and charge. This leads us to discussing the possibility of using the resonance phenomena to eject certain particles by tuning the driving frequency of the potential.
 
 \subsection*{Disclaimer and Code Documentation}
 When working with this project we have occasionally consulted with the language model ChatGPT and Copilot. However, all of our analysis, code implementation, results and language are produced by ourselves. Our code, which can be found \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3/code}{\texttt{here}}, relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, and \textsc{Armadillo}~\cite{armadillo}. We have used doxygen to create a thorough documentation of our code, found \href{https://github.uio.no/icrukan/FYS4150/blob/master/Project3/docs/doc.pdf}{\texttt{here}}. Before handing in, we made the unfortunate mistake of spilling \href{https://ctan.org/pkg/coffeestains?lang=en}{coffee} on our report...we can only hope it has concealed potential mistakes. 
@@ -318,10 +323,10 @@ For a sufficiently strong Penning trap, the particles will eventually be driven 
     V_0\rightarrow V_0(1 + A\cos(\omega_V t)),
 \end{align}
 where \(A\) is some amplitude and \(\omega_V\) is the `driving' frequency of the potential. 
-In general, we expect resonance to occur when the driving frequency \(\omega_V\) approaches some natural frequency of the system.
+In general, we expect resonance to occur when the driving frequency \(\omega_V\) approaches some natural frequency of the system.\cite{uioFYS3150H25}
 For a single particle inside the Penning trap, the natural frequencies are given by \(\omega_{\pm}\) and \(\omega_{z}\).
 Thus, as \(\omega_V\) approaches either \(\omega_{\pm}\), \(\omega_{z}\), or some combination of the two, we would expect resonance to occur.
-That is, energy is very efficiently transferred from the potential to the particle, which may eventually lead to spiraling out of the trap.
+When that happens, energy is efficiently transferred from the potential to the particle, which may eventually lead to spiraling out of the trap.
 Although we might expect similar phenomena occur when multiple particles are present in the trap, this analysis is complicated due to their Coulomb interactions.
 Thus, in the presence of multiple particles, we will have to rely on numerical simulations in order to understand how this behavior is modified.
 
@@ -536,9 +541,9 @@ In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv
 \end{figure}
 
 \subsection{Resonance phenomena}
-In section \ref{sec:time_dep_potential} we considered adding a time-dependent potential to the Penning trap, and briefly discussed how varying the driving frequency \(\omega_V\) might help to identify resonant frequencies. 
+In \eqref{eq:time_dep_v0} we considered adding a time-dependent potential to the Penning trap, and briefly discussed how varying the driving frequency \(\omega_V\) might help to identify resonant frequencies. 
 Here, we present our results from running our implementation of the Penning trap multiple times by varying \(\omega_V\in(0.2, 2.5)\ \si{MHz}\), and the amplitude \(f\in{0.1,0.4,0.7}\). 
-For the simulations themselves, we add $N=100$ $\mathrm{Ca}^{+}$ ions to the Penning trap, and simulate their motion for a total time of \(T=500\si{\us}\), using \(N_{\text{time}}=4000\) time steps.
+For the simulations themselves, we add $N=100$ $\mathrm{Ca}^{+}$ ions to the Penning trap, and simulate their motion for a total time of \(T=500\si{\us}\), using \({N_{\text{time}}=4000}\) time steps.
 The initial positions of each particle is sampled from a normal distribution with mean $0$ and standard deviation $0.1 d$.
 Likewise, the initial velocities are sampled from a normal distribution with mean $0$ and standard deviation $0.1 d /\si{\mu s}$.
 
@@ -624,23 +629,24 @@ Still, resonant behavior is clearly observed in our simulations.
 We also observe a shift of the resonant frequencies as Coulomb interactions are taken into account.
 This behavior may be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential seen by each particle.
 Naturally, these modifications to the potential will also modify the resonant frequencies of the system.
-\newline
-Although one might expect that turning off Coulomb interactions would shift the resonant frequencies onto our naive guesses $\omega_z$, $2\omega_z$, and $3\omega_z$.
+
+% Our discussion so far may seem to suggest that turning off the Coulomb interactions should shift the midpoint of the graphs in Fig.~\ref{fig:resonance_zoomed} to center around the natural frequencies. Fig.~\ref{fig:resonance_zoomed} does not display this behavior. However, while we do expect the energy transfer from the potential to the particles to maximize around the natural frequencies, we are simulating over a time \(T=50\ \si{\mu s}\), and the particles may receive enough energy within this time period without actually persiving `perfect' energy transfer.
+
+Our discussion so far may seem to suggest that turning off Coulomb interactions will shift the resonant frequencies onto the natural frequencies $\omega_z$, $2\omega_z$, and $3\omega_z$.
 For the valleys near $\omega_z$ and $2\omega_z$, this does indeed seem to be the case, as turning off the interactions shifts the resonant frequencies slightly to the right.
 On the contrary, the opposite seems to hold for the valley near $3\omega_z$, as the resonant frequency would be shifted even further away from this value.
 It is not clear what the resolution to this may be, although one obvious possibility is that one or more of our initial guesses are simply wrong.
 Generally, we might indeed expect resonant behavior to occur at more complicated combinations of both \(\omega_{\pm}\) and \(\omega_z\).
 
+Nonetheless, These results may also have practical applications.
+Lastly, we would like to discuss our understanding of how the resonance phenomena might be useful in practical applications. Since the resonant frequencies is dependent on the mass and charge of the particle species, one can imagine tuning the applied frequency to selectively eject particles of a certain type from the trap. This might be useful in isolating specific particle species, or, shooting out a large amount of particles for the purpose of producing a collider of some sort. It is also possible that one might create a rail gun using the resonance phenomena, which in our case would be shooting in any and all directions at random. 
+
+
 \subsection{Sources of error}
-A potentially big source of error in the above results is naturally the chosen integration method and the number of time steps used.
-In particular, the final results were obtained with RK4 using only $n=4000$ steps.
-Ideally, a larger number of steps could have been used, but this was limited due to time constraints and computational resources.
-On the other hand, we have seen in Fig \ref{fig:single-error-RK4} that a single particle inside the Penning trap accumulates a very small relative error of around \(10^{-7}\) when using RK4 with \(n=4000\) steps, albeit over a much shorter time interval than the main results.
-Of course, errors may accumulate much faster when simulating a larger number of particles, especially when including Coulomb interactions.
-\newline
-Another point is that our results may be somewhat sensitive to the initial conditions of the particles.
-In particular, we have only sampled one specific set of initial conditions.
-For the future, it could be interesting to run several additional simulations with different initial conditions, to obtain a better picture of the statistical behavior of the system.
+A potentially big source of error in the our results is of course the chosen integration method and the number of time steps we have used.
+Recall, the our analysis of the resonance phenomena were produced with RK4 using only $n=4000$ steps. Ideally, a larger number of steps could have been used, but this was limited due to time constraints and computational resources. On the other hand, we have seen in Fig.~\ref{fig:single-error-RK4} that a single particle inside the Penning trap accumulates a very small relative error of around \(10^{-7}\) when using RK4 with \(n=4000\) steps, albeit over a much shorter time interval than the main results. One should also expect that the errors should accumulate much faster when simulating a larger number of particles, especially when including Coulomb interactions.
+
+Our results may also be somewhat sensitive to the initial conditions of the particles. In particular, we have only sampled one specific set of initial conditions. For the future, it could be interesting to run several additional simulations with different initial conditions, to obtain a better picture of the statistical behavior of the system.
 
 % \cite{uioFYS3150H25}
 
