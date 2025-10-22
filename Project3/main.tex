@@ -165,7 +165,7 @@ Many areas of modern physics and technology rely on confining particles to certa
 
 The idea of trapping particles itself is interesting from a fundamental point of view. According to quantum mechanics, a perfect particle trap is not completely realizable, due to the effects of quantum tunneling.\footnote{Quantum tunneling refers to the effect where a particle will always have a non-zero probability of passing through a potential barrier. It is a fundamental consequence of the probabilistic nature of quantum mechanics, see for instance~\cite{griffithsQM}.} Yet, as already mentioned, there are several working particle traps which, at least practically, do in fact trap particles. This is of course because the quantum tunneling effect is almost negligible for high enough energies scales (potentials).~\cite{griffithsQM} 
 
-Most particle-trap device rely on a clever setup of strong electric and magnetic fields. A famous such device is the Penning trap, named after the physicist F.M Penning, by Hans Dehmelt which created the first trap for electrons in 1959~\cite{decaroli2021iontraps}. In this project, we consider a classical model for the Penning trap, giving an overview of the theory behind how it works, and performing numerical simulations. We simulate the case of one, two and up to a 100 particles, turning on and off Coulomb interactions.
+Most particle-trap devices rely on a clever setup of strong electric and magnetic fields. A famous such device is the Penning trap, named after the physicist F.M Penning, by Hans Dehmelt which created the first trap for electrons in 1959~\cite{decaroli2021iontraps}. In this project, we consider a classical model for the Penning trap, giving an overview of the theory behind how it works, and performing numerical simulations. We simulate the case of one, two and up to 100 particles, turning on and off Coulomb interactions.
 
 \subsection*{Disclaimer and Code Documentation}
 When working with this project we have occasionally consulted with the language model ChatGPT and Copilot. However, all of our analysis, code implementation, results and language are produced by ourselves. Our code, which can be found \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3/code}{\texttt{here}}, relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, and \textsc{Armadillo}~\cite{armadillo}. We have used doxygen to create a thorough documentation of our code, found \href{https://github.uio.no/icrukan/FYS4150/blob/master/Project3/docs/doc.pdf}{\texttt{here}}. Before handing in, we made the unfortunate mistake of spilling \href{https://ctan.org/pkg/coffeestains?lang=en}{coffee} on our report...we can only hope it has concealed potential mistakes. 
@@ -212,7 +212,7 @@ where \(B_0>0\) is the strength of the field.
 % \coffeestainC{alpha}{scale}{angle}{xoff}{yoff}
 % \coffeestainD{alpha}{scale}{angle}{xoff}{yoff}
 
-The motion of a particle inside the Penning trap can be described be Newton's second law,
+The motion of a particle inside the Penning trap can be described by Newton's second law,
 \begin{align}
     m\ddot{\vec{r}} = \vec{F}_{L} + \sum_i \vec{F}_i, \label{eq:motion_Newton}
 \end{align}
@@ -230,7 +230,7 @@ For a single particle where the second term in \eqref{eq:motion_Newton} is absen
     \notag \\
     &= \frac{qV_0}{md^2}\left(x, y, -2z\right) + \frac{qB_0}{m}\left(\dot{y}, -\dot{x}, 0\right).   \label{eq:ddotr_single_particle}
 \end{align}
-Componentwise, the expression above can be rearrange to the form 
+Componentwise, the expression above can be rearranged onto the form 
 \begin{subequations}    \label{eq:eom_componentwise}
 \begin{align}
     \ddot{x} - \omega_0 \dot{y} - \frac{1}{2}\omega_z^2x &=0, \label{eq:dot_x}\\ 
@@ -296,7 +296,7 @@ and so we may bound \(|f(t)|\) as (since \({\cos(t)\in[-1,1]}\))
 
 
 \subsection{Multiple Particles Inside Static Penning Trap} \label{sec:multiple_particles}
-We now consider \(N\) particles with charges \(\{q_n\}_{n\in[1,N]}\) and masses \(\{m_n\}_{n\in[1,N]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we know have
+We now consider \(N\) particles with charges \(\{q_n\}_{n\in[1,N]}\) and masses \(\{m_n\}_{n\in[1,N]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we now have
 \begin{subequations}    \label{eq:particles_eqm}
     \begin{align}
         \ddot{x}_n - \omega_{0,n}\dot{y}_n - \frac{1}{2}\omega_{z,n}^2x_n - k_e \frac{q_n}{m_n}\sum_{k\neq n} q_k \hat{x}_{nk} &= 0, \\
@@ -317,7 +317,7 @@ For a sufficiently strong Penning trap, the particles will eventually be driven 
 \begin{align}
     V_0\rightarrow V_0(1 + A\cos(\omega_V t)),
 \end{align}
-where \(A\) is some amplitude and \(\omega_V\) is the `driving' frequency of the potential. When \(\omega_V\) approaches \(\omega_{\pm,n}\) or \(\omega_{z,n}\), or some combination of the two, resonance occurs. The particles oscillation increase rapidly, which may eventually lead to them spiraling out of the trap. There are several use cases to matching \(\omega_V\) to \(\omega_{\pm,n}\) or \(\omega_{z,n}\). For instance, since the two latter frequencies are generally different from one particle to the other, one could set \(\omega_V=\omega_{z,n_0}\), for some \(n_0\), as to eject all particles with charge \(q_{n_0}\) and mass \(m_{n_0}\) (cf. \eqref{eq:def:omega_0_omega_z}). Or, say the particles mass and charge where unknown, then once could obtain these, at least their ratio, by adjusting \(\omega_V\) and looking for resonance phenomena. 
+where \(A\) is some amplitude and \(\omega_V\) is the `driving' frequency of the potential. When \(\omega_V\) approaches \(\omega_{\pm,n}\) or \(\omega_{z,n}\), or some combination of the two, resonance occurs. The particles oscillation increase rapidly, which may eventually lead to them spiraling out of the trap. There are several use cases to matching \(\omega_V\) to \(\omega_{\pm,n}\) or \(\omega_{z,n}\). For instance, since the two latter frequencies are generally different from one particle to the other, one could set \(\omega_V=\omega_{z,n_0}\), for some \(n_0\), as to eject all particles with charge \(q_{n_0}\) and mass \(m_{n_0}\) (cf. \eqref{eq:def:omega_0_omega_z}). Or, say the particles mass and charge where unknown, then one could obtain these, or at least their ratio, by adjusting \(\omega_V\) and looking for resonance phenomena. 
 
 In the next section we will present how we have numerical solved the motion of the particles in the Penning trap. Since we have now introduced a time-dependence to the potential, the equations of motion in \eqref{eq:eom_componentwise} take a slightly different form. If we take a step back, restoring the general form for \(\ddot{\vec{r}}\) in \eqref{eq:ddotr_single_particle} and adding the Coulomb interactions \eqref{eq:colliColliCOULOUMB}, we obtain  a compact form for the equations of motion:
 \begin{align}
@@ -333,7 +333,7 @@ where
 
 
 \subsection{Numerical Integration}
-The equations of motion in \eqref{eq:eqm_final} do not have an analytic solution for \(N>1\) particles. We have thus solved these by numerical integration. Specifically, we have consider two numerical integration methods: Runge-Kutta 4 (RK4) and Forward-Euler (FE). In the following we explain how these methods work and how we have implemented them. We have used RK4 for our main results, and used FE for a few comparisons between the two methods.
+The equations of motion in \eqref{eq:eqm_final} do not have an analytic solution for \(N>1\) particles. We have thus solved these by numerical integration. Specifically, we consider two numerical integration methods: Runge-Kutta 4 (RK4) and Forward-Euler (FE). In the following we explain how these methods work and how we have implemented them. We have used RK4 for our main results, and used FE for a few comparisons between the two methods.
 
 In \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project2}{Project 2}, we solved a second order differential equation numerically using a tridiagonal matrix. This involved approximating the derivative to first order, that is, we discretized the approximation
 \begin{align}
@@ -538,28 +538,25 @@ In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv
 \end{figure}
 
 \subsection{Resonance phenomena}
-In section \ref{sec:time_dep_potential} we considered adding a time-dependent potential to the Penning trap, and briefly discussed how varying the driving frequency \(\omega_V\) might help to identify resonant frequencies. Here, we present our results from running our implementation of the Penning trap multiple times by varying \(\omega_V\in(0.2, 2.5)\ \si{MHz}\), and the amplitude \(f\in{0.1,0.4,0.7}\). All simulations presented in this section have used \(N_{\text{time}}=4000\).
+In section \ref{sec:time_dep_potential} we considered adding a time-dependent potential to the Penning trap, and briefly discussed how varying the driving frequency \(\omega_V\) might help to identify resonant frequencies. 
+Here, we present our results from running our implementation of the Penning trap multiple times by varying \(\omega_V\in(0.2, 2.5)\ \si{MHz}\), and the amplitude \(f\in{0.1,0.4,0.7}\). 
+For the simulations themselves, we add $N=100$ $\mathrm{Ca}^{+}$ ions to the Penning trap, and simulate their motion for a total time of \(T=500\si{\us}\), using \(N_{\text{time}}=4000\) time steps.
+The initial positions of each particle is sampled from a normal distribution with mean $0$ and standard deviation $0.1 d$.
+Likewise, the initial velocities are sampled from a normal distribution with mean $0$ and standard deviation $0.1 d /\si{\mu s}$.
 
 
 \subsubsection{Number of Escaped Particles}
 In Fig.~\ref{fig:resonance_plot} we have displayed the number of escaped particles as a function of the frequency of the applied oscillating potential.
 In particular, we see that there are three prominent valleys where a significant fraction of the particles escape the Penning trap.
-This is indicates that the corresponding frequencies are resonant frequencies of the system.
-We have included markers for the frequencies \(\omega_z\), \(\omega_+\) and \((\omega_+ + \omega_z)/2\).
+This indicates that the corresponding frequencies are resonant frequencies of the system.
+We have included markers for the frequencies \(\omega_z\), \(2\omega_z\) and \(3\omega_z\).
 % \begin{align*}
 %     \omega_z,\quad \omega_+,\quad \mathrm{and}\quad \frac{\omega_+ + \omega_z}{2}.
 % \end{align*}
-These frequencies seem to almost line up with the observed resonant frequencies, but being slightly shifted to the right.
+These frequencies seem to almost line up with the observed resonant frequencies, although the frequencies near $\omega_z$ and $3\omega_z$ are slightly shifted to the right and left, respectively.
 Additionally, the system's behavior around these frequencies seems to heavily depend on the amplitude $f$ of the applied oscillating field.
 First, smaller amplitudes $f$ seem to lead to less pronounced and narrower valleys around the resonant frequencies.
 This is most extreme for the smallest amplitude \(f=0.01\), where we barely see any resonant behavior at all.
-\newline
-Lastly, we want to compare how the Coulomb interaction affects the resonant frequencies.
-For this, we zoom in on the most prominent resonant frequency, around \(\omega = 1.4 \si{\MHz}\).
-Running simulations both with and without Coulomb interactions, we track the fraction of trapped particles as before.
-The resulting plot is shown in Fig.~\ref{fig:resonance_zoomed}.
-In particular, we see that the resonant frequencies seem to be shifted slightly to the left when Coulomb interactions are taken into account.
-Although hard to tell, it might look like this shift becomes smaller as we increase the amplitude $f$.
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/results/trapped_fraction.pdf}
@@ -594,15 +591,19 @@ The relative error at each time step $t_i$ is computed as
     = 
     \frac{ |\vec{r}_\mathrm{numerical} - \vec{r}_\mathrm{analytical}| }{ |\vec{r}_\mathrm{analytical}| }.
 \end{align}
-Plotting the relative error as a function of time, we obtain Fig.~\ref{fig:single-error-RK4} and Fig.~\ref{fig:single-error-FE}, for RK4 and FE, respectively. Fig.~\ref{fig:single-error-RK4} shows that the relative error for the RK4 method is for all values of \(n_{\text{steps}}\), at least smaller than \(\sim 10^{-1}\). For increasing \(n_{\text{steps}}\), the relative error steadily decreases. 
+Plotting the relative error as a function of time, we obtain Fig.~\ref{fig:single-error-RK4} and Fig.~\ref{fig:single-error-FE}, for RK4 and FE, respectively.
+Fig.~\ref{fig:single-error-RK4} shows that the relative error for the RK4 method is roughly smaller than \(\sim 10^{-7}\) for all values of \(n_{\text{steps}}\). 
+For increasing \(n_{\text{steps}}\), the relative error steadily decreases further. 
+In particular, the relative error seems to go down by roughly one order of magnitude each time the number of time steps is doubled.
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.5]{figs/results/relerror-RK4.pdf}
     \caption{Relative errors for the RK4 method with different time steps, when simulating a single particle inside the Penning trap.}
     \label{fig:single-error-RK4}
 \end{figure}
-
-On the other hand, Fig.~\ref{fig:single-error-FE} shows a quite poor performance for the FE method, with relative errors reaching as high as \(\sim 10^0\) for \(n_{\text{steps}}=4000\). However, both figures show the same trend as \(t\) increases: the relative error starts at approximately zero at \(t=0\), jumps up, and then gradually flattens out as 
+On the other hand, Fig.~\ref{fig:single-error-FE} shows a quite poor performance for the FE method, with relative errors reaching as high as \(\sim 10^0\) for \(n_{\text{steps}}=4000\). 
+Furthermore, increasing the number of time steps seems to have much less of an effect on the relative error compared to RK4.
+However, both figures show the same trend as \(t\) increases: the relative error starts at approximately zero at \(t=0\), jumps up, and then gradually flattens out as 
 \(t\)increases.
 \begin{figure}[h!]
     \centering
@@ -629,10 +630,8 @@ Naturally, these modifications to the potential will also modify the resonant fr
 Although one might expect that turning off Coulomb interactions would shift the resonant frequencies onto our naive guesses $\omega_z$, $2\omega_z$, and $3\omega_z$.
 For the valleys near $\omega_z$ and $2\omega_z$, this does indeed seem to be the case, as turning off the interactions shifts the resonant frequencies slightly to the right.
 On the contrary, the opposite seems to hold for the valley near $3\omega_z$, as the resonant frequency would be shifted even further away from this value.
-It is not clear what the resolution to this may be, although one obvious possibility is that our initial guesses are simply wrong.
-\newline
-These results may also have practical applications.
-For instance, due to resonant frequencies being dependent on the mass and charge of the particle species, one can imagine tuning the applied frequency to selectively eject particles of a certain type from the trap.
+It is not clear what the resolution to this may be, although one obvious possibility is that one or more of our initial guesses are simply wrong.
+Generally, we might indeed expect resonant behavior to occur at more complicated combinations of both \(\omega_{\pm}\) and \(\omega_z\).
 
 \subsection{Sources of error}
 A potentially big source of error in the above results is naturally the chosen integration method and the number of time steps used.
