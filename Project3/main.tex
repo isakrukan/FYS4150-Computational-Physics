@@ -84,7 +84,7 @@
 % \providecommand\ttfontsize{12pt}
 
 %%%%%%%%%%% Important packages %%%%%%%%%%%
-
+\usepackage[justification=raggedright,singlelinecheck=false]{caption}
 \usepackage{physics,amssymb}   % physics already loads amsmath
 % \usepackage{amsmath}         
 \usepackage{graphicx}
@@ -573,7 +573,7 @@ For this, we zoom in on the most prominent resonant frequency in Fig.~\ref{fig:r
 Displaying the results for both the interacting and non-interacting cases, we obtain Fig.~\ref{fig:resonance_zoomed}.
 From the latter figure we see that the resonant frequencies seem to be shifted slightly to the left when Coulomb interactions are taken into account.
 Although hard to tell, it might look like this shift becomes smaller as we increase the amplitude $f$.
-\begin{figure}{h!}
+\begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/results/trapped_fraction_zoomed.pdf}
     \caption{
