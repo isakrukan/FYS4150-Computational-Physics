@@ -56,7 +56,7 @@ Output from problem 9, which would normally print to the terminal, will in this 
     make all
     ```
 
-2. The main program can also be run manually, using the following optional arguments: 
+2. The main program may then be run using the following optional arguments: 
     ```
     Usage:
         ./build/main [options]
