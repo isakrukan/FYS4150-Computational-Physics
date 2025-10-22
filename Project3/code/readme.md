@@ -5,9 +5,8 @@ This repository contains the code and documentation for Project 3 in the FYS3150
 ## Structure
 
 - **`src/`**: Contains all source code files for the project.
+- **`include/`** Contains relevant header files for the project.
 - **`out/`**: Save location for data from main program.
-- **`plots/`**: Save location for plotting scripts
-- **`report/`**: Contains the project report and related documentation.
 
 ## Requirements
 ### Main program

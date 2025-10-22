@@ -317,7 +317,7 @@ where \(\hat{\vec{r}}_{nk} = (\vec{r}_n - \vec{r}_k)/|\vec{r}_n-\vec{r}_k|^3\). 
 
 % \section{Method}
 
-\subsection{Time-Dependent Potential}
+\subsection{Time-Dependent Potential}\label{sec:time_dep_potential}
 For a sufficiently strong Penning trap, the particles will eventually be driven to oscillate in the \(xy\)-plane with the frequency \(\omega_{\pm,n}\) and in the \(z\)-plane with the frequency \(\omega_{z,n}\). To study and reveal possible resonance phenomena, one can add a time-dependence to the potential \(V_0\). Specifically, consider
 \begin{align}
     V_0\rightarrow V_0(1 + A\cos(\omega_V t)),
@@ -541,7 +541,7 @@ In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv
 \end{figure}
 
 \subsection{Resonance phenomena}
-In \eqref{eq:time_dep_v0} we considered adding a time-dependent potential to the Penning trap, and briefly discussed how varying the driving frequency \(\omega_V\) might help to identify resonant frequencies. 
+In \ref{sec:time_dep_potential} we considered adding a time-dependent potential to the Penning trap, and briefly discussed how varying the driving frequency \(\omega_V\) might help to identify resonant frequencies. 
 Here, we present our results from running our implementation of the Penning trap multiple times by varying \(\omega_V\in(0.2, 2.5)\ \si{MHz}\), and the amplitude \(f\in{0.1,0.4,0.7}\). 
 For the simulations themselves, we add $N=100$ $\mathrm{Ca}^{+}$ ions to the Penning trap, and simulate their motion for a total time of \(T=500\si{\us}\), using \({N_{\text{time}}=4000}\) time steps.
 The initial positions of each particle is sampled from a normal distribution with mean $0$ and standard deviation $0.1 d$.
