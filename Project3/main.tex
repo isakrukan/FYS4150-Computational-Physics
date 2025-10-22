@@ -315,7 +315,7 @@ where \(\hat{\vec{r}}_{nk} = (\vec{r}_n - \vec{r}_k)/|\vec{r}_n-\vec{r}_k|^3\). 
 \subsection{Time-Dependent Potential}
 For a sufficiently strong Penning trap, the particles will eventually be driven to oscillate in the \(xy\)-plane with the frequency \(\omega_{\pm,n}\) and in the \(z\)-plane with the frequency \(\omega_{z,n}\). To study and reveal possible resonance phenomena, one can add a time-dependence to the potential \(V_0\). Specifically, consider
 \begin{align}
-    V_0\rightarrow V_0(1 + A\cos(\omega_V t)),
+    V_0\rightarrow V_0(1 + A\cos(\omega_V t)),  \label{eq:time_dep_v0}
 \end{align}
 where \(A\) is some amplitude and \(\omega_V\) is the `driving' frequency of the potential. When \(\omega_V\) approaches \(\omega_{\pm,n}\) or \(\omega_{z,n}\), or some combination of the two, resonance occurs. The particles oscillation increase rapidly, which may eventually lead to them spiraling out of the trap. There are several use cases to matching \(\omega_V\) to \(\omega_{\pm,n}\) or \(\omega_{z,n}\). For instance, since the two latter frequencies are generally different from one particle to the other, one could set \(\omega_V=\omega_{z,n_0}\), for some \(n_0\), as to eject all particles with charge \(q_{n_0}\) and mass \(m_{n_0}\) (cf. \eqref{eq:def:omega_0_omega_z}). Or, say the particles mass and charge where unknown, then once could obtain these, at least their ratio, by adjusting \(\omega_V\) and looking for resonance phenomena. 
 
@@ -381,39 +381,39 @@ Below, in Algorithm \ref{alg:RK4}, we have presented our implementation of the R
 \begin{algorithmic}[1]
 % \Require $N > 0$
 % \Ensure $y = x^n$
-\State \(\tilde{\vec{r}} \gets \vec{r}\)    \Comment{copy of r}
-\State \(\tilde{\vec{v}} \gets \vec{v}\)    \Comment{copy of v}
+\State \(\tilde{\vec{r}_j} \gets \vec{r}_j\)    \Comment{copy of r}
+\State \(\tilde{\vec{v}_j} \gets \vec{v}_j\)    \Comment{copy of v}
 % \While{\(n<N\)} \Comment{Computing \(k_1\)}
 \For{$n \gets 1$ to $N$} \Comment{Computing \(k_1\)}
-  \State \(k_{1,r}[n] \gets h\vec{v}[n]\) 
-  \State \(k_{1,v}[n] \gets hg(t_j, \vec{r}[n], \vec{v}[n])\)
+  \State \(k_{1,r}[n] \gets h\vec{v}_j[n]\) 
+  \State \(k_{1,v}[n] \gets hg(t_j, \vec{r}_j[n], \vec{v}_j[n])\)
 \EndFor
-\AlgComment{Updating \(\vec{v}\) and \(\vec{r}\):}
-\State \(\vec{v} \gets \tilde{\vec{v}} + \frac{1}{2}k_{1,v}\)
-\State \(\vec{r} \gets \tilde{\vec{r}} + \frac{1}{2}k_{1,r}\)
+\AlgComment{Updating \(\vec{v}_j\) and \(\vec{r}\):}
+\State \(\vec{v}_j \gets \tilde{\vec{v}}_j + \frac{1}{2}k_{1,v}\)
+\State \(\vec{r}_j \gets \tilde{\vec{r}} + \frac{1}{2}k_{1,r}\)
 \\ 
 \For{$n \gets 1$ to $N$} \Comment{Computing \(k_2\)}
-  \State \(k_{2,r}[n] \gets h\left(\tilde{\vec{v}}[n] + \frac{1}{2}k_{1,v}[n]\right)\) 
-  \State \(k_{2,v}[n] \gets hg(t_j + \frac{1}{2}h, \vec{r}[n], \vec{v}[n])\)
+  \State \(k_{2,r}[n] \gets h\left(\tilde{\vec{v}}_j[n] + \frac{1}{2}k_{1,v}[n]\right)\) 
+  \State \(k_{2,v}[n] \gets hg(t_j + \frac{1}{2}h, \vec{r}_j[n], \vec{v}_j[n])\)
 \EndFor
 \AlgComment{Updating \(\vec{v}\) and \(\vec{r}\):}
-\State \(\vec{v} \gets \tilde{\vec{v}} + \frac{1}{2}k_{2,v}\)
-\State \(\vec{r} \gets \tilde{\vec{r}} + \frac{1}{2}k_{2,r}\)
+\State \(\vec{v}_j \gets \tilde{\vec{v}}_j + \frac{1}{2}k_{2,v}\)
+\State \(\vec{r}_j \gets \tilde{\vec{r}} + \frac{1}{2}k_{2,r}\)
 \\ 
 \For{$n \gets 1$ to $N$} \Comment{Computing \(k_3\)}
-  \State \(k_{3,r}[n] \gets h\left(\tilde{\vec{v}}[n] + \frac{1}{2}k_{2,v}[n]\right)\) 
-  \State \(k_{3,v}[n] \gets hg(t_j+\frac{1}{2}h, \vec{r}[n], \vec{v}[n])\)
+  \State \(k_{3,r}[n] \gets h\left(\tilde{\vec{v}}_j[n] + \frac{1}{2}k_{2,v}[n]\right)\) 
+  \State \(k_{3,v}[n] \gets hg(t_j+\frac{1}{2}h, \vec{r}_j[n], \vec{v}_j[n])\)
 \EndFor
 \AlgComment{Updating \(\vec{v}\) and \(\vec{r}\):}
-\State \(\vec{v} \gets \tilde{\vec{v}} + k_{3,v}\)
-\State \(\vec{r} \gets \tilde{\vec{r}} + k_{3,r}\)
+\State \(\vec{v}_j \gets \tilde{\vec{v}}_j + k_{3,v}\)
+\State \(\vec{r}_j \gets \tilde{\vec{r}} + k_{3,r}\)
 \\ 
 \For{$n \gets 1$ to $N$} \Comment{Computing \(k_4\)}
-  \State \(k_{1,r}[n] \gets h\left(\tilde{\vec{v}}[n] + k_{3,v}[n]\right)\) 
-  \State \(k_{1,v}[n] \gets hg(t_j+h, \vec{r}[n], \vec{v}[n])\)
+  \State \(k_{1,r}[n] \gets h\left(\tilde{\vec{v}}_j[n] + k_{3,v}[n]\right)\) 
+  \State \(k_{1,v}[n] \gets hg(t_j+h, \vec{r}_j[n], \vec{v}_j[n])\)
 \EndFor
 \AlgComment{Updating \(\vec{v}\) and \(\vec{r}\) for next time step:}
-\State \(\vec{v}_{j+1} \gets \tilde{\vec{v}} +\frac{1}{6}\left(k_{1,v} + 2k_{2,v} + 2k_{3,v} + k_{4,v}\right)\)
+\State \(\vec{v}_{j+1} \gets \tilde{\vec{v}}_j +\frac{1}{6}\left(k_{1,v} + 2k_{2,v} + 2k_{3,v} + k_{4,v}\right)\)
 \State \(\vec{r}_{j+1} \gets \tilde{\vec{r}} +\frac{1}{6}\left(k_{1,r} + 2k_{2,r} + 2k_{3,r} + k_{4,r}\right)\)
 \end{algorithmic}
 \label{alg:RK4}
@@ -444,12 +444,26 @@ As a sanity check for our numerical implementation of the Penning trap we have c
 \end{subequations}
 then \eqref{eq:dot_z} has the solution 
 \begin{align}
-    z(t) = z_0\cos(\omega_z t), \label{eq:z_analytic}
+    z(t) = z_0\cos(\omega_z t). \label{eq:z_analytic}
 \end{align}
-while we find \(\phi_{\pm} = 0\) and 
+The amplitudes \(A_{\pm}\) becomes \cite{uioFYS3150H25}
 \begin{align}
-    A_{\pm} = \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
+    A_{\pm} = \frac{\sqrt{(v_{y,0} + x_0\omega_{\mp})^2 + (v_{x,0} - y_0\omega_{\mp})^2}}{\omega_+ - \omega_ -},
+    % \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
 \end{align}
+and 
+\begin{subequations}
+    \begin{align}
+    \phi_{+} &= \begin{cases}
+        \arctan(\frac{v_{x,0}}{x_0\omega_{-}+v_{y,0}}), \quad &x_0\omega_{-} + v_{y,0} <0, \\ 
+        \arctan(\frac{v_{x,0}}{x_0\omega_{-}+v_{y,0}}) + \pi, \quad &x_0\omega_{-} + v_{y,0} \geq 0,
+    \end{cases} \\ 
+    \phi_{-} &  = \begin{cases}
+        \arctan(\frac{v_{x,0}}{x_0\omega_{+}+v_{y,0}}) + \pi, \quad &x_0\omega_{-} + v_{y,0} <0, \\ 
+        \arctan(\frac{v_{x,0}}{x_0\omega_{+}+v_{y,0}}), \quad &x_0\omega_{-} + v_{y,0} \geq 0.
+    \end{cases}
+\end{align}
+\end{subequations}
 
 \subsection{Adding a time dependent perturbation}   \label{sec:time_dep_potential}
 Lastly, we modify the static potential by adding a time-dependent perturbation.
@@ -590,7 +604,7 @@ The relative error at each time step $t_i$ is computed as
     = 
     \frac{ |\vec{r}_\mathrm{numerical} - \vec{r}_\mathrm{analytical}| }{ |\vec{r}_\mathrm{analytical}| }.
 \end{align}
-Plotting the relative error as a function of time, we obtain Fig.~\ref{fig:single-error-RK4} and Fig.~\ref{fig:single-error-FE}, for RK4 and FE, respectively. Fig.~\ref{fig:single-error-RK4} shows that the relative error for the RK4 method is for all values of \(n_{\text{steps}}\), at least smaller than \(\sim 10^{-1}\). For increasing \(n_{\text{steps}}\), the relative error steadily decreases. 
+Plotting the relative error as a function of time, we obtain Fig.~\ref{fig:single-error-RK4} and Fig.~\ref{fig:single-error-FE}, for RK4 and FE, respectively. Fig.~\ref{fig:single-error-RK4} shows that the relative error for the RK4 method is for all values of \(n_{\text{steps}}\), at least smaller than \(\sim 10^{-1}\). For increasing \(n_{\text{steps}}\), the relative error steadily decreases, for \(n_{\text{steps}}=32000\), all the way to \(\sim 10^{-11} - \sim 10^{-10}\). 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.5]{figs/results/relerror-RK4.pdf}
@@ -610,49 +624,51 @@ On the other hand, Fig.~\ref{fig:single-error-FE} shows a quite poor performance
 
 \section{Discussion}
 \subsection{Resonance}
-We will now try to gain some qualitative understanding of the main features observed in Fig.~\ref{fig:resonance_plot} and \ref{fig:resonance_zoomed}.
-First is the presence of resonant behavior at all.
-This may be best understood in the case of a single particle inside the Penning trap, in which the system has well-defined natural frequencies \(\omega_{\pm}\) and \(\omega_z\).
-When the applied frequency \(\omega_V\) closely matches these natural frequencies, we may expect the energy transfer from the applied field to the particle to become much more efficient.
-Eventually, this will then lead to the particle gaining enough energy to escape the potential well of the Penning trap.
-This is of course somewhat complicated when simulating a larger number of particles, as particle trajectories become chaotic due to Coulomb interactions.
-Still, resonant behavior is clearly observed in our simulations.
-\newline
+We will now try to gain some qualitative understanding of the main features observed in Figs.~\ref{fig:resonance_plot} and \ref{fig:resonance_zoomed}.
+First of all, there is clearly a presence of resonant behavior.
+Why this appears may be best understood in the case of a single particle inside the Penning trap. In that case, the system has an analytic solution with well-defined natural frequencies \(\omega_{\pm}\) and \(\omega_z\). In fact, the differential equation in \eqref{eq:f_t} takes the structural form as of a damped harmonic oscillator (though there is of course no actual dampening). The motion in \(z\)-plane is even simpler, taking the form a simple harmonic oscillator. Adding the time-dependence \eqref{eq:time_dep_v0} then essentially produces a driven (damped in the \(xy\)-plane) harmonic oscillator. Such systems will eventually be driven into the applied frequency, here, \(\omega_V\). 
+
+The next important point is that a time-dependent potential can transfer energy to the system. Intuitively, this suggests that if you wait long enough, more and more particles will escape the Penning trap (though not necessarily all). If the applied frequency \(\omega_V\) approaches \(\omega_{\pm}\) or \(\omega_z\), or integer combinations of the two, we expect the energy transfer from the applied field to the particle to become much more efficient, decreasing the time it takes for the particle to escape. This is of course more complicated when simulating a larger number of particles, as particle trajectories become chaotic due to Coulomb interactions. Nonetheless, we do indeed observe resonant behavior when we include Coulomb interactions as well (see Fig.~\ref{fig:resonance_zoomed}). In fact, one might speculate that the Coulomb interactions produce such chaotic motions that stable orbits, which otherwise would need a long time (if ever) to spiral out, now absorbs energy from the potential more efficiently, and thus escape faster.
+
 We also observe a shift of the resonant frequencies as Coulomb interactions are taken into account.
 This behavior may be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential seen by each particle.
 Naturally, these modifications to the potential will also modify the resonant frequencies of the system.
-\newline
-Although one might expect that turning off Coulomb interactions would shift the resonant frequencies onto the nearby natural single-particle frequencies
-\begin{align*}
-    \omega_z,\quad \omega_+,\quad \mathrm{and}\quad \frac{\omega_+ + \omega_z}{2},
-\end{align*}
-included in the figure, this does not seem to be the case.
-While this still lacks a clear explanation, one possibility 
-\newline
-These results may also have practical applications.
-For instance, due to resonant frequencies being dependent on the mass and charge of the particle species, one can imagine tuning the applied frequency to selectively eject particles of a certain type from the trap.
+
+% Our discussion so far may seem to suggest that turning off the Coulomb interactions should shift the midpoint of the graphs in Fig.~\ref{fig:resonance_zoomed} to center around the natural frequencies. Fig.~\ref{fig:resonance_zoomed} does not display this behavior. However, while we do expect the energy transfer from the potential to the particles to maximize around the natural frequencies, we are simulating over a time \(T=50\ \si{\mu s}\), and the particles may receive enough energy within this time period without actually persiving `perfect' energy transfer.
+
+Our discussion so far may seem to suggest that turning off Coulomb interactions will shift the resonant frequencies onto the nearby natural single-particle frequencies. However, according to Fig.~\ref{fig:resonance_zoomed},
+% \begin{align*}
+%     \omega_z,\quad \omega_+,\quad \mathrm{and}\quad \frac{\omega_+ + \omega_z}{2},
+% \end{align*}
+% included in the figure, 
+this does not seem to be the case. This seems to suggest that the energy transfer is more efficient leading up to the natural frequencies, than it is when moving away from it. The resolution here is not obvious, at least to us. For future outlook, we would look to increase the duration of the simulation, and investigate this parameter's position in all of this. 
+
+% There are clearly 
+Nonetheless, These results may also have practical applications.
+Lastly, we would like to discuss our understanding of how the resonance phenomena might be useful in practical applications. Since the resonant frequencies is dependent on the mass and charge of the particle species, one can imagine tuning the applied frequency to selectively eject particles of a certain type from the trap. This might be useful in isolating specific particle species, or, shooting out a large amount of particles for the purpose of producing a collider of some sort. It is also possible that one might create a rail gun using the resonance phenomena, which in our case would be shooting in any and all directions at random. 
 
 \subsection{Sources of error}
-A potentially big source of error in the above results is naturally the chosen integration method and the number of time steps used.
-In particular, the final results were obtained with RK4 using only $n=4000$ steps.
-Ideally, a larger number of steps could have been used, but this was limited due to time constraints and computational resources.
-On the other hand, we have seen in Fig \ref{fig:single-error-RK4} that a single particle inside the Penning trap accumulates a very small relative error of around \(10^{-7}\) when using RK4 with \(n=4000\) steps, albeit over a much shorter time interval than the main results.
-Of course, errors may accumulate much faster when simulating a larger number of particles, especially when including Coulomb interactions.
-\newline
-Another point is that our results may be somewhat sensitive to the initial conditions of the particles.
-In particular, we have only sampled one specific set of initial conditions.
-For the future, it could be interesting to run several additional simulations with different initial conditions, to obtain a better picture of the statistical behavior of the system.
+A potentially big source of error in the our results is of course the chosen integration method and the number of time steps we have used.
+Recall, the our analysis of the resonance phenomena were produced with RK4 using only $n=4000$ steps. Ideally, a larger number of steps could have been used, but this was limited due to time constraints and computational resources. On the other hand, we have seen in Fig \ref{fig:single-error-RK4} that a single particle inside the Penning trap accumulates a very small relative error of around \(10^{-7}\) when using RK4 with \(n=4000\) steps, albeit over a much shorter time interval than the main results. One should also expect that the errors should accumulate much faster when simulating a larger number of particles, especially when including Coulomb interactions.
+
+Our results may also be somewhat sensitive to the initial conditions of the particles. In particular, we have only sampled one specific set of initial conditions. For the future, it could be interesting to run several additional simulations with different initial conditions, to obtain a better picture of the statistical behavior of the system.
 
 % \cite{uioFYS3150H25}
 
 \section{Conclusion}
-We have successfully modeled and simulated the motion of charged particles inside a Penning trap, both with and without Coulomb interactions.
-Tracking the number of trapped particles as a function of an applied oscillating electric field, we have also seen that the system has certain natural resonant frequencies, in which a large fraction of the particles escape the trap.
-Furthermore, we have observed a shift of these resonant frequencies when Coulomb interactions are taken into account.
-This can be understood qualitatively in the mean-field limit, where the Coulomb interactions modify the effective potential felt by each particle.
-\newline
-There are also practical applications of our results.
-As the resonant frequencies will be dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
+We have successfully modeled and simulated the motion of charged particles inside a Penning trap, both with and without Coulomb interactions. Comparing the RK4 and the FE method, we saw a clearly better performance for the RK4 method, which should be expected. 
+The motion of particles inside the Penning trap showed to be very stable; in the phase-space tracing out circular orbits. 
+Turning on Coulomb interactions resulted in a more chaotic motion, though confined within the Penning trap.
+
+When adding a time-dependence to our potential, we tracked the number of trapped particles eventually leaving the Penning trap. 
+This lead to the observation of the resonance phenomena; around certain natural resonant frequencies, a large fraction of the particles escape the trap. 
+When Coulomb interactions were turned on, we observed a shift of these resonant frequencies.
+We believe this can be understood qualitatively in the mean-field limit, where the Coulomb interactions modify the effective potential felt by each particle.
+In any case, since the resonant frequencies is dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
+
+For future work, it would be interesting to consider longer simulation times and implementing more advanced numerical integration algorithms than RK4. We found the resonance phenomena intriguing, and somewhat displeasing that our figures of the number of escaped particles against frequency did not align symmetrically over the natural frequencies we found analytically. Thus, it would certainly be interesting to further investigate this phenomena and its applications. For instance, would it be possible to calculate or estimate with certainty the direction in which the ejected particles are released?
+
+
 
 \newpage
 \clearpage
