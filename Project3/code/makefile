@@ -91,13 +91,13 @@ run_problem_9:
 	$(call problem_9,--amplitude 0.4)
 	$(call problem_9,--amplitude 0.7)
 
-	$(call problem_9,--amplitude 0.1 --freq_range 101 1.7)
-	$(call problem_9,--amplitude 0.4 --freq_range 101 1.7)
-	$(call problem_9,--amplitude 0.7 --freq_range 101 1.7)
+	$(call problem_9,--amplitude 0.1 --freq_range 1.0 1.7)
+	$(call problem_9,--amplitude 0.4 --freq_range 1.0 1.7)
+	$(call problem_9,--amplitude 0.7 --freq_range 1.0 1.7)
 
-	$(call problem_9,--amplitude 0.1 --freq_range 101 1.7 --non-interacting)
-	$(call problem_9,--amplitude 0.4 --freq_range 101 1.7 --non-interacting)
-	$(call problem_9,--amplitude 0.7 --freq_range 101 1.7 --non-interacting)
+	$(call problem_9,--amplitude 0.1 --freq_range 1.0 1.7 --non-interacting)
+	$(call problem_9,--amplitude 0.4 --freq_range 1.0 1.7 --non-interacting)
+	$(call problem_9,--amplitude 0.7 --freq_range 1.0 1.7 --non-interacting)
 
 py_plots:
 	$(PY) plot_errors.py

@@ -50,7 +50,7 @@ arma::vec PenningTrap::E(const arma::vec &r, double t){
 
     if (zero_fields){
         if (arma::norm(r) <= d){
-            E_field += {r[0], r[1], - 2*r[2]};
+            E_field += arma::vec({r[0], r[1], - 2*r[2]});
             E_field *= V_0_callable(t) / (d*d);
         }
 
@@ -68,7 +68,7 @@ arma::vec PenningTrap::B(const arma::vec &r){
 
     if (zero_fields){
         if (arma::norm(r) <= d){
-            B_field += {0, 0 , B_0};
+            B_field += arma::vec({0, 0 , B_0});
         }
 
         return B_field;
