@@ -37,6 +37,7 @@ int single_run_problem9(double omega, const Args &args)
 
     PenningTrap trap(V, 9.65e1, d);
     trap.interacting = args.interacting;
+    trap.zero_fields = true;    // Sets the field outside to zero. 
 
     for (int i = 0; i < args.n_particles; i++)
     {

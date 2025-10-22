@@ -85,27 +85,31 @@
 
 %%%%%%%%%%% Important packages %%%%%%%%%%%
 
-\usepackage{physics,amssymb}  % mathematical symbols (physics imports amsmath)
-\include{amsmath}
-\usepackage{graphicx}         % include graphics such as plots
-\usepackage{xcolor}           % set colors
-\usepackage{hyperref}         % automagic cross-referencing
-\usepackage{listings}         % display code
-\usepackage{subcaption}        % imports a lot of cool and useful figure commands
-% \usepackage{float}
-%\usepackage[section]{placeins}
+\usepackage{physics,amssymb}   % physics already loads amsmath
+% \usepackage{amsmath}         
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{subcaption}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
-% \usepackage{subfigure}
+\definecolor{codegreen}{RGB}{87,166,74}
+\algrenewcommand\algorithmiccomment[1]{\hfill\textcolor{codegreen}{\textit{// #1}}}
+\newcommand{\AlgComment}[1]{\Statex \textcolor{codegreen}{\textit{// #1}}}
+
+% \algrenewcommand\algorithmiccomment[1]{\hfill\textcolor{green}{// #1}}
+
 \usepackage{tikz}
-\usetikzlibrary{quantikz}
-% defines the color of hyperref objects
-% Blending two colors:  blue!80!black  =  80% blue and 20% black
-\hypersetup{ % this is just my personal choice, feel free to change things
+\usepackage{quantikz}          % <-- package, not tikzlibrary
+\usepackage{hyperref}
+\usepackage{float}             % optional, if you want [H] placement
+
+\hypersetup{
     colorlinks,
     linkcolor={red!50!black},
     citecolor={blue!50!black},
-    urlcolor={blue!80!black}}
+    urlcolor={blue!80!black}
+}
 
 
 % ===================== Shortcuts/new commands ======================
@@ -127,7 +131,7 @@
 \section{Introduction}
 ... 
 
-\section{Theory}
+\section{Theory and Method}
 \subsection{The Penning Trap}
 A penning trap is a device which `traps' an electrically charged particle inside a static (time-independent) electromagnetic field. How this is achieved can be understood through the Lorentz force,
 \begin{align}
@@ -184,7 +188,7 @@ For a single particle where the second term in \eqref{eq:motion_Newton} is absen
     \ddot{r} 
     &= \frac{q}{m}\vec{E} + \frac{q}{m}\vec{v}\times \vec{B}
     \notag \\
-    &= \frac{qV_0}{md^2}\left(x, y, -2z\right) + \frac{qB_0}{m}\left(\dot{y}, -\dot{x}, 0\right).
+    &= \frac{qV_0}{md^2}\left(x, y, -2z\right) + \frac{qB_0}{m}\left(\dot{y}, -\dot{x}, 0\right).   \label{eq:ddotr_single_particle}
 \end{align}
 Componentwise, the expression above can be rearrange to the form 
 \begin{subequations}    \label{eq:eom_componentwise}
@@ -198,11 +202,11 @@ where we have defined
 \begin{align}
     \omega_0 \eqdef \frac{qB_0}{m}, \quad \omega_z^2 \eqdef \frac{2qV_0}{md^2}. \label{eq:def:omega_0_omega_z}
 \end{align}
-Let \(f(t)\) be the complex function given by 
+Eqs. \eqref{eq:dot_x} and \eqref{eq:dot_y} are coupled. However, introducing the complex function 
 \begin{align}
-    f(t)=x(t) + iy(t).
+    f(t)=x(t) + iy(t),
 \end{align}
-The two equations \eqref{eq:dot_x} and \eqref{eq:dot_y} can then be combined into a single equation, namely
+allows for combining \eqref{eq:dot_x} and \eqref{eq:dot_y} into a single equation, namely
 \begin{align}
     \ddot{f}(t) + i\omega_0 \dot{f}(t) -\frac{1}{2}\omega_z^2 f(t) &= 0.    \label{eq:f_t}
 \end{align}
@@ -220,7 +224,7 @@ where \(\phi_{\pm}\) are some constant phases, \(A_{\pm}\) some positive amplitu
 }
 
 
-For the single particle to remain bounded within the Penning trap, we should require that \(|f(t)|\) stays bounded for all \(t\). Otherwise, the particle's trajectory in the \(x\) and/or \(y\)-plane, given by \(\text{Re}(f)\) and \(\text{Re}(f)\), respectively, will eventually escape into infinity. This amount to requiring that \(\omega_0^2 \geq 2\omega_z^2\). To see this, consider \(|f(t)|^2\), which takes the form
+For the single particle to remain bounded within the Penning trap, we should require that \(|f(t)|\) stays bounded for all \(t\). Otherwise, the particle's trajectory in the \(x\) and/or \(y\)-plane, given by \(\text{Re}(f)\) and \(\text{Re}(f)\), respectively, will eventually escape into infinity. This amounts to requiring that \(\omega_0^2 \geq 2\omega_z^2\). To see this, consider \(|f(t)|^2\), which takes the form
 \begin{align}
     |f(t)|^2 &= A_+^2e^{2t\text{Im}(\omega_+)} + A_-^2e^{2t\text{Im}(\omega_-)} 
     \notag \\
@@ -235,7 +239,7 @@ where we have written \(\phi_{\Delta} = \phi_+ - \phi_-\), \(r_{\omega} = |\omeg
     \end{cases}
 \end{align}
 such that \(\omega_{\pm} = \omega_0/2 \pm r_\omega e^{i\theta}\).
-Clearly, if \(\text{Im}(\omega_\pm)> 0\), then \eqref{eq:bound_f_squared} blows up as \(t\rightarrow \infty\) . Hence, we must have \(\text{Im}(\omega_\pm)> 0\), i.e. \(\theta = 0\), which is true if \(\omega_0^2 \geq 2\omega_z^2\). In terms of the original quantities which \(\omega_0\) and \(\omega_z^2\) are defined by (see \eqref{eq:def:omega_0_omega_z}), this means that we must have 
+Clearly, if \(\text{Im}(\omega_\pm)> 0\), then \eqref{eq:bound_f_squared} blows up as \(t\rightarrow \infty\) . Hence, we must require \(\text{Im}(\omega_\pm)\leq 0\), i.e. \(\theta = 0\), which is true if \(\omega_0^2 \geq 2\omega_z^2\). In terms of the original quantities which \(\omega_0\) and \(\omega_z^2\) are defined by (see \eqref{eq:def:omega_0_omega_z}), this means that we must have 
 \begin{align}
     qB_0 \geq 4m \frac{V_0}{d^2},
 \end{align}
@@ -252,82 +256,145 @@ and so we may bound \(|f(t)|\) as (since \({\cos(t)\in[-1,1]}\))
 
 
 \subsection{Multiple Particles inside the Penning Trap} \label{sec:multiple_particles}
-We now consider \(n\) particles with charges \(\{q_i\}_{i\in[1,n]}\) and masses \(\{m_i\}_{i\in[1,n]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we know have
+We now consider \(N\) particles with charges \(\{q_n\}_{n\in[1,N]}\) and masses \(\{m_n\}_{n\in[1,N]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we know have
 \begin{subequations}    \label{eq:particles_eqm}
     \begin{align}
-        \ddot{x}_i - \omega_{0}\dot{y}_i - \frac{1}{2}\omega_{z,i}^2x_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{x}_{ij} &= 0, \\
-        \ddot{y}_i + \omega_{0}\dot{x}_i - \frac{1}{2}\omega_{z,i}^2y_i - k_e \frac{q_i}{m_i}\sum_{j\neq i} q_j \hat{y}_{ij} &= 0, \\ 
-        \ddot{z}_i + \omega_{z}^2z_i - k_e \frac{q_i}{m_i}\sum_{j\neq i}q_j \hat{z}_{ij} &= 0.
+        \ddot{x}_n - \omega_{0,n}\dot{y}_n - \frac{1}{2}\omega_{z,n}^2x_n - k_e \frac{q_n}{m_n}\sum_{k\neq n} q_k \hat{x}_{nk} &= 0, \\
+        \ddot{y}_n + \omega_{0,n}\dot{x}_n - \frac{1}{2}\omega_{z,n}^2y_n - k_e \frac{q_n}{m_n}\sum_{k\neq n} q_k \hat{y}_{nk} &= 0, \\ 
+        \ddot{z}_n + \omega_{z,n}^2z_n - k_e \frac{q_n}{m_n}\sum_{k\neq n}q_k \hat{z}_{nk} &= 0.
     \end{align}
 \end{subequations}
-where \(\hat{x}_{ij} = (x_i - x_j)/|r_i-r_j|^3\) and \(\hat{y}_{ij}, \hat{z}_{ij}\) defined on the corresponding form.
-Instead of trying to solve this analytically, we will compute this numerically. 
-
-\section{Method}
-The equations of motion in \eqref{eq:particles_eqm} do not have an analytic solution for \(n>1\) particles. We have thus solved these by numerical integration. Specifically, we have consider two numerical integration methods: Runge-Kutta 4 (RK4) and Forward-Euler (FE). In the following we explain how these methods work and how we have implemented them. We have used RK4 for our main results, and used FE for a few comparisons between the two methods.
-
-\subsection{Numerical Integration}
-In \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project2}{Project 2}, we solved a second order differential equation numerically using a tridiagonal matrix. This involved approximating the derivative to first order, that is, we discretized the approximation
+where \(\hat{x}_{nk} = (x_n - x_k)/|\vec{r}_n-\vec{r}_k|^3\) and \(\hat{y}_{nk}, \hat{z}_{nk}\) defined on the corresponding form. The last terms above are due to Coulomb interactions. Between two particles at position \(\vec{r}_n\) and \(\vec{r}_k\), the Coulomb force on particle \(n\) is given by 
 \begin{align}
-    \dot{r}(t) \approx \frac{r(t+h) - r(t)}{h}. \label{eq:derivative_approximation}
-\end{align}  
-This approximation is essentially what FE evolves around as well. Consider the equations of motion in \eqref{eq:particles_eqm}, which we can write compactly as 
+    F_C = k_e q_{n}q_{k}\hat{\vec{r}}_{nk}, \label{eq:colliColliCOULOUMB}
+\end{align}
+where \(\hat{\vec{r}}_{nk} = (\vec{r}_n - \vec{r}_k)/|\vec{r}_n-\vec{r}_k|^3\). Summing over all such contributions gives the last terms in \eqref{eq:particles_eqm}.
+
+% \section{Method}
+
+\subsection{Time-Dependent Potential}
+For a sufficiently strong Penning trap, the particles will eventually be driven to oscillate in the \(xy\)-plane with the frequency \(\omega_{\pm,n}\) and in the \(z\)-plane with the frequency \(\omega_{z,n}\). To study and reveal possible resonance phenomena, one can add a time-dependence to the potential \(V_0\). Specifically, consider
 \begin{align}
-    \ddot{r}_{i}(t) = f(t, r_i, \dot{r}_i),
+    V_0\rightarrow V_0(1 + A\cos(\omega_V t)),
+\end{align}
+where \(A\) is some amplitude and \(\omega_V\) is the `driving' frequency of the potential. When \(\omega_V\) approaches \(\omega_{\pm,n}\) or \(\omega_{z,n}\), or some combination of the two, resonance occurs. The particles oscillation increase rapidly, which may eventually lead to them spiraling out of the trap. There are several use cases to matching \(\omega_V\) to \(\omega_{\pm,n}\) or \(\omega_{z,n}\). For instance, since the two latter frequencies are generally different from one particle to the other, one could set \(\omega_V=\omega_{z,n_0}\), for some \(n_0\), as to eject all particles with charge \(q_{n_0}\) and mass \(m_{n_0}\) (cf. \eqref{eq:def:omega_0_omega_z}). Or, say the particles mass and charge where unknown, then once could obtain these, at least their ratio, by adjusting \(\omega_V\) and looking for resonance phenomena. 
+
+In the next section we will present how we have numerical solved the motion of the particles in the Penning trap. Since we have now introduced a time-dependence to the potential, the equations of motion in \eqref{eq:eom_componentwise} take a slightly different form. If we take a step back, restoring the general form for \(\ddot{\vec{r}}\) in \eqref{eq:ddotr_single_particle} and adding the Coulomb interactions \eqref{eq:colliColliCOULOUMB}, we obtain  a compact form for the equations of motion:
+\begin{align}
+    \ddot{\vec{r}}_{n}(t) = g(t, \vec{r}_n \dot{\vec{r}}_n),    \label{eq:eqm_final}
 \end{align}
 where 
 \begin{align}
-    f(t, r_i, \dot{r}_i) = \left(\frac{1}{2}\omega_{z}^2x_i, \omega_0\dot{y}_i, 0\right) + k_e \frac{q_i}{m_i}\sum_{j\neq i}q_j\hat{r}_{ij}. \label{eq:fi}
+    g(t, \vec{r}_n, \dot{\vec{r}}_n) &= \frac{q_{n}}{m_{n}}\big(\vec{v}_{n}\times \vec{B} 
+    -\nabla \vec{E}\big) 
+    \notag \\
+    &+ k_e \frac{q_n}{m_n}\sum_{k\neq n}q_k\frac{\hat{\vec{r}}_{nk}}{|\vec{r}_{n} - \vec{r}_{k}|^3}. \label{eq:fi}
 \end{align}
-Next, we discretize in time by writing 
+
+
+\subsection{Numerical Integration}
+The equations of motion in \eqref{eq:eqm_final} do not have an analytic solution for \(N>1\) particles. We have thus solved these by numerical integration. Specifically, we have consider two numerical integration methods: Runge-Kutta 4 (RK4) and Forward-Euler (FE). In the following we explain how these methods work and how we have implemented them. We have used RK4 for our main results, and used FE for a few comparisons between the two methods.
+
+In \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project2}{Project 2}, we solved a second order differential equation numerically using a tridiagonal matrix. This involved approximating the derivative to first order, that is, we discretized the approximation
 \begin{align}
-    v_{m,i} = \dot{r}_i(t_m), \quad r_{m,i} = r_i(t_m), \label{eq:general_our_discret}
+    \dot{\vec{r}}(t) \approx \frac{\vec{r}(t+h) - \vec{r}(t)}{h}. \label{eq:derivative_approximation}
+\end{align}  
+This approximation is essentially what FE evolves around as well. To see this, begin by discretizing in time by writing 
+\begin{align}
+    \vec{v}_{j,n} = \dot{\vec{r}}_n(t_j), \quad \vec{r}_{j,n} = \vec{r}_n(t_j), \label{eq:general_our_discret}
 \end{align} 
-where \(m=1, ..., M\), for some integer \(M>0\). The time array is assumed to be equispaced over a time interval \([0,T]\), i.e. \(t_m = mh\), where \(h=T/M\). 
-Approximating the derivative using \eqref{eq:derivative_approximation} and rearranging results in the FE method \footnote{The Euler-Cromer method looks almost exactly the same, only with \(v_{n,i}\) in \eqref{eq:r_FE} substituted with \(v_{n+1,i}\). }: 
+where \(j=1, ..., N_{\text{time}}\), for some integer \(N_{\text{time}}>0\). The time array \((t_j)_{j=1}^{N}\) is assumed to be equispaced over a time interval \([0,T]\), i.e. \(t_j = jh\), where \(h=T/N_{\text{time}}\). 
+Approximating the derivative using \eqref{eq:derivative_approximation} and rearranging results in the FE method \footnote{The Euler-Cromer method looks almost exactly the same, only with \(v_{j,n}\) in \eqref{eq:r_FE} substituted with \(v_{n+1,i}\). }: 
 \begin{subequations}    \label{eq:FE_general_algorithm}
     \begin{align}
-        v_{m+1,i} &= v_{m,i} + hf(t_m,  r_{m,i}, v_{m,i}), \\ 
-        r_{m+1,i} &= r_{m,i} + hv_{m,i}. \label{eq:r_FE}
+        \vec{v}_{j+1,n} &= \vec{v}_{j,n} + hg(t_j,  \vec{r}_{j,n}, \vec{v}_{j,n}), \\ 
+        \vec{r}_{j+1,n} &= \vec{r}_{j,n} + h\vec{v}_{j,n}. \label{eq:r_FE}
     \end{align}
 \end{subequations}
-For Runge-Kutta methods, the idea is to further approximate the slope between \(t_n\) and \(t_{n+1}\), by computing intermediate steps and taking their weighted average. In particular, RK4 computes four of these intermediate steps, \(k_1, \ k_2, \ k_3\) and \(k_4\). Since \eqref{eq:general_our_discret} is a second order differential equation, we two set of such \(k\)'s:
-\begin{subequations}
+For Runge-Kutta methods, the idea is to further approximate the slope between \(t_j\) and \(t_{j+1}\), by computing intermediate steps and taking their weighted average. In particular, RK4 computes four of these intermediate steps, \(k_1, \ k_2, \ k_3\) and \(k_4\). Since \eqref{eq:general_our_discret} is a second order differential equation, we need two set of such \(k\)'s:
+\begin{subequations}    \label{eq:RK4_ks}
     \begin{align}
-     k_{1,r} &= hv_{m,i}, \\ 
-     k_{1,v} &= hf(t_m, r_{m,i}, v_{m,i}), \\ 
-     k_{2,r} &= h(v_{m,i} + \frac{1}{2}k_{1,v}), \\ 
-     k_{2,v} &= hf(t_m+\frac{1}{2}h, r_{m,i} + \frac{1}{2}k_{1,r}, v_{m,i} + \frac{1}{2}k_{1,v}), \\
-     k_{3,r} &= h(v_{m,i} + \frac{1}{2}k_{2,v}), \\ 
-     k_{3,v} &= hf(t_m+\frac{1}{2}h, r_{m,i} + \frac{1}{2}k_{2,r}, v_{m,i} + \frac{1}{2}k_{2,v}), \\
-     k_{4,r} &= h(v_{m,i} + \frac{1}{2}k_{3,v}), \\ 
-     k_{4,v} &= hf(t_m+\frac{1}{2}h, r_{m,i} + \frac{1}{2}k_{3,r}, v_{m,i} k_{3,v}).
+     k_{1,r} &= h\vec{v}_{j,n}, \\ 
+     k_{1,v} &= hg(t_j, \vec{r}_{j,n}, \vec{v}_{j,n}), \\ 
+     k_{2,r} &= h(\vec{v}_{j,n} + \frac{1}{2}k_{1,v}), \\ 
+     k_{2,v} &= hg(t_j+\frac{1}{2}h, \vec{r}_{j,n} + \frac{1}{2}k_{1,r}, \vec{v}_{j,n} + \frac{1}{2}k_{1,v}), \\
+     k_{3,r} &= h(\vec{v}_{j,n} + \frac{1}{2}k_{2,v}), \\ 
+     k_{3,v} &= hg(t_j+\frac{1}{2}h, \vec{r}_{j,n} + \frac{1}{2}k_{2,r}, \vec{v}_{j,n} + \frac{1}{2}k_{2,v}), \\
+     k_{4,r} &= h(\vec{v}_{j,n} + \frac{1}{2}k_{3,v}), \\ 
+     k_{4,v} &= hg(t_j+\frac{1}{2}h, \vec{r}_{j,n} + \frac{1}{2}k_{3,r}, \vec{v}_{j,n} k_{3,v}).
     \end{align}
-    % and 
-    % \begin{align} 
-    %  r_{i+1} &= r_i + \frac{1}{6}(k_{1,r} + 2k_{2,r} + 2k_{3,r} + k_{4,r}), \\ 
-    %  v_{i+1} &= v_i + \frac{1}{6}(k_{1,v} + 2k_{2,v} + 2k_{3,v} + k_{4,v}), \\ 
-    % \end{align}
 \end{subequations}
-For the scenario we consider here, with \(n\) particles inside the Penning trap, the RK4 method involves computing 
+Once these are computed, the next time step is updated: 
+\begin{subequations}    \label{eq:RK4_update_rv}
+\begin{align} 
+     \vec{r}_{j+1,n} &= \vec{r}_{j,n} + \frac{1}{6}(k_{1,r} + 2k_{2,r} + 2k_{3,r} + k_{4,r}), \\ 
+     \vec{v}_{j+1,n} &= \vec{v}_{j,n} + \frac{1}{6}(k_{1,v} + 2k_{2,v} + 2k_{3,v} + k_{4,v}).
+\end{align}
+\end{subequations}
 
 
-We will specialize the RK4 method to the scenario of \(n\) particles inside the Penning trap. Since the last term in \eqref{eq:fi} is dependent on the current position and velocities of the other particles, we need to update all particles position and velocity for each intermediate step.
+% We will specialize the RK4 method to the scenario of \(n\) particles inside the Penning trap. Specifically, we implement 
 
-For RK4, this takes the form 
-\begin{subequations}
-    \begin{align}
-        k_1 &= hf(t_i)
-    \end{align}
-\end{subequations} 
+Below, in Algorithm \ref{alg:RK4}, we have presented our implementation of the RK4 method for a single time step update. For readability, we have placed the time index \(j\) as a subscript, and the particle index \(n\) in square-parenthesis. Since \(g(t,\vec{r}_n, \dot{\vec{r}}_n)\) is dependent on the current position and velocities of the other particles, as evident by the last term in \eqref{eq:fi}, we have updated the particles velocities and positions between each computation of \(k_1\), \(k_2\) and \(k_3\).
+\begin{algorithm}[H] 
+\caption{RK4: Next time step}
+\begin{algorithmic}[1]
+% \Require $N > 0$
+% \Ensure $y = x^n$
+\State \(\tilde{\vec{r}} \gets \vec{r}\)    \Comment{copy of r}
+\State \(\tilde{\vec{v}} \gets \vec{v}\)    \Comment{copy of v}
+% \While{\(n<N\)} \Comment{Computing \(k_1\)}
+\For{$n \gets 1$ to $N$} \Comment{Computing \(k_1\)}
+  \State \(k_{1,r}[n] \gets h\vec{v}[n]\) 
+  \State \(k_{1,v}[n] \gets hg(t_j, \vec{r}[n], \vec{v}[n])\)
+\EndFor
+\AlgComment{Updating \(\vec{v}\) and \(\vec{r}\):}
+\State \(\vec{v} \gets \tilde{\vec{v}} + \frac{1}{2}k_{1,v}\)
+\State \(\vec{r} \gets \tilde{\vec{r}} + \frac{1}{2}k_{1,r}\)
+\\ 
+\For{$n \gets 1$ to $N$} \Comment{Computing \(k_2\)}
+  \State \(k_{2,r}[n] \gets h\left(\tilde{\vec{v}}[n] + \frac{1}{2}k_{1,v}[n]\right)\) 
+  \State \(k_{2,v}[n] \gets hg(t_j + \frac{1}{2}h, \vec{r}[n], \vec{v}[n])\)
+\EndFor
+\AlgComment{Updating \(\vec{v}\) and \(\vec{r}\):}
+\State \(\vec{v} \gets \tilde{\vec{v}} + \frac{1}{2}k_{2,v}\)
+\State \(\vec{r} \gets \tilde{\vec{r}} + \frac{1}{2}k_{2,r}\)
+\\ 
+\For{$n \gets 1$ to $N$} \Comment{Computing \(k_3\)}
+  \State \(k_{3,r}[n] \gets h\left(\tilde{\vec{v}}[n] + \frac{1}{2}k_{2,v}[n]\right)\) 
+  \State \(k_{3,v}[n] \gets hg(t_j+\frac{1}{2}h, \vec{r}[n], \vec{v}[n])\)
+\EndFor
+\AlgComment{Updating \(\vec{v}\) and \(\vec{r}\):}
+\State \(\vec{v} \gets \tilde{\vec{v}} + k_{3,v}\)
+\State \(\vec{r} \gets \tilde{\vec{r}} + k_{3,r}\)
+\\ 
+\For{$n \gets 1$ to $N$} \Comment{Computing \(k_4\)}
+  \State \(k_{1,r}[n] \gets h\left(\tilde{\vec{v}}[n] + k_{3,v}[n]\right)\) 
+  \State \(k_{1,v}[n] \gets hg(t_j+h, \vec{r}[n], \vec{v}[n])\)
+\EndFor
+\AlgComment{Updating \(\vec{v}\) and \(\vec{r}\) for next time step:}
+\State \(\vec{v}_{j+1} \gets \tilde{\vec{v}} +\frac{1}{6}\left(k_{1,v} + 2k_{2,v} + 2k_{3,v} + k_{4,v}\right)\)
+\State \(\vec{r}_{j+1} \gets \tilde{\vec{r}} +\frac{1}{6}\left(k_{1,r} + 2k_{2,r} + 2k_{3,r} + k_{4,r}\right)\)
+\end{algorithmic}
+\label{alg:RK4}
+\end{algorithm}
 
-reshuffling these expressions and taking a weighted averaged weight to obtain a better estimate which only depends on the current time index, thus not needing an actual increase in the number of discretization steps. 
 
-For RK4, this involves the computation of four additional slopes before updating \(r_{n+1,i}\) and \(v_{n+1,i}\). 
 
+
+% \begin{algorithm}[htbp] % or [H]
+% \caption{Sum of First $n$ Integers}
+% \begin{algorithmic}[1]
+%   \State $S \gets 0$
+%   \For{$i = 1$ to $n$}
+%     \State $S \gets S + i$
+%   \EndFor
+%   \State \Return $S$
+% \end{algorithmic}
+% \end{algorithm}
 
 \subsection{Specific Analytical Solution}
-As a sanity check for our numerical implementation of the Penning trap we consider the following analytic solution to the Penning trap containing a single particle. Let 
+As a sanity check for our numerical implementation of the Penning trap we have considered the following analytic solution to the (static) Penning trap containing a single particle. Let 
 \begin{subequations}
 \begin{alignat}{2}
     x(0) &= x_0, &\quad  \dot{x}(0) &= 0, \\
@@ -337,43 +404,56 @@ As a sanity check for our numerical implementation of the Penning trap we consid
 \end{subequations}
 then \eqref{eq:dot_z} has the solution 
 \begin{align}
-    z(t) = z_0\cos(\omega_z t),
+    z(t) = z_0\cos(\omega_z t), \label{eq:z_analytic}
 \end{align}
 while we find \(\phi_{\pm} = 0\) and 
 \begin{align}
     A_{\pm} = \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
 \end{align}
 
-\section{Results}
-\subsection{Trajectories}
-The motion in the $z$-direction of a single particle inside the Penning trap is shown in figure \ref{fig:single-tz}. 
-Next, we consider two particles inside the Penning trap, and compare results with and without a Coulomb interaction between them.
-A comparison of the trajectories in the $xy$-plane is shown in figure \ref{fig:xy_comparison}.
-From the figure, we see that the Coloumb interaction has a significant effect on the trajectories, with each particle taking on much more irregular paths when the interaction is included.
-A comparison between phase space plots in the $z$-direction is also shown in figure \ref{fig:phasespace_z_comparison}.
-In this case as well, the effect of the Coulomb interaction is significant.
-Concretely, the interaction causes the two perfectly circular phase space trajectories to severely deform and spiral.
-This is of course in large contrast to the non-interacting case where the phase space trajectories are perfectly circular, as each particle oscillates harmonically in the $z$-direction.
-Additional plots of the phase space in the $x$-direction are shown in section \ref{sec:appendix_plots} of the appendix.
-Also here, we see the effect of the Coulomb interaction.
-However, the analysis of this becomes less straightforward due to the already complex motion in the $x$-direction.
 
+
+\section{Results}
+\subsection{Trajectories of Two Particles}
+Here, we present the results from simulating two particles inside the Penning trap. We have set \(T=50\mu s\), and given the two particles the following initial phase space conditions. For particle 1:
+\begin{subequations}
+    \begin{align}
+        (x_0, y_0, z_0) &= (20,0,0)\mu m, \\ 
+        (v_{x,0}, v_{y,0}, v_{z,0}) &= (0,25,0)\mu m/\mu s,
+    \end{align}
+\end{subequations}
+and for particle 2:
+\begin{subequations}
+    \begin{align}
+        (x_0, y_0, z_0) &= (25,25,0)\mu m, \\ 
+        (v_{x,0}, v_{y,0}, v_{z,0}) &= (0,40,5)\mu m/\mu s.
+    \end{align}
+\end{subequations}
+We have also simulated the case of particle 1 alone, inside the Penning trap.
+
+The motion in the $z$-direction of particle 1 is shown in Fig.~\ref{fig:single-tz}. The figure shows a clear sinusoidal motion, as predicted by the analytic solution \eqref{eq:z_analytic}.
 % ------------------------
 % single particle tz plot
 % ------------------------
-\begin{figure}
+\begin{figure}{H}
     \centering
     \includegraphics[scale=0.5]{figs/results/single-tz-RK4-n4000.pdf}
-    \caption{Caption. Single particle.}
+    \caption{A single-particle's trajectory in the \(z\)-coordinate, as a function of time.}
     \label{fig:single-tz}
 \end{figure}
+
+For the simulation of two particles inside the Penning trap, we have considered both the interacting and the non-interacting case. Fig.~\ref{fig:xy_comparison} shows the motion of the two particles in the \(xy\)-plane, for with (a) and without (b) interactions.
+From the figure, we see that the Coulomb interaction has a subtle, but noticeable effect on the trajectories.
+Likewise, a comparison between phase space plots in the $z$-direction is shown in Fig.~\ref{fig:phasespace_z_comparison}.
+In this case, the effect of the Coulomb interaction is much more noticeable.
+Concretely, the interaction causes the two perfectly circular phase space trajectories to spiral and deform.
 
 % ------------------------
 % Position space xy plots 
 % ------------------------
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{subfigure}[a]{0.45\textwidth}
         \centering
         \includegraphics[scale=0.5]{figs/results/nonint-xy-RK4-n4000.pdf}
         \caption{Position space xy (interacting).}
@@ -386,25 +466,30 @@ However, the analysis of this becomes less straightforward due to the already co
         \caption{Position space xy (non-interacting).}
         \label{fig:xy_int}
     \end{subfigure}
-    \caption{Comparison of trajectories in the xy plane for2 interacting and non-interacting cases.}
+    \caption{Comparison of trajectories of two particles in the \(xy\)-plane for the cases of interacting (a) and non-interacting (b).}
     \label{fig:xy_comparison}
 \end{figure}
+
+
+Additional plots of the phase space in the $x$-direction are shown in section \ref{sec:appendix_plots} of the appendix.
+
+
 
 % ---------------------
 % Phase space z plots
 % ---------------------
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{subfigure}[a]{0.45\textwidth}
         \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-z-nonint-RK4-n4000.pdf}
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-int-RK4-n4000.pdf}
         \caption{Phase space z (interacting).}
         \label{fig:phasespace_z_nonint}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-z-int-RK4-n4000.pdf}
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-nonint-RK4-n4000.pdf}
         \caption{Phase space z (non-interacting).}
         \label{fig:phasespace_z_int}
     \end{subfigure}
@@ -413,7 +498,7 @@ However, the analysis of this becomes less straightforward due to the already co
 \end{figure}
 
 \subsection{Resonance phenomena}
-Tracking the number of escaped particles as a function of the frequency of an applied oscillating electric field, we obtain the plot shown in figure \ref{fig:resonance_plot}.
+Tracking the number of escaped particles as a function of the frequency of an applied oscillating electric field, we obtain the plot shown in Fig.~\ref{fig:resonance_plot}.
 In particular, we see that there are three prominent valleys where all (or nearly all) particles escape the Penning trap.
 This clearly indicates some form of resonance, where the applied frequency matches some natural frequency of the system.
 These phenomena also seem to heavily depend on the amplitude $f$ of the applied oscillating field.
