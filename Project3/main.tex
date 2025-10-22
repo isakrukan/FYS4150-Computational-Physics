@@ -264,7 +264,7 @@ where \(\phi_{\pm}\) are some constant phases, \(A_{\pm}\) some positive amplitu
 }
 
 
-For the single particle to remain bounded within the Penning trap, we should require that \(|f(t)|\) stays bounded for all \(t\). Otherwise, the particle's trajectory in the \(x\) and/or \(y\)-plane, given by \(\text{Re}(f)\) and \(\text{Re}(f)\), respectively, will eventually escape into infinity. This amounts to requiring that \(\omega_0^2 \geq 2\omega_z^2\). To see this, consider \(|f(t)|^2\), which takes the form
+For the single particle to remain bounded within the Penning trap, we should require that \(|f(t)|\) stays bounded for all \(t\). Otherwise, the particle's trajectory in the \(x\) and/or \(y\)-plane, given by \(\text{Re}(f)\) and \(\text{Im}(f)\), respectively, will eventually escape into infinity. This amounts to requiring that \(\omega_0^2 \geq 2\omega_z^2\). To see this, consider \(|f(t)|^2\), which takes the form
 \begin{align}
     |f(t)|^2 &= A_+^2e^{2t\text{Im}(\omega_+)} + A_-^2e^{2t\text{Im}(\omega_-)} 
     \notag \\
@@ -317,7 +317,19 @@ For a sufficiently strong Penning trap, the particles will eventually be driven 
 \begin{align}
     V_0\rightarrow V_0(1 + A\cos(\omega_V t)),
 \end{align}
-where \(A\) is some amplitude and \(\omega_V\) is the `driving' frequency of the potential. When \(\omega_V\) approaches \(\omega_{\pm,n}\) or \(\omega_{z,n}\), or some combination of the two, resonance occurs. The particles oscillation increase rapidly, which may eventually lead to them spiraling out of the trap. There are several use cases to matching \(\omega_V\) to \(\omega_{\pm,n}\) or \(\omega_{z,n}\). For instance, since the two latter frequencies are generally different from one particle to the other, one could set \(\omega_V=\omega_{z,n_0}\), for some \(n_0\), as to eject all particles with charge \(q_{n_0}\) and mass \(m_{n_0}\) (cf. \eqref{eq:def:omega_0_omega_z}). Or, say the particles mass and charge where unknown, then one could obtain these, or at least their ratio, by adjusting \(\omega_V\) and looking for resonance phenomena. 
+where \(A\) is some amplitude and \(\omega_V\) is the `driving' frequency of the potential. 
+In general, we expect resonance to occur when the driving frequency \(\omega_V\) approaches some natural frequency of the system.
+For a single particle inside the Penning trap, the natural frequencies are given by \(\omega_{\pm}\) and \(\omega_{z}\).
+Thus, as \(\omega_V\) approaches either \(\omega_{\pm}\), \(\omega_{z}\), or some combination of the two, we would expect resonance to occur.
+That is, energy is very efficiently transferred from the potential to the particle, which may eventually lead to spiraling out of the trap.
+Although we might expect similar phenomena occur when multiple particles are present in the trap, this analysis is complicated due to their Coulomb interactions.
+Thus, in the presence of multiple particles, we will have to rely on numerical simulations in order to understand how this behavior is modified.
+  
+%There are several use cases to matching \(\omega_V\) to \(\omega_{\pm,n}\) or \(\omega_{z,n}\). 
+To motivate this further, we may imagine several possible use cases if particle interactions do not fundamentally alter the resonant behavior of the system.
+For instance, since the natural frequencies \(\omega_{\pm}\), \(\omega_{z}\) are generally different from one particle to the other, one could tune the driving frequency to eject all particle with a specific mass-to-charge ratio.
+%\(\omega_V=\omega_{z,n_0}\), for some \(n_0\), as to eject all particles with charge \(q_{n_0}\) and mass \(m_{n_0}\) (cf. \eqref{eq:def:omega_0_omega_z}).
+Or, say the particles mass and charge where unknown, then one could similarly obtain their ratio by tuning \(\omega_V\) and searching for resonance phenomena.
 
 In the next section we will present how we have numerical solved the motion of the particles in the Penning trap. Since we have now introduced a time-dependence to the potential, the equations of motion in \eqref{eq:eom_componentwise} take a slightly different form. If we take a step back, restoring the general form for \(\ddot{\vec{r}}\) in \eqref{eq:ddotr_single_particle} and adding the Coulomb interactions \eqref{eq:colliColliCOULOUMB}, we obtain  a compact form for the equations of motion:
 \begin{align}
@@ -447,16 +459,6 @@ while we find \(\phi_{\pm} = 0\) and
     A_{\pm} = \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
 \end{align}
 
-\subsection{Adding a time dependent perturbation}   \label{sec:time_dep_potential}
-Lastly, we modify the static potential by adding a time-dependent perturbation.
-Concretely, we add a driving cosine term to the potential, such that
-\begin{align}
-    V_0 \rightarrow V_0(1 + f\cos(\omega_V t)).
-\end{align}
-One of our main goals will then be to study the effect of this perturbation on the motion of particles inside the Penning trap.
-This will be achieved by simulating the motion of a large number of particles inside the Penning trap, while varying the driving frequency \(\omega_V\) and the amplitude \(f\).
-Tracking the number of particles that remain trapped after a fixed time \(T\), we will then be able to identify resonant frequencies where a large fraction of particles escape the trap. 
-
 \section{Results}
 \subsection{Trajectories of Two Particles}
 Here, we present the results from simulating two particles inside the Penning trap. We have set \(T=50\si{\us}\), and given the two particles the following initial phase space conditions. For particle 1:
@@ -479,7 +481,7 @@ The motion in the $z$-direction of particle 1 is shown in Fig.~\ref{fig:single-t
 % ------------------------
 % single particle tz plot
 % ------------------------
-\begin{figure}{H}
+\begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/results/single-tz-RK4-n4000.pdf}
     \caption{A single-particle's trajectory in the \(z\)-coordinate, as a function of time.}
