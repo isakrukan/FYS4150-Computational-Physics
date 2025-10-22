@@ -30,7 +30,7 @@ def plot_trapped(filename, amplitudes=[0.1,0.4,0.7], frequency_range=None, lines
 
             frequencies = data[:, 0]
             fraction_inside = 1 - data[:, 1] / 100  # since we simulated 100 particles
-
+            
             plt.plot(frequencies, fraction_inside, label=f'f={f}', linestyle=linestyle, color=colors[i], alpha=alpha)
 
     if frequency_range:
@@ -38,7 +38,7 @@ def plot_trapped(filename, amplitudes=[0.1,0.4,0.7], frequency_range=None, lines
     else:
         plt.xlim(frequencies.min(), frequencies.max())
     
-    plt.xlabel(r'$\omega\ \ [MHz]$')
+    plt.xlabel(r'$\omega_V\ \ [MHz]$')
     plt.ylabel('Fraction of particles inside the trap')
 
 
@@ -48,19 +48,44 @@ if __name__ == "__main__":
     OUTDIR = '../figs/results/'
     if not os.path.exists(OUTDIR):
         os.makedirs(OUTDIR)
-        
-        
-    plt.figure(figsize=(6,4))
+
+    B0 = 9.65*1e1
+    V0 = 2.41*1e6
+    d = 500
+    m = 40
+    q = 1 
+    
+    omega_0 = q * B0 / m
+    omega_z = np.sqrt(2 * q * V0 / (m * d**2))
+
+    temp = np.sqrt(omega_0**2 - 2 * omega_z**2)
+    omega_pos = 0.5 * (omega_0 + temp)
+    omega_neg = 0.5 * (omega_0 - temp)
+    omega_peak = (omega_pos + omega_z) / 2
+    omega_peak_str = r"$(\omega_z + \omega_+)\ / \ 2$"
+
+    fig = plt.figure(figsize=(6,4))
     plot_trapped('out/n_escaped-p100-f$(FWILD)-RK4-int-n4000.h5')
-    plt.savefig(OUTDIR + 'trapped_fraction.pdf')
+    ylim = fig.gca().get_ylim()
+    plt.ylim(ylim)
+    plt.vlines([omega_peak, omega_z, omega_pos], ymin=ylim[0], ymax=ylim[1], colors=['k','k','k'], linestyles='dotted', zorder=1)
+    plt.text(omega_peak, ylim[1]*1.05, omega_peak_str, ha='center', va='top', rotation=0)
+    plt.text(omega_z, ylim[1]*1.05, r'$\omega_\mathrm{z}$', ha='center', va='top', rotation=0)
+    plt.text(omega_pos, ylim[1]*1.05, r'$\omega_\mathrm{+}$', ha='center', va='top', rotation=0)
     plt.legend()
+    plt.savefig(OUTDIR + 'trapped_fraction.pdf')
 
     plt.figure(figsize=(6,4))
     linestyles = ['-', '--']
     types = ['int', 'nonint']
     alphas = [1.0, 0.7]
     for i in range(2):
+        #plot_trapped(f'out/n_escaped-p100-f$(FWILD)-RK4-{types[i]}-n4000.h5', frequency_range=(1, 1.7), linestyle=linestyles[i], colors=['C0', 'C1', 'C2'], alpha=alphas[i])
         plot_trapped(f'out/n_escaped-p100-f$(FWILD)-RK4-{types[i]}-n4000.h5', frequency_range=(1, 1.7), linestyle=linestyles[i], colors=['C0', 'C1', 'C2'], alpha=alphas[i])
 
+    ylim = fig.gca().get_ylim()
+    plt.ylim(ylim)
+    plt.vlines([omega_peak], ymin=ylim[0], ymax=ylim[1], colors=['k'], linestyles='dotted', zorder=1)
+    plt.text(omega_peak, ylim[1]*1.05, omega_peak_str, ha='center', va='top', rotation=0)
     plt.legend(['','','','f=0.1', 'f=0.4', 'f=0.7'],ncol=2, columnspacing=-0.3, loc='lower left')
     plt.savefig(OUTDIR + 'trapped_fraction_zoomed.pdf')

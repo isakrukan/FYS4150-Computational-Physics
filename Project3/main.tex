@@ -128,6 +128,14 @@
 \author{Magnus Axelsen and Isak Cecil Onsager Rukan} % self-explanatory
 \date{\today}                             % self-explanatory
 \noaffiliation                            % ignore this, but keep it.
+
+\begin{abstract}
+    Using the fourth-order Runge-Kutta method, we simulate the motion of $\mathrm{Ca}^+$ particles inside a Penning trap.
+    Comparisons are also made with the simpler Forward-Euler method, which is found to be significantly less accurate.
+    Additionally, we perturb the static electric potential of the Penning trap by adding a time-dependent oscillating term.
+    Simulating the motion of $N=100$ $\mathrm{Ca}^+$ particles while varying the frequency of the oscillating term, we identify several resonant frequencies where a significant fraction of the particles escape the trap.
+    We also find that the Coulomb interaction between the particles has a noticeable effect on the resonant frequencies, shifting them slightly compared to the non-interacting case.
+\end{abstract}
 \maketitle
 
 \section{Introduction}
@@ -413,7 +421,15 @@ while we find \(\phi_{\pm} = 0\) and
     A_{\pm} = \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
 \end{align}
 
-
+\subsection{Adding a time dependent perturbation}
+Lastly, we modify the static potential by adding a time-dependent perturbation.
+Concretely, we add a driving cosine term to the potential, such that
+\begin{align}
+    V_0 \rightarrow V_0(1 + f\cos(\omega_V t)).
+\end{align}
+One of our main goals will then be to study the effect of this perturbation on the motion of particles inside the Penning trap.
+This will be achieved by simulating the motion of a large number of particles inside the Penning trap, while varying the driving frequency \(\omega_V\) and the amplitude \(f\).
+Tracking the number of particles that remain trapped after a fixed time \(T\), we will then be able to identify resonant frequencies where a large fraction of particles escape the trap. 
 
 \section{Results}
 \subsection{Trajectories of Two Particles}
@@ -496,10 +512,15 @@ In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv
 \end{figure}
 
 \subsection{Resonance phenomena}
-Tracking the number of escaped particles as a function of the frequency of an applied oscillating electric field, we obtain the plot shown in Fig.~\ref{fig:resonance_plot}.
-In particular, we see that there are three prominent valleys where all (or nearly all) particles escape the Penning trap.
-This clearly indicates some form of resonance, where the applied frequency matches some natural frequency of the system.
-These phenomena also seem to heavily depend on the amplitude $f$ of the applied oscillating field.
+Tracking the number of escaped particles as a function of the frequency of the applied oscillating potential, we obtain the plot shown in Fig.~\ref{fig:resonance_plot}.
+In particular, we see that there are three prominent valleys where a significant fraction of the particles escape the Penning trap.
+This is indicates that the corresponding frequencies are resonant frequencies of the system.
+We have also included markers for the frequencies
+\begin{align*}
+    \omega_z,\quad \omega_+,\quad \mathrm{and}\quad \frac{\omega_+ + \omega_z}{2}.
+\end{align*}
+These frequencies seem to almost line up with the observed resonant frequencies, but being slightly shifted to the right.
+Additionally, the system's behavior around these frequencies seems to heavily depend on the amplitude $f$ of the applied oscillating field.
 Indeed, as $f$ is decreased, the valleys become less pronounced and eventually disappear.
 Lastly, we want to compare how the Coulomb interaction affects the resonant frequencies.
 For this, we zoom in on the most prominent resonant frequency, around \(\omega = 1.4 \si{\MHz}\).
@@ -550,10 +571,25 @@ Plotting the relative error as a function of time, we obtain Fig. \ref{fig:singl
 
 \section{Discussion}
 \subsection{Resonance}
-Although a detailed analysis of the observed resonance phenomena may go beyond the scope of this project, we can try to gain some qualitative understanding of the main features.
-In particular, we observe that the resonant frequencies seem to be shifted slightly when Coulomb interactions are taken into account.
-This behavior can be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential seen by each particle.
+We will now try to gain some qualitative understanding of the main features observed in Fig.~\ref{fig:resonance_plot} and \ref{fig:resonance_zoomed}.
+First is the presence of resonant behavior at all.
+This may be best understood in the case of a single particle inside the Penning trap, in which the system has well-defined natural frequencies \(\omega_{\pm}\) and \(\omega_z\).
+When the applied frequency \(\omega_V\) closely matches these natural frequencies, we may expect the energy transfer from the applied field to the particle to become much more efficient.
+Eventually, this will then lead to the particle gaining enough energy to escape the potential well of the Penning trap.
+This is of course somewhat complicated when simulating a larger number of particles, as particle trajectories become chaotic due to Coulomb interactions.
+Still, resonant behavior is clearly observed in our simulations.
+\newline
+We also observe a shift of the resonant frequencies as Coulomb interactions are taken into account.
+This behavior may be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential seen by each particle.
 Naturally, these modifications to the potential will also modify the resonant frequencies of the system.
+\newline
+Although one might expect that turning off Coulomb interactions would shift the resonant frequencies onto the nearby natural single-particle frequencies
+\begin{align*}
+    \omega_z,\quad \omega_+,\quad \mathrm{and}\quad \frac{\omega_+ + \omega_z}{2},
+\end{align*}
+included in the figure, this does not seem to be the case.
+While this still lacks a clear explanation, one possibility 
+
 \newline
 These results may also have practical applications.
 For instance, due to resonant frequencies being dependent on the mass and charge of the particle species, one can imagine tuning the applied frequency to selectively eject particles of a certain type from the trap.
