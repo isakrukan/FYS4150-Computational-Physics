@@ -98,5 +98,5 @@ A few plotting scripts are also included:
 **Problem 9**
 - `plot_trapped.py` - Generates plots of the fraction of trapped particles remaining in the penning trap.
 
-These can be run as any other python program, and all figures will be saved to the **`plots/`** folder.
+These can be run as any other python program, and all figures will be saved to the **`Project3/figs/results/`** folder.
 Note that some tweaks may be necessary if using different datasets/parameters than the ones used by us.
