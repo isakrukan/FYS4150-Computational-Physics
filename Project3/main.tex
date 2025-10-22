@@ -221,9 +221,9 @@ The motion of a particle inside the Penning trap can be described by Newton's se
 \begin{align}
     m\ddot{\vec{r}} = \vec{F}_{L} + \sum_i \vec{F}_i, \label{eq:motion_Newton}
 \end{align}
-where \(m\) is the mass of the particle and \(\vec{r}=(x,y,z)\) with \(\ddot{\vec{r}}\) denoting the second time-derivative of \(\vec{r}\). The term \(\sum_i F_i\) corresponds to all the Coulomb forces from the other particles inside the Penning trap. (We are neglecting the contribution to the \(B\)-field from the moving particles inside the Penning trap. This is reasonable as long as we consider the non-relativistic case: \(|\vec{r}|\ll c\), where \(c\) is the speed of light.) The Coulomb force between two particles at position \(r_1\) and \(r_2\), as experience by the particle at \(r_1\) is given by 
+where \(m\) is the mass of the particle and \(\vec{r}=(x,y,z)\) with \(\ddot{\vec{r}}\) denoting the second time-derivative of \(\vec{r}\). The term \(\sum_i F_i\) corresponds to all the Coulomb forces from the other particles inside the Penning trap. (We are neglecting the contribution to the \(B\)-field from the moving particles inside the Penning trap. This is reasonable as long as we consider the non-relativistic case: \(|\vec{r}|\ll c\), where \(c\) is the speed of light.) The Coulomb force between two particles at position \(\vec{r}_1\) and \(\vec{r}_2\), as experience by the particle at \(r_1\) is given by 
 \begin{align}
-    F_{2} = k_e \frac{q_1q_2}{m_1} \frac{r_1 - r_2}{|r_1 - r_2|^3},
+    \vec{F}_{C} = k_e \frac{q_1q_2}{m_1} \frac{\vec{r}_1 - \vec{r}_2}{|\vec{r}_1 - \vec{r}_2|^3},
 \end{align}
 where \(m_1\) is the mass of the particle at position \(x_1\), \(k_e\) the Coulomb constant and \(q_{i}\) the charge of the particle at position \(x_i\), \(i=1,2\). We will consider the case of multiple particles in section \ref{sec:multiple_particles}.
 
@@ -651,13 +651,24 @@ Our results may also be somewhat sensitive to the initial conditions of the part
 % \cite{uioFYS3150H25}
 
 \section{Conclusion}
-We have successfully modeled and simulated the motion of charged particles inside a Penning trap, both with and without Coulomb interactions.
-Tracking the number of trapped particles as a function of an applied oscillating electric field, we have also seen that the system has certain natural resonant frequencies, in which a large fraction of the particles escape the trap.
-Furthermore, we have observed a shift of these resonant frequencies when Coulomb interactions are taken into account.
-This can be understood qualitatively in the mean-field limit, where the Coulomb interactions modify the effective potential felt by each particle.
-\newline
-There are also practical applications of our results.
-For instance, as the resonant frequencies will be dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
+% We have successfully modeled and simulated the motion of charged particles inside a Penning trap, both with and without Coulomb interactions.
+% Tracking the number of trapped particles as a function of an applied oscillating electric field, we have also seen that the system has certain natural resonant frequencies, in which a large fraction of the particles escape the trap.
+% Furthermore, we have observed a shift of these resonant frequencies when Coulomb interactions are taken into account.
+% This can be understood qualitatively in the mean-field limit, where the Coulomb interactions modify the effective potential felt by each particle.
+% \newline
+% There are also practical applications of our results.
+% For instance, as the resonant frequencies will be dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
+We have successfully modeled and simulated the motion of charged particles inside a Penning trap, both with and without Coulomb interactions. Comparing the RK4 and the FE method, we saw a clearly better performance for the RK4 method, which should be expected. 
+The motion of particles inside the Penning trap showed to be very stable; in the phase-space tracing out circular orbits. 
+Turning on Coulomb interactions resulted in a more chaotic motion, though confined within the Penning trap.
+
+When adding a time-dependence to our potential, we tracked the number of trapped particles eventually leaving the Penning trap. 
+This lead to the observation of the resonance phenomena; around certain natural resonant frequencies, a large fraction of the particles escape the trap. 
+When Coulomb interactions were turned on, we observed a shift of these resonant frequencies.
+We believe this can be understood qualitatively in the mean-field limit, where the Coulomb interactions modify the effective potential felt by each particle.
+In any case, since the resonant frequencies is dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
+
+For future work, it would be interesting to consider longer simulation times and implementing more advanced numerical integration algorithms than RK4. We found the resonance phenomena intriguing, and somewhat displeasing that our figures of the number of escaped particles against frequency did not align symmetrically over the natural frequencies we found analytically. Thus, it would certainly be interesting to further investigate this phenomena and its applications. For instance, would it be possible to calculate or estimate with certainty the direction in which the ejected particles are released?
 
 \newpage
 \clearpage
