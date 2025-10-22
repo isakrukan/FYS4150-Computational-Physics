@@ -32,6 +32,7 @@ To run the plotting scripts, you need the following dependencies:
 - NumPy
 - Matplotlib
 - h5py
+
 These can be installed by running
 
 ```bash
