@@ -47,7 +47,7 @@ endif
 
 # --- fixed definitions for Windows ---
 problem_8 = "$(BUILD)/main$(EXE)" --problem_8 $(1)
-problem_9 = "$(BUILD)/main$(EXE)" --problem_9 --n_steps 4000 --n_particles 100 --n_freq 101 $(1) >> $(LOGFILE)
+problem_9 = "$(BUILD)/main$(EXE)" --problem_9 --n_steps 4000 --n_particles 100 --n_freq 101 $(1) >> $(LOGFILE) 2>&1 
 
 
 define LOGTIME
