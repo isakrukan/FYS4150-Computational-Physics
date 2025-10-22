@@ -56,9 +56,9 @@ if __name__ == "__main__":
     plt.legend()
 
     plt.figure(figsize=(6,4))
-    linestyles = ['--', '-']
+    linestyles = ['-', '--']
     types = ['int', 'nonint']
-    alphas = [0.7, 1.0]
+    alphas = [1.0, 0.7]
     for i in range(2):
         plot_trapped(f'out/n_escaped-p100-f$(FWILD)-RK4-{types[i]}-n4000.h5', frequency_range=(1, 1.7), linestyle=linestyles[i], colors=['C0', 'C1', 'C2'], alpha=alphas[i])
 
