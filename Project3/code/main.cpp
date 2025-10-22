@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include <iomanip>
 #include <chrono>
+#include <filesystem>
 
 void problem8(const Args &args){
     //// Problem 8
@@ -84,7 +85,7 @@ void problem9(const Args &args)
     std::string time_stamp = get_time_stamp();
 
     // Try to load existing data. If fails, create empty dataset.
-    try
+    if (std::filesystem::exists(filename))
     {
         arma::hdf5_name data_hdf5 = arma::hdf5_name(filename, "escape_data");
         data.load(data_hdf5);
@@ -92,9 +93,9 @@ void problem9(const Args &args)
         std::cout << time_stamp << " - Found existing dataset " << filename << " with " << data.n_cols << " entries." << std::endl;
         std::cout << time_stamp << " - Loading and appending to this dataset." << std::endl;
     }
-    catch (...)
+    else
     {
-        std::cout << time_stamp << " - No existing dataset found." << filename << "." << std::endl;
+        std::cout << time_stamp << " - No existing dataset found." << std::endl;
         std::cout << time_stamp << " - Creating new dataset at " << filename << std::endl;
         data.set_size(2, 0);
     }
