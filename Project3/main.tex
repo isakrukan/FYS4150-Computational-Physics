@@ -130,7 +130,37 @@
 \maketitle
 
 \section{Introduction}
-... 
+\begin{center}
+% \textit{"Give me a place to stand and a lever long enough, and I will move the world." \cite{pappus_synagoge}} 
+% % \\
+% % — Archimedes, quoted by Pappus of Alexandria in \textit{Synagoge}, Book VIII (4th century CE)
+% \vspace{1em}
+\textit{"Give us a deep enough potential well and strong enough fields, and we will trap your particles (in a simulation)." — Modern adaptation of Archimedes famous `long-lever' quote \cite{pappus_synagoge}}
+\end{center}
+% \begin{center}
+% \parbox{0.85\textwidth}{
+% \textit{``Give me a place to stand and a lever long enough, and I will move the world.''}\\[0.3em]
+% \hfill — Archimedes~\cite{pappus_synagoge}
+% }
+
+% \vspace{1.5em}
+
+% \parbox{0.85\textwidth}{
+% \textit{``Give us a deep enough potential well and strong enough fields, and we will trap your particles (in a simulation).''}\\[0.3em]
+% \hfill — Adapted for the age of numerical physics~\cite{archimedes_particle_trap_parody}
+% }
+% \end{center}
+
+
+Many areas of modern physics and technology rely on confining particles to certain regions in space. For instance, particle colliders depend on storing a huge amount of particles, before accelerating them to relativistic speeds and colliding them in a controlled manner.\footnote{There are several existing particle colliders, for example the Large Hadron Collider at CERN~\cite{cernCollider} or the Tevatron at Fermilab~\cite{tevatron}.} The ATRAP and ALPHA collaborations at CERN trap antiprotons and positrons, and combine them to create and study antihydrogen \cite{atrapCERN,alphaCERN}. The list goes on for such fundamental physics experiments which involve trapping particles. There are also real-world applications to trapping particles beyond fundamental research, see for instance.~\cite{marshallFTICR,MakarovOrbitrap,ionImplantation}
+
+The idea of trapping particles itself is interesting from a fundamental point of view. According to quantum mechanics, a perfect particle trap is not completely realizable, due to the effects of quantum tunneling.\footnote{Quantum tunneling refers to the effect where a particle will always have a non-zero probability of passing through a potential barrier. It is a fundamental consequence of the probabilistic nature of quantum mechanics, see for instance~\cite{griffithsQM}.} Yet, as already mentioned, there are several working particle traps which, at least practically, do in fact trap particles. This is of course because the quantum tunneling effect is almost negligible for high enough energies scales (potentials).~\cite{griffithsQM} 
+
+Most particle-trap device rely on a clever setup of strong electric and magnetic fields. A famous such device is the Penning trap, named after the physicist F.M Penning, by Hans Dehmelt which created the first trap for electrons in 1959~\cite{decaroli2021iontraps}. In this project, we consider a classical model for the Penning trap, giving an overview of the theory behind how it works, and performing numerical simulations. We simulate the case of one, two and up to a 100 particles, turning on and off Coulomb interactions.
+
+\subsection*{Disclaimer and Code Documentation}
+When working with this project we have occasionally consulted with the language model ChatGPT and Copilot. However, all of our analysis, code implementation, results and language are produced by ourselves. Our code, which can be found \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3/code}{\texttt{here}}, relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, and \textsc{Armadillo}~\cite{armadillo}. We have used doxygen to create a thorough documentation of our code, found \href{https://github.uio.no/icrukan/FYS4150/blob/master/Project3/docs/doc.pdf}{\texttt{here}}. Before handing in, we made the unfortunate mistake of spilling \href{https://ctan.org/pkg/coffeestains?lang=en}{coffee} on our report...we can only hope it has concealed potential mistakes. 
+
 
 \section{Theory and Method}
 \subsection{The Penning Trap}
