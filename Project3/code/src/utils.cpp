@@ -22,6 +22,7 @@ int single_run_problem9(double f, double omega, double d, const Args &args)
 
     PenningTrap trap(V, 9.65e1, d);
     trap.interacting = args.interacting;
+    trap.zero_fields = true;
 
     for (int i = 0; i < args.n_particles; i++)
     {

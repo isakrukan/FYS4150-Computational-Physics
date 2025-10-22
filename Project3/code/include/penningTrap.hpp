@@ -59,8 +59,9 @@ private:
 
 public:
 
-    // Private variables:
+    // Public variables:
     bool interacting = true; ///< Whether or not the Penning trap includes interactions.
+    bool zero_fields = false; ///< If true, turns of the fields outside r>d.
 
     ///// Constructors //// 
     /**
@@ -100,7 +101,7 @@ public:
      * @param t Time [\f$ \mu s\f$] (microseconds)
      * @return \f$ \vec{E}\f$
      */
-    arma::vec E(arma::vec &r, double t);
+    arma::vec E(const arma::vec &r, double t);
 
     /**
      * @brief The magnetic field at position \f$ r = (x,y,z)\f$, given by \f$\vec{B} = B_0 \hat{e}_z = (0,0,B_0)\f$.
@@ -108,7 +109,7 @@ public:
      * @param r Position [\f$ \mu m \f$ ] (micrometer). 
      * @return \f$ \vec{B}\f$
      */
-    arma::vec B(arma::vec &r);
+    arma::vec B(const arma::vec &r);
 
     /**
      * @brief The forced applied to a @ref Particle "Particle" by index, due to the other particles inside the Penning trap. 

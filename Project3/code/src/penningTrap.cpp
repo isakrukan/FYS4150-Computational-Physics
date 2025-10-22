@@ -45,29 +45,37 @@ Particle& PenningTrap::operator[](int i){
 }
 
 
-arma::vec PenningTrap::E(arma::vec &r, double t){
-    arma::vec E_field;
+arma::vec PenningTrap::E(const arma::vec &r, double t){
+    arma::vec E_field = arma::vec(3).fill(0);
 
-    if (arma::norm(r) > d){
-        E_field = {0, 0, 0};
-    }
-    else{
-        E_field = {V_0_callable(t) / (d*d) * r[0], V_0_callable(t) / (d*d) * r[1], - 2*V_0_callable(t) / (d*d) * r[2]};
+    if (zero_fields){
+        if (arma::norm(r) <= d){
+            E_field += {r[0], r[1], - 2*r[2]};
+            E_field *= V_0_callable(t) / (d*d);
+        }
+
+        return E_field;
     }
 
+    // Won't go here if if tests succeeds
+    E_field = {r[0], r[1], - 2*r[2]};
+    E_field *= V_0_callable(t) / (d*d);
     return E_field;
 } 
 
-arma::vec PenningTrap::B(arma::vec &r){
-    arma::vec B_field;
+arma::vec PenningTrap::B(const arma::vec &r){
+    arma::vec B_field = arma::vec(3).fill(0);
 
-    if (arma::norm(r) > d){
-        B_field = {0, 0 , 0};
-    }
-    else{
-        B_field = {0, 0 , B_0};
-    }
+    if (zero_fields){
+        if (arma::norm(r) <= d){
+            B_field += {0, 0 , B_0};
+        }
 
+        return B_field;
+    }
+    
+    // Won't go here if if tests succeeds
+    B_field = {0, 0 , B_0};
     return B_field;
 } 
 
@@ -79,12 +87,12 @@ arma::vec PenningTrap::F_interaction(int i){
     }
     arma::vec Force = arma::vec(3).fill(0);
 
-    double prefactor = k_e * particles[i].q;
+    const double prefactor = k_e * particles[i].q;
     double norm;
     for (int j=0; j<n; j++){
         if (i != j){
 
-            norm = arma::norm(particles[i].r - particles[j].r, 1);
+            norm = arma::norm(particles[i].r - particles[j].r);
             Force += particles[j].q * (particles[i].r - particles[j].r) / std::pow(norm, 3);
         }
     }

@@ -81,7 +81,7 @@ clean:
 
 all: outfolder compile link clean
 
-.PHONY: run_problem_8 run_problem_9 py_plots complete_project
+.PHONY: run_problem_8 run_problem_9 py_plots project
 
 run_problem_8:
 	@echo "Running Problem 8 simulations..."
@@ -108,5 +108,5 @@ py_plots:
 	$(PY) plot_trapped.py
 
 # Build first (via 'all'), then run everything and plot
-complete_project: all run_problem_8 run_problem_9 py_plots
+project: all run_problem_8 run_problem_9 py_plots
 	@echo "Complete project finished."
