@@ -104,6 +104,7 @@
 \usepackage{hyperref}
 \usepackage{float}             % optional, if you want [H] placement
 
+
 \hypersetup{
     colorlinks,
     linkcolor={red!50!black},
@@ -182,7 +183,7 @@ where \(m\) is the mass of the particle and \(\vec{r}=(x,y,z)\) with \(\ddot{\ve
 \end{align}
 where \(m_1\) is the mass of the particle at position \(x_1\), \(k_e\) the Coulomb constant and \(q_{i}\) the charge of the particle at position \(x_i\), \(i=1,2\). We will consider the case of multiple particles in section \ref{sec:multiple_particles}.
 
-\subsection{A Single Particle inside the Penning Trap}
+\subsection{Single Particle Inside Static Penning Trap}
 For a single particle where the second term in \eqref{eq:motion_Newton} is absent, inserting \eqref{eq:Lorentz_force} into \eqref{eq:motion_Newton} and using the expressions for the \(E\)- and \(B\)-fields in \eqref{eq:E_field} and \eqref{eq:B_field} gives 
 \begin{align}
     \ddot{r} 
@@ -255,7 +256,7 @@ and so we may bound \(|f(t)|\) as (since \({\cos(t)\in[-1,1]}\))
 \end{align}
 
 
-\subsection{Multiple Particles inside the Penning Trap} \label{sec:multiple_particles}
+\subsection{Multiple Particles Inside Static Penning Trap} \label{sec:multiple_particles}
 We now consider \(N\) particles with charges \(\{q_n\}_{n\in[1,N]}\) and masses \(\{m_n\}_{n\in[1,N]}\) inside the Penning trap. The componentwise equations of motion for the particle at \(x_i\) with velocity \(v_i\) gets a second term, compared to \eqref{eq:eom_componentwise}. That is, we know have
 \begin{subequations}    \label{eq:particles_eqm}
     \begin{align}
@@ -443,10 +444,9 @@ The motion in the $z$-direction of particle 1 is shown in Fig.~\ref{fig:single-t
 \end{figure}
 
 For the simulation of two particles inside the Penning trap, we have considered both the interacting and the non-interacting case. Fig.~\ref{fig:xy_comparison} shows the motion of the two particles in the \(xy\)-plane, for with (a) and without (b) interactions.
-From the figure, we see that the Coulomb interaction has a subtle, but noticeable effect on the trajectories.
-Likewise, a comparison between phase space plots in the $z$-direction is shown in Fig.~\ref{fig:phasespace_z_comparison}.
-In this case, the effect of the Coulomb interaction is much more noticeable.
-Concretely, the interaction causes the two perfectly circular phase space trajectories to spiral and deform.
+From the figure, we see that the Coulomb interaction has a significant effect on the trajectories. With interactions, particle 1 starts its motion away from particle 2, and when particle 2 circles around the \(xy\)-plane and the two meet again, it seems like particle 1 is once more steering away from particle 2. 
+
+In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv_z\)-plane) comparison between the two cases of with or without interactions. Without interactions, the two particles trace out `perfect' circles in the phase space. With interactions, there is also a clear circular motion in the phase space, but somewhat more complicated.  
 
 % ------------------------
 % Position space xy plots 
@@ -471,7 +471,6 @@ Concretely, the interaction causes the two perfectly circular phase space trajec
 \end{figure}
 
 
-Additional plots of the phase space in the $x$-direction are shown in section \ref{sec:appendix_plots} of the appendix.
 
 
 
@@ -493,7 +492,7 @@ Additional plots of the phase space in the $x$-direction are shown in section \r
         \caption{Phase space z (non-interacting).}
         \label{fig:phasespace_z_int}
     \end{subfigure}
-    \caption{Comparison of phase space z for interacting and non-interacting cases.}
+    \caption{Two particles's orbit in the \(zv_z\)-plane (phase space) for the cases of interacting (a) and non-interacting (b).}
     \label{fig:phasespace_z_comparison}
 \end{figure}
 

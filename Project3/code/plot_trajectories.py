@@ -39,7 +39,7 @@ def plot_trajectories(**kwargs):
 if __name__ == "__main__":
     import os
 
-    OUTDIR = 'plots/'
+    OUTDIR = '../figs/results/'
     if not os.path.exists(OUTDIR):
         os.makedirs(OUTDIR)
         

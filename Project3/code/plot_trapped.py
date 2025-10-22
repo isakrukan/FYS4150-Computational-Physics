@@ -45,7 +45,7 @@ def plot_trapped(filename, amplitudes=[0.1,0.4,0.7], frequency_range=None, lines
 if __name__ == "__main__":
     import os
 
-    OUTDIR = 'plots/'
+    OUTDIR = '../figs/results/'
     if not os.path.exists(OUTDIR):
         os.makedirs(OUTDIR)
         
