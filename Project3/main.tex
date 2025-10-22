@@ -419,9 +419,6 @@ Below, in Algorithm \ref{alg:RK4}, we have presented our implementation of the R
 \label{alg:RK4}
 \end{algorithm}
 
-
-
-
 % \begin{algorithm}[htbp] % or [H]
 % \caption{Sum of First $n$ Integers}
 % \begin{algorithmic}[1]
@@ -432,7 +429,6 @@ Below, in Algorithm \ref{alg:RK4}, we have presented our implementation of the R
 %   \State \Return $S$
 % \end{algorithmic}
 % \end{algorithm}
-
 \subsection{Specific Analytical Solution}
 As a sanity check for our numerical implementation of the Penning trap we have considered the following analytic solution to the (static) Penning trap containing a single particle. Let 
 \begin{subequations}
@@ -451,9 +447,6 @@ while we find \(\phi_{\pm} = 0\) and
     A_{\pm} = \pm \frac{v_0 + \omega_-x_0}{\omega_{\Delta}}.
 \end{align}
 
-\subsection{Adding a time dependent perturbation}
-Lastly, we modify the static potential by adding a time-dependent perturbation.
-Concretely, we add a driving cosine term to the potential, such that
 \begin{align}
     V_0 \rightarrow V_0(1 + f\cos(\omega_V t)).
 \end{align}
@@ -527,34 +520,36 @@ In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv
     \begin{subfigure}[a]{0.45\textwidth}
         \centering
         \includegraphics[scale=0.5]{figs/results/phasespace-z-nonint-RK4-n4000.pdf}
-        \caption{The $z$-direction phase space of two interacting particles inside the Penning trap.}
+        \caption{The phase space (\(zv_z\)-plane) of two interacting particles inside the Penning trap.}
         \label{fig:phasespace_z_nonint}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[scale=0.5]{figs/results/phasespace-z-int-RK4-n4000.pdf}
-        \caption{The $z$-direction phase space of two non-interacting particles inside the Penning trap.}
+        \caption{The phase space (\(zv_z\)-plane) of two non-interacting particles inside the Penning trap.}
         \label{fig:phasespace_z_int}
     \end{subfigure}
-    \caption{The orbit of two particles in the \(zv_z\)-plane (phase space) for the cases where Coulomb interactions are turned off (a) and on (b).}
+    \caption{The orbit of two particles in phase space (\(zv_z\)-plane) for the cases where Coulomb interactions are turned off (a) and on (b).}
     \label{fig:phasespace_z_comparison}
 \end{figure}
 
 \subsection{Resonance phenomena}
-Tracking the number of escaped particles as a function of the frequency of the applied oscillating potential, we obtain the plot shown in Fig.~\ref{fig:resonance_plot}.
-In particular, we see that there are three prominent valleys where a significant fraction of the particles escape the Penning trap.
-This is indicates that the corresponding frequencies are resonant frequencies of the system.
-We have also included markers for the frequencies
-\begin{align*}
-    \omega_z,\quad \omega_+,\quad \mathrm{and}\quad \frac{\omega_+ + \omega_z}{2}.
-\end{align*}
-These frequencies seem to almost line up with the observed resonant frequencies, but being slightly shifted to the right.
+Adding $N=100$ $\mathrm{Ca}^{+}$ ions inside the Penning trap, we have simulated their motion for a total time of \(T=500\si{\us}\).
+The initial positions of each particle is sampled from a normal distribution with mean $0$ and standard deviation $0.1 d$.
+Likewise, the initial velocities are sampled from a normal distribution with mean $0$ and standard deviation $0.1 d /\si{\mu s}$.
+Running simulations for $n_{\omega} = 101$ different driving frequencies $\omega_V$ in the range $[0.5, 3.5] \si{\MHz}$, we track how many particles remain trapped inside the Penning trap after the total time $T=500\si{\us}$.
+Plotting the fraction of trapped particles against the driving frequency we obtain the plot shown in Fig.~\ref{fig:resonance_plot}.
+The figure also includes vertical lines indicating $\omega_z$, $2\omega_z$, and $3\omega_z$, as naive guesses for the resonant frequencies of the system.
+Indeed, near these frequencies we see that three prominent valleys where a significant fraction of the particles escape the Penning trap.
 Additionally, the system's behavior around these frequencies seems to heavily depend on the amplitude $f$ of the applied oscillating field.
-Indeed, as $f$ is decreased, the valleys become less pronounced and eventually disappear.
+First, smaller amplitudes $f$ seem to lead to less pronounced and narrower valleys around the resonant frequencies.
+This is most extreme for the smallest amplitude \(f=0.01\), where we barely see any resonant behavior at all.
+\newline
 Lastly, we want to compare how the Coulomb interaction affects the resonant frequencies.
 For this, we zoom in on the most prominent resonant frequency, around \(\omega = 1.4 \si{\MHz}\).
-Plotting the results for both the interacting and non-interacting cases, we obtain Fig.~\ref{fig:resonance_zoomed}.
+Running simulations both with and without Coulomb interactions, we track the fraction of trapped particles as before.
+The resulting plot is shown in Fig.~\ref{fig:resonance_zoomed}.
 In particular, we see that the resonant frequencies seem to be shifted slightly to the left when Coulomb interactions are taken into account.
 Although hard to tell, it might look like this shift becomes smaller as we increase the amplitude $f$.
 \begin{figure}
@@ -613,13 +608,10 @@ We also observe a shift of the resonant frequencies as Coulomb interactions are 
 This behavior may be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential seen by each particle.
 Naturally, these modifications to the potential will also modify the resonant frequencies of the system.
 \newline
-Although one might expect that turning off Coulomb interactions would shift the resonant frequencies onto the nearby natural single-particle frequencies
-\begin{align*}
-    \omega_z,\quad \omega_+,\quad \mathrm{and}\quad \frac{\omega_+ + \omega_z}{2},
-\end{align*}
-included in the figure, this does not seem to be the case.
-While this still lacks a clear explanation, one possibility 
-
+Although one might expect that turning off Coulomb interactions would shift the resonant frequencies onto our naive guesses $\omega_z$, $2\omega_z$, and $3\omega_z$.
+For the valleys near $\omega_z$ and $2\omega_z$, this does indeed seem to be the case, as turning off the interactions shifts the resonant frequencies slightly to the right.
+On the contrary, the opposite seems to hold for the valley near $3\omega_z$, as the resonant frequency would be shifted even further away from this value.
+It is not clear what the resolution to this may be, although one obvious possibility is that our initial guesses are simply wrong.
 \newline
 These results may also have practical applications.
 For instance, due to resonant frequencies being dependent on the mass and charge of the particle species, one can imagine tuning the applied frequency to selectively eject particles of a certain type from the trap.
@@ -644,7 +636,7 @@ Furthermore, we have observed a shift of these resonant frequencies when Coulomb
 This can be understood qualitatively in the mean-field limit, where the Coulomb interactions modify the effective potential felt by each particle.
 \newline
 There are also practical applications of our results.
-As the resonant frequencies will be dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
+For instance, as the resonant frequencies will be dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
 
 \newpage
 \clearpage

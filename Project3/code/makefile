@@ -5,7 +5,7 @@
 BUILD 		:= build
 LIB			:= 
 INCL 		:= -I./include
-CXXFLAGS 	:= -DARMA_USE_HDF5 -O2 
+CXXFLAGS 	:= -DARMA_USE_HDF5 -std=c++17 -O2 
 LDFLAGS 	:= -larmadillo
 PY			:= 
 EXE			:= 

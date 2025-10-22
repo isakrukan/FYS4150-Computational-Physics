@@ -5,8 +5,8 @@ This repository contains the code and documentation for Project 3 in the FYS3150
 ## Structure
 
 - **`src/`**: Contains all source code files for the project.
-- **`out/`**: Stores output datasets.
-- **`plots/`**: Save location used by plotting scripts
+- **`out/`**: Save location for data from main program.
+- **`plots/`**: Save location for plotting scripts
 - **`report/`**: Contains the project report and related documentation.
 
 ## Requirements
@@ -44,7 +44,7 @@ in the root folder.
 ### Compiling and running entire project using make
 The entire project may be compiled and run using
 ```bash
-make complete_project 
+make project 
 ```
 This includes generating data for all parts of problem 8 and 9, as well as generating plots using the python scripts.
 
