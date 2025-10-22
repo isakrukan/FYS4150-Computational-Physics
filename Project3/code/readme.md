@@ -1,4 +1,4 @@
-# Project 3: Computational Physics
+# Code Implementation for Project 3
 
 This repository contains the code and documentation for Project 3 in the FYS3150 - Computational Physics course at the University of Oslo.
 
