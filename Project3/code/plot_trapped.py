@@ -91,3 +91,5 @@ if __name__ == "__main__":
     plt.text(omega_2, ylim[1]*1.05, r'$2\omega_\mathrm{z}$', ha='center', va='top', rotation=0)
     plt.legend(['','','','f=0.1', 'f=0.4', 'f=0.7'],ncol=2, columnspacing=-0.3, loc='lower left')
     plt.savefig(OUTDIR + 'trapped_fraction_zoomed.pdf')
+
+    plt.show()
