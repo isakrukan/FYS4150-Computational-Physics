@@ -12,11 +12,26 @@ bool check_exists(const arma::mat &data, double omega)
     return false;
 }
 
-int single_run_problem9(double f, double omega, double d, const Args &args)
+
+std::string get_time_stamp()
+{
+    auto now = std::chrono::system_clock::now();
+    auto now_c = std::chrono::system_clock::to_time_t(now);
+
+    std::ostringstream time_str;
+    time_str << "[" << std::put_time(std::localtime(&now_c), "%H:%M:%S") << "]";
+    
+    return time_str.str();
+}
+
+int single_run_problem9(double omega, const Args &args)
 {
     arma::arma_rng::set_seed(args.seed);
 
     double V_0 = 2.41e6;
+    double d = 500;
+    double f = args.amplitude;
+    
     auto V = [V_0, f, omega](double t)
     { return V_0 * (1 + f * std::cos(omega * t)); };
 

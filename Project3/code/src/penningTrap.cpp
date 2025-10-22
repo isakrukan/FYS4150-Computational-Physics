@@ -84,7 +84,7 @@ arma::vec PenningTrap::F_interaction(int i){
     for (int j=0; j<n; j++){
         if (i != j){
 
-            norm = arma::norm(particles[i].r - particles[j].r, 1);
+            norm = arma::norm(particles[i].r - particles[j].r, 2);
             Force += particles[j].q * (particles[i].r - particles[j].r) / std::pow(norm, 3);
         }
     }

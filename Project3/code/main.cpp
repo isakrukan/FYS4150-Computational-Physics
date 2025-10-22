@@ -56,16 +56,14 @@ void problem8(const Args &args){
 void problem9(const Args &args)
 {
 
-    double f = args.amplitude;
-    double d = 500;
-    std::ostringstream f_str;
-    f_str << std::fixed << std::setprecision(1) << f; // e.g. "0.10"
+    // Prepare filename 
+    std::ostringstream f_oss;
+    f_oss << std::fixed << std::setprecision(1) << args.amplitude;
+    std::string f_str = f_oss.str();
+    std::string tmp   = f_str;
+    tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
 
-    // Filename for the created/loaded dataset
-    std::string fclean = f_str.str();
-    fclean.erase(std::remove(fclean.begin(), fclean.end(), '.'), fclean.end());
-    std::string outdir = "out/";
-    std::string info = "n_escaped-p" + std::to_string(args.n_particles) + "-f" + fclean + "-RK4";
+    std::string info = "n_escaped-p" + std::to_string(args.n_particles) + "-f" + tmp + "-RK4";
     if (args.interacting) {
         info += "-int";
     }
@@ -73,45 +71,55 @@ void problem9(const Args &args)
         info += "-nonint";
     }
     info += "-n" + std::to_string(args.n_steps);
-
+    
+    std::string outdir = "out/";
     std::string filename = outdir + info + ".h5";
 
+    // Run simulations
+    std::cout << "---------------------------------" << std::endl;
+    std::cout << "Starting problem 9 with f = " << f_str << std::endl;
+    std::cout << "---------------------------------" << std::endl;
+    
     arma::mat data;
+    std::string time_stamp = get_time_stamp();
 
     // Try to load existing data. If fails, create empty dataset.
     try
     {
         arma::hdf5_name data_hdf5 = arma::hdf5_name(filename, "escape_data");
         data.load(data_hdf5);
+
+        std::cout << time_stamp << " - Found existing dataset " << filename << " with " << data.n_cols << " entries." << std::endl;
+        std::cout << time_stamp << " - Loading and appending to this dataset." << std::endl;
     }
     catch (...)
     {
-        data.set_size(2, 0); // 2 rows, 0 cols initially
+        std::cout << time_stamp << " - No existing dataset found." << filename << "." << std::endl;
+        std::cout << time_stamp << " - Creating new dataset at " << filename << std::endl;
+        data.set_size(2, 0);
     }
 
+    // Run simulations each frequency:
 
-
-    // Compute frequencies not already in the dataset
+    std::cout << time_stamp << " - Running simulations for f = " << f_str << " ..." << std::endl;
+    
     arma::vec omega_values = arma::linspace(args.freq_min, args.freq_max, args.n_freq);
     for (double omega : omega_values)
     {
-        // Get current time for logging
-        auto now = std::chrono::system_clock::now();
-        auto now_c = std::chrono::system_clock::to_time_t(now);
-        auto time_str = std::put_time(std::localtime(&now_c), "%H:%M:%S");
-        
-        // Check if this omega already exists in the dataset
+        time_stamp = get_time_stamp();
         bool exists = check_exists(data, omega);
         
+        // If omega already in dataset, skip 
         if (exists)
         {
-            std::cout << "[" << time_str << "] Skipping omega=" << omega << " (already in dataset)" << std::endl;
+            std::cout << time_stamp << "\t\t Skipping omega=" << omega << " (already in dataset)" << std::endl;
             continue;
         }
+        // Else, run simulation and append to dataset
         else
         {
-            std::cout << "[" << time_str << "] Running omega=" << omega << std::endl;
-            int escape_count = single_run_problem9(f, omega, d, args);
+            std::cout << time_stamp << "\t\t Running omega=" << omega << std::endl;
+            int escape_count = single_run_problem9(omega, args);
             arma::vec new_col = {omega, static_cast<double>(escape_count)};
             data.insert_cols(data.n_cols, new_col);
         }
@@ -120,11 +128,11 @@ void problem9(const Args &args)
     }
 
 
-    // Sort dataset columns by the frequency values in column 0 
+    // Sort new dataset by the frequency values in column 0 
     arma::uvec sort_idx = arma::sort_index(data.row(0));
     data = data.cols(sort_idx);
 
-    // Save data back to file
+    // Save back to file
     arma::hdf5_name data_hdf5 = arma::hdf5_name(filename, "escape_data", arma::hdf5_opts::replace);
     data.save(data_hdf5, arma::hdf5_binary);
 }

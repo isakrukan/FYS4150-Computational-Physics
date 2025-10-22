@@ -38,7 +38,7 @@ def rel_error(dataset, r_0, v_0):
     z_numerical = dataset['positions'][2,:,0].T
 
     _, _, z_analytical = analytical_solution(t_numerical, r_0, v_0)
-
+    
     return np.abs(z_numerical - z_analytical) / np.abs(z_analytical)
 
 
@@ -54,7 +54,6 @@ if __name__ == "__main__":
  
     r_0 = np.array([20, 0, 20])  # Initial position [um]
     v_0 = np.array([0, 25, 0])    # Initial velocity
-    t = np.linspace(0, 50, 1000)  # Time array [μs]
 
     for method in ['FE', 'RK4']:
         plt.figure(figsize=(6,4))
