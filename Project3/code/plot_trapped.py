@@ -59,34 +59,36 @@ if __name__ == "__main__":
     omega_z = np.sqrt(2 * q * V0 / (m * d**2))
 
     temp = np.sqrt(omega_0**2 - 2 * omega_z**2)
-    omega_pos = 0.5 * (omega_0 + temp)
-    omega_neg = 0.5 * (omega_0 - temp)
-    omega_peak = (omega_pos + omega_z) / 2
-    omega_peak_str = r"$(\omega_z + \omega_+)\ / \ 2$"
+    omega_1 = omega_z
+    omega_2 = omega_z*2
+    omega_3 = omega_z*3
+
 
     fig = plt.figure(figsize=(6,4))
     plot_trapped('out/n_escaped-p100-f$(FWILD)-RK4-int-n4000.h5')
     ylim = fig.gca().get_ylim()
     plt.ylim(ylim)
-    plt.vlines([omega_peak, omega_z, omega_pos], ymin=ylim[0], ymax=ylim[1], colors=['k','k','k'], linestyles='dotted', zorder=1)
-    plt.text(omega_peak, ylim[1]*1.05, omega_peak_str, ha='center', va='top', rotation=0)
-    plt.text(omega_z, ylim[1]*1.05, r'$\omega_\mathrm{z}$', ha='center', va='top', rotation=0)
-    plt.text(omega_pos, ylim[1]*1.05, r'$\omega_\mathrm{+}$', ha='center', va='top', rotation=0)
+    plt.vlines([omega_1, omega_2, omega_3], ymin=ylim[0], ymax=ylim[1], colors=['k','k','k'], linestyles='dotted', zorder=1)
+    plt.text(omega_1, ylim[1]*1.05, r'$\omega_\mathrm{z}$', ha='center', va='top', rotation=0)
+    plt.text(omega_2, ylim[1]*1.05, r'$2\omega_\mathrm{z}$', ha='center', va='top', rotation=0)
+    plt.text(omega_3, ylim[1]*1.05, r'$3\omega_\mathrm{z}$', ha='center', va='top', rotation=0)
     plt.legend()
     plt.savefig(OUTDIR + 'trapped_fraction.pdf')
 
-    plt.figure(figsize=(6,4))
+
+    omega_range = (1, 1.7)
+    fig = plt.figure(figsize=(6,4))
     linestyles = ['-', '--']
     types = ['int', 'nonint']
     alphas = [1.0, 0.7]
     for i in range(2):
         #plot_trapped(f'out/n_escaped-p100-f$(FWILD)-RK4-{types[i]}-n4000.h5', frequency_range=(1, 1.7), linestyle=linestyles[i], colors=['C0', 'C1', 'C2'], alpha=alphas[i])
-        plot_trapped(f'out/n_escaped-p100-f$(FWILD)-RK4-{types[i]}-n4000.h5', frequency_range=(1, 1.7), linestyle=linestyles[i], colors=['C0', 'C1', 'C2'], alpha=alphas[i])
+        plot_trapped(f'out/n_escaped-p100-f$(FWILD)-RK4-{types[i]}-n4000.h5', frequency_range=omega_range, linestyle=linestyles[i], colors=['C0', 'C1', 'C2'], alpha=alphas[i])
 
     ylim = fig.gca().get_ylim()
     plt.ylim(ylim)
-    plt.vlines([omega_peak], ymin=ylim[0], ymax=ylim[1], colors=['k'], linestyles='dotted', zorder=1)
-    plt.text(omega_peak, ylim[1]*1.05, omega_peak_str, ha='center', va='top', rotation=0)
+    plt.vlines([omega_2], ymin=ylim[0], ymax=ylim[1], colors=['k'], linestyles='dotted', zorder=1)
+    plt.text(omega_2, ylim[1]*1.05, r'$2\omega_\mathrm{z}$', ha='center', va='top', rotation=0)
     plt.legend(['','','','f=0.1', 'f=0.4', 'f=0.7'],ncol=2, columnspacing=-0.3, loc='lower left')
     plt.savefig(OUTDIR + 'trapped_fraction_zoomed.pdf')
 
