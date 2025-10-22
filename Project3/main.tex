@@ -88,6 +88,7 @@
 \usepackage{physics,amssymb}   % physics already loads amsmath
 % \usepackage{amsmath}         
 \usepackage{graphicx}
+\usepackage{siunitx}
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{subcaption}
@@ -446,18 +447,18 @@ while we find \(\phi_{\pm} = 0\) and
 
 \section{Results}
 \subsection{Trajectories of Two Particles}
-Here, we present the results from simulating two particles inside the Penning trap. We have set \(T=50\mu s\), and given the two particles the following initial phase space conditions. For particle 1:
+Here, we present the results from simulating two particles inside the Penning trap. We have set \(T=50\si{\us}\), and given the two particles the following initial phase space conditions. For particle 1:
 \begin{subequations}
     \begin{align}
-        (x_0, y_0, z_0) &= (20,0,0)\mu m, \\ 
-        (v_{x,0}, v_{y,0}, v_{z,0}) &= (0,25,0)\mu m/\mu s,
+        (x_0, y_0, z_0) &= (20,0,0) \ \si{\um}, \\ 
+        (v_{x,0}, v_{y,0}, v_{z,0}) &= (0,25,0)\ \si{\um/\us},
     \end{align}
 \end{subequations}
 and for particle 2:
 \begin{subequations}
     \begin{align}
-        (x_0, y_0, z_0) &= (25,25,0)\mu m, \\ 
-        (v_{x,0}, v_{y,0}, v_{z,0}) &= (0,40,5)\mu m/\mu s.
+        (x_0, y_0, z_0) &= (25,25,0)\ \si{\um}, \\ 
+        (v_{x,0}, v_{y,0}, v_{z,0}) &= (0,40,5)\ \si{\um/\us}.
     \end{align}
 \end{subequations}
 We have also simulated the case of particle 1 alone, inside the Penning trap.
@@ -486,23 +487,21 @@ In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv
     \begin{subfigure}[a]{0.45\textwidth}
         \centering
         \includegraphics[scale=0.5]{figs/results/nonint-xy-RK4-n4000.pdf}
-        \caption{Position space xy (interacting).}
+        \caption{The rajectory in the \(xy\)-plane of two non-interacting particles stuck in the Penning trap.}
         \label{fig:xy_nonint}
     \end{subfigure}
     \vfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[scale=0.5]{figs/results/int-xy-RK4-n4000.pdf}
-        \caption{Position space xy (non-interacting).}
+        \caption{The trajectory in the \(xy\)-plane of two interacting particles stuck in the Penning trap.}
         \label{fig:xy_int}
     \end{subfigure}
-    \caption{Comparison of trajectories of two particles in the \(xy\)-plane for the cases of interacting (a) and non-interacting (b).}
+    \caption{
+        Trajectories of two particles in the \(xy\)-plane for the cases where Coulomb interactions are turned off (a) and on (b).
+        }
     \label{fig:xy_comparison}
 \end{figure}
-
-
-
-
 
 % ---------------------
 % Phase space z plots
@@ -511,18 +510,18 @@ In Fig.~\ref{fig:phasespace_z_comparison}, we have displayed a phase-space (\(zv
     \centering
     \begin{subfigure}[a]{0.45\textwidth}
         \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-z-int-RK4-n4000.pdf}
-        \caption{Phase space z (interacting).}
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-nonint-RK4-n4000.pdf}
+        \caption{The $z$-direction phase space of two interacting particles inside the Penning trap.}
         \label{fig:phasespace_z_nonint}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[scale=0.5]{figs/results/phasespace-z-nonint-RK4-n4000.pdf}
-        \caption{Phase space z (non-interacting).}
+        \includegraphics[scale=0.5]{figs/results/phasespace-z-int-RK4-n4000.pdf}
+        \caption{The $z$-direction phase space of two non-interacting particles inside the Penning trap.}
         \label{fig:phasespace_z_int}
     \end{subfigure}
-    \caption{Two particles's orbit in the \(zv_z\)-plane (phase space) for the cases of interacting (a) and non-interacting (b).}
+    \caption{The orbit of two particles in the \(zv_z\)-plane (phase space) for the cases where Coulomb interactions are turned off (a) and on (b).}
     \label{fig:phasespace_z_comparison}
 \end{figure}
 
@@ -533,55 +532,83 @@ This clearly indicates some form of resonance, where the applied frequency match
 These phenomena also seem to heavily depend on the amplitude $f$ of the applied oscillating field.
 Indeed, as $f$ is decreased, the valleys become less pronounced and eventually disappear.
 Lastly, we want to compare how the Coulomb interaction affects the resonant frequencies.
-For this, we zoom in on the most prominent resonant frequency, around \(\omega = 1.4 \mathrm{MHz}\).
-Plotting the results for both the interacting and non-interacting cases, we obtain figure \ref{fig:resonance_zoomed}.
+For this, we zoom in on the most prominent resonant frequency, around \(\omega = 1.4 \si{\MHz}\).
+Plotting the results for both the interacting and non-interacting cases, we obtain Fig.~\ref{fig:resonance_zoomed}.
 In particular, we see that the resonant frequencies seem to be shifted slightly to the left when Coulomb interactions are taken into account.
 Although hard to tell, it might look like this shift becomes smaller as we increase the amplitude $f$.
-
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/results/trapped_fraction.pdf}
-    \caption{Caption. Resonance plot.}
+    \caption{
+        The fraction of trapped particles as a function of the driving frequency \(\omega_V\), for different amplitudes \(f\) of the applied oscillating electric field. 
+        We see evidence of a few resonant frequencies, where a large fraction of the particles are ejected from the trap.
+        }
     \label{fig:resonance_plot}
 \end{figure}
-
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/results/trapped_fraction_zoomed.pdf}
-    \caption{Resonance zoom. Dashed lines correspond to the non-interacting case, while solid lines correspond to the interacting case.}
+    \caption{
+        A zoom in on the most prominent resonant frequency from Fig.~\ref{fig:resonance_plot}, around \(\omega_V \approx 1.4 \mathrm{MHz}\).
+        To see the effect of including Coulomb interactions, we have plotted results both with (solid) and without (dashed) these interactions.
+    }
     \label{fig:resonance_zoomed}
+\end{figure}
+
+\subsection{Relative errors}
+For the single-particle case, where the analytic solution is known, we have additionally computed the relative error of our numerical solution.
+The relative error at each time step $t_i$ is computed as
+\begin{align}
+    \epsilon_i 
+    = 
+    \frac{ |\vec{r}_\mathrm{numerical} - \vec{r}_\mathrm{analytical}| }{ |\vec{r}_\mathrm{analytical}| }.
+\end{align}
+Plotting the relative error as a function of time, we obtain Fig. \ref{fig:single-error-RK4} and \ref{fig:single-error-FE}, for RK4 and FE, respectively.
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/relerror-RK4.pdf}
+    \caption{Relative errors for the RK4 method with different time steps, when simulating a single particle inside the Penning trap.}
+    \label{fig:single-error-RK4}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figs/results/relerror-FE.pdf}
+    \caption{Relative errors for the FE method with different time steps, when simulating a single particle inside the Penning trap.}
+    \label{fig:single-error-FE}
 \end{figure}
 
 
 \section{Discussion}
-\subsection{Relative errors}
-We now move on to considering the relative error between the numerical and analytical solutions for a single particle inside the Penning trap. 
-Plots of the relative errors for the RK4 and FE methods are shown in figures \ref{fig:single-error-RK4} and \ref{fig:single-error-FE}, respectively.
-
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.5]{figs/results/relerror-RK4.pdf}
-    \caption{Caption. Single particle errors - RK4.}
-    \label{fig:single-error-RK4}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.5]{figs/results/relerror-FE.pdf}
-    \caption{Caption. Single particle errors - FE.}
-    \label{fig:single-error-FE}
-\end{figure}
-
-\subsection{Resonance phenomena}
+\subsection{Resonance}
 Although a detailed analysis of the observed resonance phenomena may go beyond the scope of this project, we can try to gain some qualitative understanding of the main features.
 In particular, we observe that the resonant frequencies seem to be shifted slightly when Coulomb interactions are taken into account.
-This behavior can be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential acting on each particle.
+This behavior can be well understood in the mean-field limit, where the Coulomb interactions average out to some effective external potential seen by each particle.
 Naturally, these modifications to the potential will also modify the resonant frequencies of the system.
+\newline
+These results may also have practical applications.
+For instance, due to resonant frequencies being dependent on the mass and charge of the particle species, one can imagine tuning the applied frequency to selectively eject particles of a certain type from the trap.
 
-
-
+\subsection{Sources of error}
+A potentially big source of error in the above results is naturally the chosen integration method and the number of time steps used.
+In particular, the final results were obtained with RK4 using only $n=4000$ steps.
+Ideally, a larger number of steps could have been used, but this was limited due to time constraints and computational resources.
+On the other hand, we have seen in Fig \ref{fig:single-error-RK4} that a single particle inside the Penning trap accumulates a very small relative error of around \(10^{-7}\) when using RK4 with \(n=4000\) steps, albeit over a much shorter time interval than the main results.
+Of course, errors may accumulate much faster when simulating a larger number of particles, especially when including Coulomb interactions.
+\newline
+Another point is that our results may be somewhat sensitive to the initial conditions of the particles.
+In particular, we have only sampled one specific set of initial conditions.
+For the future, it could be interesting to run several additional simulations with different initial conditions, to obtain a better picture of the statistical behavior of the system.
 
 % \cite{uioFYS3150H25}
+
+\section{Conclusion}
+We have successfully modeled and simulated the motion of charged particles inside a Penning trap, both with and without Coulomb interactions.
+Tracking the number of trapped particles as a function of an applied oscillating electric field, we have also seen that the system has certain natural resonant frequencies, in which a large fraction of the particles escape the trap.
+Furthermore, we have observed a shift of these resonant frequencies when Coulomb interactions are taken into account.
+This can be understood qualitatively in the mean-field limit, where the Coulomb interactions modify the effective potential felt by each particle.
+\newline
+There are also practical applications of our results.
+As the resonant frequencies will be dependent on the mass and charge of the particles, one could tune the applied frequency to selectively eject particles of a certain type from the trap.
 
 \newpage
 \clearpage
