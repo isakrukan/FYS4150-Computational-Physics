@@ -75,12 +75,16 @@ clean:
 all: outfolder compile link clean
 
 run_problem_5:
-	@$(BUILD)/main -L 20 -T 1.0 -n_cycles 10000 --filename random-L20-T1p0.csv
-	@$(BUILD)/main -L 20 -T 1.0 -n_cycles 10000 --filename ordered-L20-T1p0.csv --ordered
-	@$(BUILD)/main -L 20 -T 2.4 -n_cycles 10000 --filename random-L20-T2p4.csv
-	@$(BUILD)/main -L 20 -T 2.4 -n_cycles 10000 --filename ordered-L20-T2p4.csv --ordered
-	python3 problem_5.py
+	@$(BUILD)/main -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000
+	@$(BUILD)/main -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000 --ordered
+	@$(BUILD)/main -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000
+	@$(BUILD)/main -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000 --ordered
+
+py_plots:
+	@$(PY) problem_5.py
+	@$(PY) problem_6.py
+
 
 # Build first (via 'all'), then run everything and plot
-project: all run_problem_8 run_problem_9 py_plots
+project: all run_problem_5 py_plots
 	@echo "Complete project finished."
