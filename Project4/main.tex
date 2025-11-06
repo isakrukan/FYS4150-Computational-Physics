@@ -1,0 +1,250 @@
+% USEFUL LINKS:
+% -------------
+%
+% - UiO LaTeX guides:          https://www.mn.uio.no/ifi/tjenester/it/hjelp/latex/
+% - Mathematics:               https://en.wikibooks.org/wiki/LaTeX/Mathematics
+% - Physics:                   https://ctan.uib.no/macros/latex/contrib/physics/physics.pdf
+% - Basics of Tikz:            https://en.wikibooks.org/wiki/LaTeX/PGF/Tikz
+% - All the colors!            https://en.wikibooks.org/wiki/LaTeX/Colors
+% - How to make tables:        https://en.wikibooks.org/wiki/LaTeX/Tables
+% - Code listing styles:       https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+% - \includegraphics           https://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
+% - Learn more about figures:  https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+% - Automagic bibliography:    https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management  (this one is kinda difficult the first time)
+%
+%                              (This document is of class "revtex4-1", the REVTeX Guide explains how the class works)
+%   REVTeX Guide:              http://www.physics.csbsju.edu/370/papers/Journal_Style_Manuals/auguide4-1.pdf
+%
+%
+% COMPILING THE .pdf FILE IN THE LINUX TERMINAL
+% ---------------------------------------------
+%
+% [terminal]$ pdflatex report_example.tex
+%
+% Run the command twice, always.
+%
+% When using references, footnotes, etc. you should run the following chain of commands:
+%
+% [terminal]$ pdflatex report_example.tex
+% [terminal]$ bibtex report_example
+% [terminal]$ pdflatex report_example.tex
+% [terminal]$ pdflatex report_example.tex
+%
+% This series of commands can of course be gathered into a single-line command:
+% [terminal]$ pdflatex report_example.tex && bibtex report_example.aux && pdflatex report_example.tex && pdflatex report_example.tex
+%
+% ----------------------------------------------------
+
+
+
+% \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
+% \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
+\documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
+% \documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
+% If you want a single-column, remove "reprint"
+% \raggedbottom
+
+
+% Allows special characters (including æøå)
+\usepackage[utf8]{inputenc}
+% \usepackage[english]{babel}
+
+% Note that you may need to download some of these packages manually, it depends on your setup.
+% It may be usefult to download TeXMaker, because it includes a large library of the most common packages.
+
+
+%%%%%%%%%%% Important packages %%%%%%%%%%%
+\usepackage{coffeestains}
+% \AddToHookNext{shipout/background}{%
+%   \coffeestainA{0.8}{1}{-25}{5cm}{1.5cm}%
+% }
+
+% \AddToHookNext{shipout/background}{%
+%   \coffeestainC{1}{1}{180}{0}{-5mm}%
+% }
+
+% \directlua{package.path = package.path .. ";./?.lua;./?/init.lua"}
+% \usepackage{typewriter}
+% \providecommand\ttgreybolda{0.6}
+% \providecommand\ttgreyboldb{0.3}
+% \providecommand\ttrotatebold{12}
+% \providecommand\ttdownbold{20000}
+% \providecommand\ttrightbold{35000}
+% \providecommand\ttoverprintbolda{1}
+% \providecommand\ttoverprintboldb{1}
+% \providecommand\ttoverprintboldc{1}
+% \providecommand\ttgreynormala{0.3}
+% \providecommand\ttgreynormalb{0.5}
+% \providecommand\ttrotatenormal{8}
+% \providecommand\ttrightnormal{20000}
+% \providecommand\ttdownnormal{20000}
+% \providecommand\ttoverprintnormal{1}
+% \providecommand\ttbasefont{cmuntt.otf}
+% \providecommand\ttmathfont{\ttbasefont}
+% \providecommand\ttfontsize{12pt}
+
+%%%%%%%%%%% Important packages %%%%%%%%%%%
+\usepackage[justification=raggedright,singlelinecheck=false]{caption}
+\usepackage{physics,amssymb}   % physics already loads amsmath
+% \usepackage{amsmath}         
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{standalone}   % for \includestandalone
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\definecolor{codegreen}{RGB}{87,166,74}
+\algrenewcommand\algorithmiccomment[1]{\hfill\textcolor{codegreen}{\textit{// #1}}}
+\newcommand{\AlgComment}[1]{\Statex \textcolor{codegreen}{\textit{// #1}}}
+
+% \algrenewcommand\algorithmiccomment[1]{\hfill\textcolor{green}{// #1}}
+
+\usepackage{tikz}
+\usepackage{quantikz}          % <-- package, not tikzlibrary
+\usepackage{hyperref}
+\usepackage{float}             % optional, if you want [H] placement
+
+
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+
+% ===================== Shortcuts/new commands ======================
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\newcommand{\eqdef}{\mathrel{\mathop:}=}
+\newcommand{\eqdefback}{\mathrel{=\mathop:}}
+
+\begin{document}
+
+\title{FYS4150 - Project 3\\[0.5em]
+  \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3}{\texttt{github.uio.no/icrukan/FYS4150/Project3}}
+}
+\author{Magnus Axelsen and Isak Cecil Onsager Rukan} % self-explanatory
+\date{\today}                             % self-explanatory
+\noaffiliation                            % ignore this, but keep it.
+
+\begin{abstract}
+    Abstract
+\end{abstract}
+\maketitle
+
+
+\section{Problems (reorganize later)}
+
+\subsection{Problem 1}
+To count the total energy from nearest neighbor interactions on a 2D lattice with periodic boundary conditions:
+\begin{itemize}
+    \item[1.] Loop through each spin
+    \item[2.] Count contributions from right and down neighbors only
+\end{itemize}
+Illustrated in Figure~\ref{fig:problem1}.
+
+\begin{figure}
+    \centering
+    \includestandalone[width=0.4\textwidth]{figs/lattice}
+    \caption{Problem 1}
+    \label{fig:problem1}
+\end{figure}
+
+\subsubsection{2x2 example}
+
+
+\section{Introduction}
+Introduction
+
+\subsection*{Disclaimer and Code Documentation}
+When working with this project we have occasionally consulted with the language model ChatGPT and Copilot. However, all of our analysis, code implementation, results and language are produced by ourselves. Our code, which can be found \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3/code}{\texttt{here}}, relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, and \textsc{Armadillo}~\cite{armadillo}. We have used doxygen to create a thorough documentation of our code, found \href{https://github.uio.no/icrukan/FYS4150/blob/master/Project3/docs/doc.pdf}{\texttt{here}}. Before handing in, we made the unfortunate mistake of spilling \href{https://ctan.org/pkg/coffeestains?lang=en}{coffee} on our report...we can only hope it has concealed potential mistakes. 
+
+
+\section{Theory and Method}
+
+\subsection{The Ising model}
+We will be considering the two-dimensional Ising model with no external magnetic field. 
+The model consists of an 2D lattice of spins $\vec{s} = {s_1,\dots, s_N}$ with nearest neighbor interactions.
+Here $N$ is the number of spins, and each spin is taken discretely to be either up ($s_i = +1$) or down ($s_i = -1$).
+The Ising Hamiltonian is given by
+\begin{equation}
+    H(s) = -J \sum_{\langle ij \rangle} s_i s_j,
+\end{equation}
+where ${\langle ij \rangle}$ indicates the sum runs over all nearest neighbor pairs $ij$.
+This is generally dependent on the specific configuration of spins $s$.
+On the other hand, the total magnetization
+\begin{align}
+    M(s) & = \sum_{i=1}^N s_i,
+\end{align}
+is dependent only on the number of up-spins $N_\uparrow$.
+We may then choose to distinguish spin configurations based on the triplet $(N_\uparrow, M(s), E(s))$.
+\\
+\subsection{Boundary conditions}
+In particular, we will be considering a square lattice of size $L \times L$ with periodic boundary conditions, such that the total number of spins is $N = L^2$.
+To compute the energy of a given spin configuration, we may in this case sum over all spins, counting only the contributions from only the right and down neighbors to avoid double counting.
+This is illustrated in Figure~\ref{fig:problem1}.
+
+\subsection{Example: 2x2 lattice}
+We now consider analytical results for the case of a $2\times 2$ lattice, which will later be used to verify our numerical results.
+Table~1 shows all possible types  for a $2\times 2$ lattice, along with their degeneracies.
+\begin{table}
+    \centering
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{c|c|c|c}
+    {$N_\uparrow$} & {$M(s)$} & {$E(s)$ [$J$]} & Degeneracy \\
+    \hline
+        0 &  -4 &  -8 & 1 \\
+        1 &  -2 &   0 & 4 \\
+        2 &   0 &   0 & 4 \\
+        2 &   0 &   8 & 2 \\
+        3 &   2 &   0 & 4 \\
+        4 &   4 &  -8 & 1 \\
+    \end{tabular}
+\end{table}
+From this we may easily compute the partition function
+\begin{align}
+    Z & = 4 \cosh(x) + 12\\
+\end{align}
+where we have defined $x = \frac{E_0}{T k_{B}}$ and $E_0 = 8J$ for convenience and clarity.
+From this we may compute the expectation values
+\begin{align}
+    \langle E \rangle & = -E_0 \frac{\sinh(x)}{\cosh(x) + 3} \\
+    \langle E^2 \rangle & = E_0^2 \frac{\cosh(x)}{\cosh(x) + 3}\\
+    \langle |M| \rangle & = \frac{2e^{-x} + 4}{\cosh(x) + 3}\\
+    \langle M^2 \rangle & = 4 \langle |M| \rangle\\
+\end{align}
+Here, expectation values for the energy have been computed using standard differentiation formulas for the partition function, while the those for the magnetization are computed directly from the definition.  
+This further results in the following expressions for the heat capacity $C_V$ and magnetic susceptibility $\chi$:
+\begin{align}
+    C_V & = \frac{E_0^2}{k_B T^2} \frac{\cosh(x) + 1}{(\cosh(x) + 3)^2}\\
+    \chi & = \frac{4}{k_B T} \langle |M| \rangle\\
+\end{align}
+
+
+
+
+\section{Results}
+
+\section{Discussion}
+
+\section{Conclusion}
+
+\newpage
+\clearpage
+\onecolumngrid
+\appendix
+
+\section{Additional plots}\label{sec:appendix_plots}
+
+
+
+% \bibliographystyle{apalike}
+% \bibliographystyle{unsrt}
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
+
+
+\end{document}
