@@ -10,8 +10,13 @@ Args parse_args(int argc, char *argv[])
         {"-L", "--lattice_size"},
         {"-J", "--coupling"},
         {"-T", "--temperature"},
+        {"-T_scan", "--temperature_scan"},
+        {"-T_min", "--temperature_min"},
+        {"-T_max", "--temperature_max"},
+        {"-T_steps", "--temperature_steps"},
         {"-n_steps", "--steps_per_cycle"},
         {"-n_cycles", "--total_cycles"},
+        {"-n_burn", "--burn_in_cycles"},
         {"-h", "--help"}};
 
     // Parse each argument
@@ -22,7 +27,9 @@ Args parse_args(int argc, char *argv[])
         // Check for aliases
         if (alias_map.count(arg)) arg = alias_map[arg];
 
-        // Match and assign values
+        // ----------------------------
+        // General/lattice parameters
+        // ----------------------------
         if (arg == "--lattice_size" && i + 1 < argc)
         {
             args.lattice_size = std::stoi(argv[++i]);
@@ -30,14 +37,6 @@ Args parse_args(int argc, char *argv[])
         else if (arg == "--coupling" && i + 1 < argc)
         {
             args.coupling = std::stod(argv[++i]);
-        }
-        else if (arg == "--steps_per_cycle" && i + 1 < argc)
-        {
-            args.steps_per_cycle = std::stoi(argv[++i]);
-        }
-        else if (arg == "--total_cycles" && i + 1 < argc)
-        {
-            args.total_cycles = std::stoi(argv[++i]);
         }
         else if (arg == "--temperature" && i + 1 < argc)
         {
@@ -47,6 +46,53 @@ Args parse_args(int argc, char *argv[])
         {
             args.ordered = true;
         }
+        // ----------------
+        // MCMC parameters
+        // ----------------
+        else if (arg == "--run")
+        {
+            args.run = true;
+        }
+        else if (arg == "--steps_per_cycle" && i + 1 < argc)
+        {
+            args.steps_per_cycle = std::stoi(argv[++i]);
+        }
+        else if (arg == "--total_cycles" && i + 1 < argc)
+        {
+            args.total_cycles = std::stoi(argv[++i]);
+        }
+        else if (arg == "--burn_in_cycles" && i + 1 < argc)
+        {
+            args.burn_in_cycles = std::stoi(argv[++i]);
+        }
+        else if (arg == "--seed" && i + 1 < argc)
+        {
+            args.seed = std::stoi(argv[++i]);
+        }
+
+        // ----------------------------
+        // Temperature scan parameters
+        // ----------------------------
+        else if (arg == "--temperature_scan")
+        {
+            args.temperature_scan = true;
+        }
+        else if (arg == "--temperature_min" && i + 1 < argc)
+        {
+            args.temperature_min = std::stod(argv[++i]);
+        }
+        else if (arg == "--temperature_max" && i + 1 < argc)
+        {
+            args.temperature_max = std::stod(argv[++i]);
+        }
+        else if (arg == "--temperature_steps" && i + 1 < argc)
+        {
+            args.temperature_steps = std::stoi(argv[++i]);
+        }
+
+        // ---------------
+        // Misc.
+        // ---------------
         else if (arg == "--filename" && i + 1 < argc)
         {
             args.filename = argv[++i];
@@ -54,14 +100,27 @@ Args parse_args(int argc, char *argv[])
         else if (arg == "--help")
         {
             std::cout << "Usage:\n"
-                      << "  ./program [options]\n"
+                      << "  ./main [options]\n"
                       << "\n"
                       << "Options:\n"
-                      << "  --lattice_size,    -L           size of the lattice (default: 2)\n"
-                      << "  --coupling,        -J           coupling constant (default: 1.0)\n"
-                      << "  --temperature,     -T           temperature (default: 1.0)\n"
-                      << "  --steps_per_cycle, -n_steps     number of steps per cycle (default: 1000)\n"
-                      << "  --total_cycles,    -n_cycles    number of total cycles (default: 100)\n";
+                      << "  --lattice_size,    -L               size of the lattice (default: 2)\n"
+                      << "  --coupling,        -J               coupling constant (default: 1.0)\n"
+                      << "  --temperature,     -T               temperature (default: 1.0)\n"
+                      << "  --ordered                           start with ordered spins (default: false)\n"
+                      << "\n"
+                      << "  --run              -r               run MCMC simulation (default: false)\n"
+                      << "  --steps_per_cycle, -n_steps         number of steps per cycle (default: 1000)\n"
+                      << "  --total_cycles,    -n_cycles        number of total cycles (default: 100)\n"
+                      << "  --burn_in_cycles,  -n_burn          number of burn-in cycles (default: 0)\n"
+                      << "  --seed                              random seed (default: 1234)\n"
+                      << "\n"
+                      << "  --temperature_scan,  -T_scan        perform temperature scan (default: false)\n"
+                      << "  --temperature_min,   -T_min         minimum temperature for scan (default: 2.1)\n"
+                      << "  --temperature_max,   -T_max         maximum temperature for scan (default: 2.4)\n"
+                      << "  --temperature_steps, -T_steps       number of temperature steps (default: 30)\n"
+                      << "\n"
+                      << "  --filename,                         output filename (default: auto-generated)\n"
+                      << "  --help,            -h               display this help message\n";
 
             exit(0);
         }

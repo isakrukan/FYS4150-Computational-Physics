@@ -6,8 +6,8 @@ BUILD 		:= build
 LIB			:= 
 INCL 		:= -I./include
 #CXXFLAGS 	:= -DARMA_USE_HDF5 -std=c++17 -O2 
-CXXFLAGS 	:= -std=c++17 -O2 
-LDFLAGS 	:= -larmadillo
+CXXFLAGS 	:= -std=c++17 -O3
+LDFLAGS 	:= -larmadillo -march=native
 PY			:= 
 EXE			:= 
 LOGFILE 	:= problem9.log
@@ -24,7 +24,7 @@ ifeq ($(UNAME),Windows_NT)
 $(info I am sorry for using Windows)
 INCL 		+= -I"C:/vcpkg/installed/x64-mingw-dynamic/include"
 LIB 		:= -L"C:/vcpkg/installed/x64-mingw-dynamic/lib"
-LDFLAGS   	+= -lhdf5 -lhdf5_hl
+LDFLAGS   	+= #-lhdf5 -lhdf5_hl
 DELETE		:= del /Q
 PY 			+= py 
 EXE			:= .exe
@@ -35,8 +35,8 @@ endef
 
 else 
 $(info I can't update my mac but I love it so much)
-CXXFLAGS += $(shell pkg-config --cflags hdf5)
-LDFLAGS  += $(shell pkg-config --libs hdf5)
+CXXFLAGS += #$(shell pkg-config --cflags hdf5)
+LDFLAGS  += #$(shell pkg-config --libs hdf5)
 DELETE		:= rm -f
 PY 			+= python3
 
@@ -62,6 +62,9 @@ OS_message:
 outfolder:
 	@$(call MKDIR,$(BUILD))
 
+# - - - - - - -  
+# Serial build
+# - - - - - - -  
 compile:
 	g++ -c $(wildcard src/*.cpp) $(INCL) $(LIB) $(CXXFLAGS)
 	g++ -c main.cpp -o main.o	 $(INCL) $(LIB) $(CXXFLAGS) 
@@ -69,10 +72,20 @@ compile:
 link:
 	g++ $(wildcard *.o) $(LIB) $(LDFLAGS) -o $(BUILD)/main
 
+# - - - - - - -  
+# OpenMP build
+# - - - - - - -  
+compile_openmp:
+	g++ -fopenmp -c $(wildcard src/*.cpp) $(INCL) $(LIB) $(CXXFLAGS)
+	g++ -fopenmp -c main.cpp -o main.o	 $(INCL) $(LIB) $(CXXFLAGS)
+
+link_openmp:
+	g++ $(wildcard *.o) $(LIB) $(LDFLAGS) -fopenmp -o $(BUILD)/main_openmp
+
 clean:
 	-$(DELETE) *.o
 
-all: outfolder compile link clean
+all: outfolder compile link compile_openmp link_openmp clean
 
 run_problem_5:
 	@$(BUILD)/main -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000

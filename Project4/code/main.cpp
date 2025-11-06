@@ -1,6 +1,7 @@
 #include "lattice.hpp"
 #include "utils.hpp"
 #include "arg_parser.hpp"
+#include "mcmc.hpp"
 
 std::string OUTDIR = "out/";
 
@@ -9,30 +10,27 @@ int main(int argc, char *argv[])
     // Parse command-line arguments using (see `arg_parser.hpp/.cpp`)
     Args args = parse_args(argc, argv);
 
-    // -------------------------------------------------------
-    // Generate filename for intermediate samples during MCMC:
-    // -------------------------------------------------------
+    // If no filename provided, generate one based on parameters
+    if (args.filename.empty())
+    {
+        args.filename = generate_filename(args, OUTDIR);
+    }
 
-    // 1) Format temperature: precision 1 & replace '.' with 'p'
-    std::ostringstream T_stream;
-    T_stream.precision(1);
-    T_stream << std::fixed << args.temperature;
-    std::string T_str = T_stream.str();
-    std::replace(T_str.begin(), T_str.end(), '.', 'p');
+    // If run flag is set, perform MCMC simulation
+    if (args.run)
+    {
+        Lattice lattice(args.lattice_size, args.coupling, args.temperature);
+        lattice.initialize_spins(args.ordered);
 
-    // 2) Create filename, modified based T, L, and initial configuration
-    std::string filename_MCMC;
-    filename_MCMC = OUTDIR + "MCMC";
-    filename_MCMC += args.ordered ? "-ordered" : "-unordered";
-    filename_MCMC += "-L" + std::to_string(args.lattice_size);
-    filename_MCMC += "-T" + T_str + ".csv";
+        MCMC solver(lattice, args.total_cycles, args.steps_per_cycle, args.seed);
+        solver.set_burn_in(args.burn_in_cycles);
+        solver.run(args.total_cycles, args.steps_per_cycle, args.filename);
+    }
 
-    // ----------------------------------------
-    // Create lattice and run MCMC simulation
-    // ----------------------------------------
-    Lattice lattice(args.lattice_size, args.coupling, args.temperature);
-    lattice.initialize_spins(args.ordered);
-    lattice.run_MCMC(args.total_cycles, args.steps_per_cycle, filename_MCMC);
-
+    // If temperature scan flag is set, perform temperature scan
+    if (args.temperature_scan)
+    {
+        temperature_scan(args);
+    }
     return 0;
 }

@@ -9,13 +9,26 @@
  */
 struct Args
 {
-    double temperature = 1.0;
-    double coupling = 1.0;
+    // General/lattice parameters
     int lattice_size = 2;
-    int steps_per_cycle = 1000;
-    int total_cycles = 100;
-    std::string filename = "";
+    double coupling = 1.0;
+    double temperature = 1.0;
     bool ordered = false;
+    
+    // MCMC parameters
+    bool run = false;
+    int steps_per_cycle = 1000;
+    int total_cycles = 1000;
+    int burn_in_cycles = 0;
+    int seed = 1234;
+
+    // Temperature scan parameters
+    bool temperature_scan = false;
+    double temperature_min = 2.1;
+    double temperature_max = 2.4;
+    int temperature_steps = 30;
+
+    std::string filename = "";
 };
 
 /**
