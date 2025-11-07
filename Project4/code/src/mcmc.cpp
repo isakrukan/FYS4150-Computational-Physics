@@ -36,14 +36,13 @@ void MCMC::cycle_MCMC(int steps)
         int i = idx_distr(generator);
         int j = idx_distr(generator);
 
-        int spin = lattice.get_spin(i, j);
-        int up = lattice.get_spin(pbc(i - 1, nrows), j);
-        int down = lattice.get_spin(pbc(i + 1, nrows), j);
-        int left = lattice.get_spin(i, pbc(j - 1, ncols));
-        int right = lattice.get_spin(i, pbc(j + 1, ncols));
+        Location &location = lattice[i][j];
 
-        diff = 2 * spin * (up + down + left + right);
-
+        diff = 2 * location.s * ((*location.up).s +
+                                 (*location.down).s +
+                                 (*location.left).s +
+                                 (*location.right).s);
+        
         if (spin_distr(generator) < boltzmann[(diff + 8) / 4])
         {
             lattice.flip_spin(i, j);
