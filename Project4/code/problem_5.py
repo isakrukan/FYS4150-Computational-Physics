@@ -17,14 +17,15 @@ for type in ["unordered", "ordered"]:
 
     for T in [1.0, 2.4]:
 
-        data = np.loadtxt(DIR + f"MCMC-{type}-L{L}-T{str(T).replace('.', 'p')}.csv", delimiter=",", skiprows=1)
-        
-        n_MC_cycles = data[:, 0]
-        eps = data[:, 1] / N
-        mean_eps = data[:, 2] / N   
+        identifier = f"MCMC-{type}-L{L}-T{str(T).replace('.', 'p')}/"
+        raw_data = np.loadtxt(DIR + identifier + "raw_data.csv", delimiter=",", skiprows=1)
 
-        plt.semilogx(n_MC_cycles, eps, color=colors[color_idx], linewidth=1.0, alpha=0.4)
-        plt.semilogx(n_MC_cycles, mean_eps, color=colors[color_idx], linewidth=2.0, label=f'$T={T}$ $J/k_{{B}}$, {type}')
+        n_cycles = raw_data[:, 0]
+        eps = raw_data[:, 1] / N
+        mean_eps = np.cumsum(eps) / n_cycles    
+
+        plt.semilogx(n_cycles, eps, color=colors[color_idx], linewidth=1.0, alpha=0.4)
+        plt.semilogx(n_cycles, mean_eps, color=colors[color_idx], linewidth=2.0, label=f'$T={T}$ $J/k_{{B}}$, {type}')
 
         color_idx += 1
 

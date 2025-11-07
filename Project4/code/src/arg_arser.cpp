@@ -93,9 +93,9 @@ Args parse_args(int argc, char *argv[])
         // ---------------
         // Misc.
         // ---------------
-        else if (arg == "--filename" && i + 1 < argc)
+        else if (arg == "--run_name" && i + 1 < argc)
         {
-            args.filename = argv[++i];
+            args.run_name = argv[++i];
         }
         else if (arg == "--help")
         {
@@ -119,7 +119,7 @@ Args parse_args(int argc, char *argv[])
                       << "  --temperature_max,   -T_max         maximum temperature for scan (default: 2.4)\n"
                       << "  --temperature_steps, -T_steps       number of temperature steps (default: 30)\n"
                       << "\n"
-                      << "  --filename,                         output filename (default: auto-generated)\n"
+                      << "  --run_name,                         output filename (default: auto-generated)\n"
                       << "  --help,            -h               display this help message\n";
 
             exit(0);

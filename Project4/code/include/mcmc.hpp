@@ -1,7 +1,11 @@
 #ifndef __mcmc_hpp__
 #define __mcmc_hpp__
 
+#include <random>
+#include <fstream>
 #include "lattice.hpp"
+#include "stats.hpp"
+
 
 /**
  * @brief Struct to hold MCMC simulation results.
@@ -16,6 +20,9 @@ struct MCMC_data
     double avg_magnetization_abs = 0.0;
     double avg_magnetization_squared = 0.0;
     double var_magnetization = 0.0;
+
+    double MCSE_energy = 0.0;
+    double MCSE_magnetization = 0.0;
 
     double heat_capacity = 0.0;
     double susceptibility = 0.0;
@@ -41,15 +48,15 @@ private:
     int steps_per_cycle;
     int burn_in_cycles = 0;
 
+    arma::mat simulation_data;
+
     std::array<double, 5> boltzmann;
 
 public:
 
     MCMC_data results;
 
-    MCMC(Lattice &lattice, int total_cycles, int steps_per_cycle, int seed);
-
-    void set_burn_in(int no_cycles);
+    MCMC(Lattice &lattice, int seed);
 
     /**
      * @brief Perform a single MCMC cycle on the lattice.
@@ -64,7 +71,21 @@ public:
      * @param total_cycles Number of total cycles to run.
      * @param steps_per_cycle Number of steps per cycle.
      */
-    void run(int total_cycles, int steps_per_cycle, const std::string &filename = "");
+    void run(int total_cycles, int steps_per_cycle, int burn_in_cycles);
+
+    /**
+     * @brief Process the collected simulation data to compute averages, variances, errors and derived quantities.
+     */
+    void process_results();
+
+    /**
+     * @brief Save `simulation_data` to a csv file and `results` to a json file
+     * in the specified directory `out_dir`.
+     *
+     * @param out_dir name of the directory to save results to.
+     */
+    void save_data(const std::string &out_dir) const;
+
 };
 
 #endif
