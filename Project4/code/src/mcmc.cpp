@@ -1,7 +1,7 @@
 #include "mcmc.hpp"
 #include "utils.hpp"
 
-MCMC::MCMC(Lattice &lattice, int total_cycles, int steps_per_cycle, int seed)
+MCMC::MCMC(Lattice &lattice, int seed)
     : lattice(lattice), total_cycles(total_cycles), steps_per_cycle(steps_per_cycle)
     {
     if (seed == 0)
@@ -21,10 +21,6 @@ MCMC::MCMC(Lattice &lattice, int total_cycles, int steps_per_cycle, int seed)
     }
 }
 
-void MCMC::set_burn_in(int no_cycles)
-{ 
-    burn_in_cycles = no_cycles; 
-}
 
 void MCMC::cycle_MCMC(int steps)
 {
@@ -54,16 +50,8 @@ void MCMC::cycle_MCMC(int steps)
     }
 }
 
-void MCMC::run(int total_cycles, int steps_per_cycle, const std::string &filename)
+void MCMC::run(int total_cycles, int steps_per_cycle, int burn_in_cycles)
 {
-
-    bool save = !filename.empty();
-    std::ofstream outfile(filename);
-
-    if (save)
-    {
-        outfile << "cycle, E, <E>, M, <M>\n";
-    }
 
     // Burn-in cycles
     for (int cycle = 0; cycle < burn_in_cycles; ++cycle)
@@ -71,40 +59,78 @@ void MCMC::run(int total_cycles, int steps_per_cycle, const std::string &filenam
         cycle_MCMC(steps_per_cycle);
     }
 
+    
+    // Initialize storage for simulation data
+    simulation_data.set_size(total_cycles, 3);
+    simulation_data.zeros();
+    
+    simulation_data(0, 0) = 1;
+    simulation_data(0, 1) = lattice.get_energy();
+    simulation_data(0, 2) = lattice.get_magnetization();
+    
     // Perform main MCMC cycles
     for (int cycle = 1; cycle < total_cycles; ++cycle)
     {
+
+        simulation_data( cycle, 0 ) = cycle + 1;
+        simulation_data( cycle, 1 ) = lattice.get_energy();
+        simulation_data( cycle, 2 ) = lattice.get_magnetization();
+
         cycle_MCMC(steps_per_cycle);
-
-        double E_now = lattice.get_energy();
-        double M_now = lattice.get_magnetization();
-
-        results.avg_energy += E_now;
-        results.avg_energy_squared += E_now * E_now;
-        results.avg_magnetization += M_now;
-        results.avg_magnetization_abs += std::abs(M_now);
-        results.avg_magnetization_squared += M_now * M_now;
-
-        if (save)
-        {
-            outfile << cycle << ", "
-                    << E_now << ", " << results.avg_energy / cycle << ", "
-                    << M_now << ", " << results.avg_magnetization / cycle << "\n";
-        }
     }
     
-    // Finalize averages and compute variances
-    results.avg_energy /= total_cycles;
-    results.avg_energy_squared /= total_cycles;
-    results.avg_magnetization /= total_cycles;
-    results.avg_magnetization_abs /= total_cycles;
-    results.avg_magnetization_squared /= total_cycles;
+    // Compute final averages, variances, etc.
+    process_results();
+
+}
+
+
+void MCMC::process_results()
+{
+    int total_cycles = simulation_data.n_rows;
+
+    arma::vec cycle_numbers = simulation_data.col(0);
+    arma::vec energies = simulation_data.col(1);
+    arma::vec magnetizations = simulation_data.col(2);
+
+    // Main observables - averages & variances:
+    results.avg_energy = arma::mean(energies);
+    results.avg_energy_squared = arma::mean(energies % energies);
+    results.avg_magnetization = arma::mean(magnetizations);
+    results.avg_magnetization_abs = arma::mean(arma::abs(magnetizations));
+    results.avg_magnetization_squared = arma::mean(magnetizations % magnetizations);
 
     results.var_energy = results.avg_energy_squared - results.avg_energy * results.avg_energy;
     results.var_magnetization = results.avg_magnetization_squared - results.avg_magnetization_abs * results.avg_magnetization_abs;
 
-    // Compute heat capacity and susceptibility
+    // Main observables - standard errors accounting for autocorrelation:
+    results.MCSE_energy = standard_error(energies);
+    results.MCSE_magnetization = standard_error(magnetizations);
+    
+    // Derived quantities
     results.heat_capacity = results.var_energy / (lattice.T * lattice.T);
     results.susceptibility = results.var_magnetization / lattice.T;
 
+}
+
+void MCMC::save_data(const std::string &out_dir) const
+{
+    simulation_data.save(out_dir + "raw_data.csv", arma::csv_ascii);
+    std::ofstream stats_file(out_dir + "stats.json");
+
+    stats_file << "{\n";
+    stats_file << "  \"avg_energy\": " << results.avg_energy << ",\n";
+    stats_file << "  \"avg_energy_squared\": " << results.avg_energy_squared << ",\n";
+    stats_file << "  \"var_energy\": " << results.var_energy << ",\n";
+    stats_file << "  \"avg_magnetization\": " << results.avg_magnetization << ",\n";
+    stats_file << "  \"avg_magnetization_abs\": " << results.avg_magnetization_abs << ",\n";
+    stats_file << "  \"avg_magnetization_squared\": " << results.avg_magnetization_squared << ",\n";
+    stats_file << "  \"var_magnetization\": " << results.var_magnetization << ",\n";
+    stats_file << "  \"MCSE_energy\": " << results.MCSE_energy << ",\n";
+    stats_file << "  \"MCSE_magnetization\": " << results.MCSE_magnetization << ",\n";
+    stats_file << "  \"heat_capacity\": " << results.heat_capacity << ",\n";
+    stats_file << "  \"susceptibility\": " << results.susceptibility << "\n";
+    stats_file << "}\n";
+
+    stats_file.close();
 }

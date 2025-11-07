@@ -21,7 +21,10 @@ for i, T in enumerate([1.0, 2.4]):
 
     # as a consistency check, plot both ordered and unordered initial configurations
     for j, type in enumerate(["unordered", "ordered"]):
-        filename = DIR + f"MCMC-{type}-L20-T{str(T).replace('.', 'p')}.csv"
+        
+        identifier = f"MCMC-{type}-L{L}-T{str(T).replace('.', 'p')}/"
+        filename = DIR + identifier + "raw_data.csv"
+        
         epsilon = np.loadtxt(filename, delimiter=",", skiprows=1)[burnin_cycles:, 1] / N
         bins = np.arange(epsilon.min() - bin_width/2, epsilon.max() + bin_width/2, bin_width)
 

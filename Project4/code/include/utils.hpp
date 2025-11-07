@@ -15,12 +15,14 @@
  */
 int pbc(int x, int L);
 
-std::string generate_filename(const Args &args, const std::string &OUTDIR = "out/");
+std::string generate_temp_scan_name(const Args &args);
+
+std::string generate_run_name(const Args &args);
 
 /**
  * @brief Perform a temperature scan over a range of temperatures.
  * @param args Struct containing simulation parameters.
  */
-void temperature_scan(Args &args, const std::string &OUTDIR = "out/");
+void temperature_scan(Args &args, const std::string &out_dir = "out/");
 
 #endif

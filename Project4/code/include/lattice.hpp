@@ -3,11 +3,6 @@
 #define __lattice_hpp__
 
 #include <armadillo>
-#include <cmath>
-#include <random>
-#include <map>
-#include <iostream>
-#include <fstream>
 
 
 struct Location

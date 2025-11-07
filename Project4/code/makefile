@@ -94,10 +94,10 @@ clean:
 all: outfolder compile link compile_openmp link_openmp clean
 
 run_problem_5:
-	@$(BUILD)/main --run -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000
-	@$(BUILD)/main --run -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000 --ordered
-	@$(BUILD)/main --run -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000
-	@$(BUILD)/main --run -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000 --ordered
+	@$(BUILD)/main --run --seed 1 -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000
+	@$(BUILD)/main --run --seed 2 -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000 --ordered
+	@$(BUILD)/main --run --seed 3 -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000
+	@$(BUILD)/main --run --seed 4 -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000 --ordered
 
 py_plots:
 	@$(PY) problem_5.py

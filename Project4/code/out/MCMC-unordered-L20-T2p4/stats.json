@@ -1,0 +1,13 @@
+{
+  "avg_energy": -494.987,
+  "avg_energy_squared": 248363,
+  "var_energy": 3350.66,
+  "avg_magnetization": 25.9276,
+  "avg_magnetization_abs": 183.332,
+  "avg_magnetization_squared": 42399,
+  "var_magnetization": 8788.26,
+  "MCSE_energy": 0.872073,
+  "MCSE_magnetization": 9.71651,
+  "heat_capacity": 581.711,
+  "susceptibility": 3661.78
+}
