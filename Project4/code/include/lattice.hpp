@@ -27,16 +27,14 @@ struct Location
  * @param J: Interaction strength between neighboring spins.
  * @param E: Total energy of the lattice.
  * @param M: Total magnetization of the lattice.
- * @param grid: 2D Armadillo matrix representing the lattice spins.
+ * @param grid: 2D nested vector of `Location` representing lattice spins.
  */
 class Lattice
 {
     friend class MCMC;
 
 private:
-    arma::imat grid;
-    std::vector<std::vector<Location>> grid_new;
-    //std::vector<int> grid;
+    std::vector<std::vector<Location>> grid;
 
     /**
      * @brief Sets up the pointers in the lattice.
@@ -73,12 +71,30 @@ public:
      */
     void initialize_spins(bool ordered=false);
 
+    /**
+     * @brief Returns the spin at position (i, j).
+     * 
+     * @param i Row index.
+     * @param j Column index.
+     */
     int get_spin(int i, int j) const;
 
+    /**
+     * @brief Flips the spin at position (i, j) and updates E and M accordingly.
+     * 
+     * @param i Row index.
+     * @param j Column index.
+     */
     void flip_spin(int i, int j);
     
+    /**
+     * @brief Returns the total energy of the lattice.
+     */
     double get_energy() const;
 
+    /**
+     * @brief Returns the total magnetization of the lattice.
+     */
     double get_magnetization() const;
 
     /**
