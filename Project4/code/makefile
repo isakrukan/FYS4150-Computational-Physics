@@ -3,14 +3,19 @@
 # Some default flags and paths
 #------------------------------
 BUILD 		:= build
+TESTS		:= tests
 LIB			:= 
 INCL 		:= -I./include
 #CXXFLAGS 	:= -DARMA_USE_HDF5 -std=c++17 -O2 
-CXXFLAGS 	:= -std=c++17 -O3
-LDFLAGS 	:= -larmadillo -march=native
+CXXFLAGS 	:= -std=c++17 -O3 -march=native
+LDFLAGS 	:= -larmadillo
 PY			:= 
 EXE			:= 
 LOGFILE 	:= problem9.log
+
+SRC_OBJS := $(patsubst src/%.cpp, %.o, $(wildcard src/*.cpp))
+MAIN_OBJS := $(SRC_OBJS) main.o
+TEST_OBJS := $(SRC_OBJS) test_lattice.o
 
 #------------------------------
 # OS specific settings
@@ -68,19 +73,20 @@ outfolder:
 compile:
 	g++ -c $(wildcard src/*.cpp) $(INCL) $(LIB) $(CXXFLAGS)
 	g++ -c main.cpp -o main.o	 $(INCL) $(LIB) $(CXXFLAGS) 
+	g++ -c $(TESTS)/test_lattice.cpp -o test_lattice.o $(INCL) $(LIB) $(CXXFLAGS) 
 
 link:
-	g++ $(wildcard *.o) $(LIB) $(LDFLAGS) -o $(BUILD)/main
+	g++ $(MAIN_OBJS) $(LIB) $(LDFLAGS) -o $(BUILD)/main$(EXE)
+	g++ $(TEST_OBJS) $(LIB) $(LDFLAGS) -o $(BUILD)/test_lattice$(EXE)
 
 # - - - - - - -  
 # OpenMP build
 # - - - - - - -  
 compile_openmp:
-	g++ -fopenmp -c $(wildcard src/*.cpp) $(INCL) $(LIB) $(CXXFLAGS)
-	g++ -fopenmp -c main.cpp -o main.o	 $(INCL) $(LIB) $(CXXFLAGS)
+	g++ -fopenmp -c main.cpp -o main_openmp.o $(INCL) $(LIB) $(CXXFLAGS)
 
 link_openmp:
-	g++ $(wildcard *.o) $(LIB) $(LDFLAGS) -fopenmp -o $(BUILD)/main_openmp
+	g++ $(SRC_OBJS) main_openmp.o $(LIB) $(LDFLAGS) -fopenmp -o $(BUILD)/main_openmp$(EXE)
 
 clean:
 	-$(DELETE) *.o
@@ -88,14 +94,17 @@ clean:
 all: outfolder compile link compile_openmp link_openmp clean
 
 run_problem_5:
-	@$(BUILD)/main -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000
-	@$(BUILD)/main -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000 --ordered
-	@$(BUILD)/main -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000
-	@$(BUILD)/main -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000 --ordered
+	@$(BUILD)/main --run -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000
+	@$(BUILD)/main --run -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000 --ordered
+	@$(BUILD)/main --run -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000
+	@$(BUILD)/main --run -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000 --ordered
 
 py_plots:
 	@$(PY) problem_5.py
 	@$(PY) problem_6.py
+
+run_tests:
+	@$(BUILD)/test_lattice$(EXE)
 
 
 # Build first (via 'all'), then run everything and plot

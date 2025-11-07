@@ -12,6 +12,7 @@ states = [{"n_up": 0, "M" : -4, "E" : -8, "deg" : 1},
 if __name__ == "__main__":
     from tabulate import tabulate
     import sympy as sp
+    import matplotlib.pyplot as plt
     
     # a) 
     headers = ["n_up", "M", "E", "Degeneracy"]
@@ -80,7 +81,7 @@ if __name__ == "__main__":
     print(M2_avg)
     print(C_V)
     print(chi)
-    exit()
+    # exit()
     
     print("\nSymbolic expressions for averages:")
     print(f"<M> = {M_avg}")

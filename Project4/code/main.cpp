@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
         args.filename = generate_filename(args, OUTDIR);
     }
 
+    std::cout << args.filename << std::endl;
+    std::cout << args.run << std::endl;
     // If run flag is set, perform MCMC simulation
     if (args.run)
     {

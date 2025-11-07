@@ -9,6 +9,21 @@
 #include <iostream>
 #include <fstream>
 
+
+struct Location
+{
+    Location *left = nullptr;     ///< Pointer to the location to the left.
+    Location *right = nullptr;    ///< Pointer to the location to the right.
+    Location *up = nullptr;       ///< Pointer to the location to the up.
+    Location *down = nullptr;     ///< Pointer to the location to the down.
+
+    int s = 0;              ///< Spin state (\f$s = \pm 1\f$) of location. Initialized to zero for debugging.
+
+    Location(int s): s(s) {};
+    Location() = default; // To avoid possible errors from resizing grid in Lattice.
+};
+
+
 /**
  * @brief Class representing a 2D lattice for MCMC simulations.
  *
@@ -25,7 +40,13 @@ class Lattice
 
 private:
     arma::imat grid;
+    std::vector<std::vector<Location>> grid_new;
     //std::vector<int> grid;
+
+    /**
+     * @brief Sets up the pointers in the lattice.
+     */
+    void assign_pointers();
 
     /**
      * @brief Compute the total energy of the lattice.
@@ -64,6 +85,13 @@ public:
     double get_energy() const;
 
     double get_magnetization() const;
+
+    /**
+     * @brief Returns the column of location at row @ref row_index 
+     * 
+     * @param row_index Row index.
+     */
+    std::vector<Location>& operator[](int row_index);
 
 };
 
