@@ -15,10 +15,10 @@ int main(int argc, char *argv[])
     if (args.run)
     {
         // Generate run name if not provided
-        args.run_name = args.run_name.empty() ? generate_run_name(args) : args.run_name;
+        args.out_dir  = args.out_dir.empty() ? "out/" : args.out_dir;
 
         // Set and create output directory
-        std::string out_dir = "out/" + args.run_name + "/";
+        std::string out_dir = args.out_dir + "/";
         std::filesystem::create_directories(out_dir);
 
         // Initialize lattice and run MCMC solver
@@ -34,13 +34,15 @@ int main(int argc, char *argv[])
     if (args.temperature_scan)
     {
         // + generate_temp_scan_name(args) + "/";
-        
+
+        args.run_name = args.run_name.empty() ? generate_temp_scan_name(args) : args.run_name;
+        args.out_dir = args.out_dir.empty() ? "out/temperature_scans/" : args.out_dir;
+
         // Set and create output directory
-        std::string out_dir = "out/";                   
-        std::filesystem::create_directories(out_dir);
+        std::filesystem::create_directories(args.out_dir);
 
         // Perform temperature scan (see `utils.hpp/.cpp`)
-        temperature_scan(args, "out/");
+        temperature_scan(args);
     }
     return 0;
 }

@@ -35,6 +35,6 @@ std::string generate_run_name(const Args &args);
  * @brief Perform a temperature scan over a range of temperatures.
  * @param args Struct containing simulation parameters.
  */
-void temperature_scan(Args &args, const std::string &out_dir = "out/");
+void temperature_scan(Args &args);
 
 #endif

@@ -7,33 +7,43 @@ int pbc(int x, int L)
 
 std::string generate_temp_scan_name(const Args &args)
 {
-    std::string identifier = "temp_scan";
-    identifier += "-n" + std::to_string(args.temperature_steps);
-    identifier += "-L" + std::to_string(args.lattice_size);
+    std::ostringstream oss;
+    oss << std::setprecision(0);
 
-    return identifier;
+    oss << "temp_scan_"
+        << "n" << args.temperature_steps 
+        << "L" << args.lattice_size;
+    // oss << "L"              << args.lattice_size 
+    //    << "-T"             << args.temperature_steps 
+    //    << std::scientific
+    //    << "-cyc"           << static_cast<double>(args.total_cycles)
+    //    << "-n"             << static_cast<double>(args.steps_per_cycle)
+    //    << "-brn"           << static_cast<double>(args.burn_in_cycles);
+
+    std::string name = oss.str();
+    //name.erase(std::remove(name.begin(), name.end(), '+'), name.end());
+
+    return name;
 }
 
 std::string generate_run_name(const Args &args)
 {
     // 1) Format temperature: precision 1 & replace '.' with 'p'
     std::ostringstream oss;
-    oss.precision(1);
-    oss << std::fixed << args.temperature;
+    oss.precision(0);
+    oss << "MCMC" 
+        << (args.ordered ? "-ordered" : "-unordered")
+        << "-L" << args.lattice_size
+        << "-T" << args.temperature;
 
-    std::string T_str = oss.str();
-    std::replace(T_str.begin(), T_str.end(), '.', 'p');
-
-    // 2) Create filename, modified based T, L, and initial configuration
-    std::string identifier = "MCMC";
-    identifier += args.ordered ? "-ordered" : "-unordered";
-    identifier += "-L" + std::to_string(args.lattice_size);
-    identifier += "-T" + T_str;
-
-    return identifier;
+    std::string name = oss.str();
+    std::replace(name.begin(), name.end(), '.', 'p');
+    
+    name += ".csv";
+    return name;
 }
 
-void temperature_scan(Args &args, const std::string &out_dir)
+void temperature_scan(Args &args)
 {
     double T_min = args.temperature_min;
     double T_max = args.temperature_max;
@@ -77,7 +87,8 @@ void temperature_scan(Args &args, const std::string &out_dir)
     std::chrono::duration<double> elapsed = end - start;
     std::cout << "Temperature scan completed in " << elapsed.count() << " seconds.\n";
     
-    results.save(out_dir + generate_temp_scan_name(args) + ".csv", arma::csv_ascii);
+
+    results.save(args.out_dir + args.run_name + ".csv", arma::csv_ascii);
     
     
 }

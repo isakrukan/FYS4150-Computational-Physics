@@ -93,9 +93,17 @@ Args parse_args(int argc, char *argv[])
         // ---------------
         // Misc.
         // ---------------
-        else if (arg == "--run_name" && i + 1 < argc)
+        else if (arg == "--name" && i + 1 < argc)
         {
             args.run_name = argv[++i];
+        }
+        else if (arg == "--outdir" && i + 1 < argc)
+        {
+            args.out_dir = argv[++i];
+            if (args.out_dir.back() != '/')
+            {
+                args.out_dir += "/";
+            }
         }
         else if (arg == "--help")
         {
@@ -119,8 +127,9 @@ Args parse_args(int argc, char *argv[])
                       << "  --temperature_max,   -T_max         maximum temperature for scan (default: 2.4)\n"
                       << "  --temperature_steps, -T_steps       number of temperature steps (default: 30)\n"
                       << "\n"
-                      << "  --run_name,                         output filename (default: auto-generated)\n"
-                      << "  --help,            -h               display this help message\n";
+                      << "  --outdir,                           output directory (default: out/)\n"
+                      << "  --name,                             run name (default: autogenerates based on parameters)\n"
+                      << "  --help,             -h              display this help message\n";
 
             exit(0);
         }

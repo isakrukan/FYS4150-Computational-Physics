@@ -28,7 +28,9 @@ struct Args
     double temperature_max = 2.4;
     int temperature_steps = 30;
 
+    // Output parameters
     std::string run_name = "";
+    std::string out_dir = "";
 };
 
 /**
