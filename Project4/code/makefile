@@ -108,5 +108,5 @@ run_tests:
 
 
 # Build first (via 'all'), then run everything and plot
-project: all run_problem_5 py_plots
+project: all run_problem_5 py_plots run_tests
 	@echo "Complete project finished."
