@@ -96,6 +96,7 @@ run_problem_5:
 py_plots:
 	@$(PY) problem_5.py
 	@$(PY) problem_6.py
+	@$(PY) problem_8.py
 
 
 # Build first (via 'all'), then run everything and plot

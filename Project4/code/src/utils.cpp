@@ -7,12 +7,6 @@ int pbc(int x, int L)
 
 std::string generate_temp_scan_name(const Args &args)
 {
-    std::ostringstream oss;
-    oss << std::fixed << args.temperature;
-
-    std::string T_str = oss.str();
-    std::replace(T_str.begin(), T_str.end(), '.', 'p');
-
     std::string identifier = "temp_scan";
     identifier += "-n" + std::to_string(args.temperature_steps);
     identifier += "-L" + std::to_string(args.lattice_size);
@@ -47,11 +41,6 @@ void temperature_scan(Args &args, const std::string &out_dir)
 
     // Define vectors to hold temperature, heat capacity, and susceptibility
     arma::colvec T = arma::linspace(T_min, T_max, T_steps + 1);
-    // arma::colvec eps = arma::zeros(T_steps + 1);
-    // arma::colvec m_abs = arma::zeros(T_steps + 1);
-    // arma::colvec C_V = arma::zeros(T_steps + 1);
-    // arma::colvec chi = arma::zeros(T_steps + 1);
-
     arma::mat results = arma::zeros(T_steps + 1, 7);
     
     // Check for OpenMP compiler flags
@@ -82,27 +71,13 @@ void temperature_scan(Args &args, const std::string &out_dir)
         results(i, 5) = solver.results.heat_capacity / lattice.N;
         results(i, 6) = solver.results.susceptibility / lattice.N;
 
-        //eps(i) = solver.results.avg_energy / lattice.N;
-        //m_abs(i) = solver.results.avg_magnetization_abs / lattice.N;
-        //C_V(i) = solver.results.heat_capacity / lattice.N;
-        //chi(i) = solver.results.susceptibility / lattice.N;
     }
     
     auto end = std::chrono::high_resolution_clock::now();
-
     std::chrono::duration<double> elapsed = end - start;
-    
     std::cout << "Temperature scan completed in " << elapsed.count() << " seconds.\n";
-
-    // arma::mat results = arma::zeros(T_steps + 1, 5);
-    // results.col(0) = T;
-    // results.col(1) = eps;
-    // results.col(2) = m_abs;
-    // results.col(3) = C_V;
-    // results.col(4) = chi;
-
-    // results.save(out_dir + "T_scan-n" + std::to_string(args.temperature_steps) + "-L" + std::to_string(args.lattice_size) + ".csv", arma::csv_ascii);
-
+    
     results.save(out_dir + generate_temp_scan_name(args) + ".csv", arma::csv_ascii);
+    
     
 }

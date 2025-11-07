@@ -2,6 +2,8 @@
 #define __utils_hpp__
 
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <armadillo>
 #include "lattice.hpp"
 #include "mcmc.hpp"
@@ -15,8 +17,18 @@
  */
 int pbc(int x, int L);
 
+/**
+ * @brief Generate name for a temperature scan run.
+ * @param args Struct containing simulation parameters.
+ * @return Generated temperature scan name.
+ */
 std::string generate_temp_scan_name(const Args &args);
 
+/**
+ * @brief Generate run name based on simulation parameters.
+ * @param args Struct containing simulation parameters.
+ * @return Generated run name.
+ */
 std::string generate_run_name(const Args &args);
 
 /**

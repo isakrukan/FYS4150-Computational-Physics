@@ -29,7 +29,7 @@ for i, T in enumerate([1.0, 2.4]):
         bins = np.arange(epsilon.min() - bin_width/2, epsilon.max() + bin_width/2, bin_width)
 
         ax[i].hist(epsilon, bins=bins, density=True, alpha=0.7, label=type.capitalize(), color=f"C{j}")
-        leg = ax[i].legend(title=f"T = {T} $\mathbf{{J/k_{{B}}}}$")
+        leg = ax[i].legend(title=rf"T = {T} $\mathbf{{J/k_B}}$")
         leg.get_title().set_fontweight('bold')
         # compute variance of epsilon and store for later use
         variances.append(np.var(epsilon))
