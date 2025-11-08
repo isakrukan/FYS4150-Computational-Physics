@@ -74,12 +74,14 @@ void temperature_scan(Args &args)
 
         results(i, 0) = T(i);
         results(i, 1) = solver.results.avg_energy / lattice.N;
-        results(i, 2) = solver.results.MCSE_energy / lattice.N;
-        results(i, 3) = solver.results.avg_magnetization_abs / lattice.N;
-        results(i, 4) = solver.results.MCSE_magnetization / lattice.N;
-        results(i, 5) = solver.results.heat_capacity / lattice.N;
-        results(i, 6) = solver.results.susceptibility / lattice.N;
+        results(i, 2) = solver.results.avg_magnetization_abs / lattice.N;
+        results(i, 3) = solver.results.heat_capacity / lattice.N;
+        results(i, 4) = solver.results.susceptibility / lattice.N;
 
+        results(i, 5) = solver.results.MCSE_energy / lattice.N;
+        results(i, 6) = solver.results.ESS_energy;
+        results(i, 7) = solver.results.MCSE_magnetization_abs / lattice.N;
+        results(i, 8) = solver.results.ESS_magnetization_abs;
     }
     
     auto end = std::chrono::high_resolution_clock::now();
