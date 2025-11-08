@@ -26,11 +26,17 @@ for i, L in enumerate(L_vals):
     T_X[i] = data_averaged[maxidx_X, 0]
 
 
-T_c = (T_C + T_X) / 2
-x = 1 / L_vals
-y = T_c
 
-slope, intercept, r_value, p_value, std_err = linregress(x, y)
-T_C_infinite = intercept
+def estimate_T_infinite(L_vals, T_vals):
+    x = 1 / L_vals
+    y = T_vals
 
-print(f"Estimated critical temperature for infinite system size: {T_C_infinite}")
+    slope, intercept, r_value, p_value, std_err = linregress(x, y)
+    T_infinite = intercept
+    return T_infinite, std_err
+
+T_C_infinite, T_C_std_err = estimate_T_infinite(L_vals, T_C)
+T_X_infinite, T_X_std_err = estimate_T_infinite(L_vals, T_X)
+
+print(f"Estimated T(∞) using heat capacity: {T_C_infinite} ± {T_C_std_err}")
+print(f"Estimated T(∞) using susceptibility: {T_X_infinite} ± {T_X_std_err}")
