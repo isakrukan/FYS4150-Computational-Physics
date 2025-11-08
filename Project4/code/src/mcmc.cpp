@@ -92,25 +92,31 @@ void MCMC::process_results()
     arma::vec cycle_numbers = simulation_data.col(0);
     arma::vec energies = simulation_data.col(1);
     arma::vec magnetizations = simulation_data.col(2);
+    arma::vec magnetizations_abs = arma::abs(magnetizations);
 
     // Main observables - averages & variances:
     results.avg_energy = arma::mean(energies);
     results.avg_energy_squared = arma::mean(energies % energies);
     results.avg_magnetization = arma::mean(magnetizations);
-    results.avg_magnetization_abs = arma::mean(arma::abs(magnetizations));
+    results.avg_magnetization_abs = arma::mean(magnetizations_abs);
     results.avg_magnetization_squared = arma::mean(magnetizations % magnetizations);
 
     results.var_energy = results.avg_energy_squared - results.avg_energy * results.avg_energy;
     results.var_magnetization = results.avg_magnetization_squared - results.avg_magnetization_abs * results.avg_magnetization_abs;
 
-    // Main observables - standard errors accounting for autocorrelation:
-    results.MCSE_energy = standard_error(energies);
-    results.MCSE_magnetization = standard_error(magnetizations);
-    
     // Derived quantities
     results.heat_capacity = results.var_energy / (lattice.T * lattice.T);
     results.susceptibility = results.var_magnetization / lattice.T;
 
+    // MCSE errors & effective samples accounting for autocorrelation:
+    int max_lag = std::min(total_cycles / 2, 5000);
+    
+    results.MCSE_energy = standard_error(energies);
+    results.ESS_energy = n_eff(energies, max_lag);
+    
+    results.MCSE_magnetization = standard_error(magnetizations);
+    results.MCSE_magnetization_abs = standard_error(magnetizations_abs);
+    results.ESS_magnetization = n_eff(magnetizations, max_lag);
 }
 
 void MCMC::save_data(const std::string &out_dir) const
@@ -128,6 +134,7 @@ void MCMC::save_data(const std::string &out_dir) const
     stats_file << "  \"var_magnetization\": " << results.var_magnetization << ",\n";
     stats_file << "  \"MCSE_energy\": " << results.MCSE_energy << ",\n";
     stats_file << "  \"MCSE_magnetization\": " << results.MCSE_magnetization << ",\n";
+    stats_file << "  \"MCSE_magnetization_abs\": " << results.MCSE_magnetization_abs << ",\n";
     stats_file << "  \"heat_capacity\": " << results.heat_capacity << ",\n";
     stats_file << "  \"susceptibility\": " << results.susceptibility << "\n";
     stats_file << "}\n";

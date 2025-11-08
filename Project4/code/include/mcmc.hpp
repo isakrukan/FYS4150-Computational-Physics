@@ -12,6 +12,7 @@
  */
 struct MCMC_data
 {
+    // Averages and variances of main observables
     double avg_energy = 0.0;
     double avg_energy_squared = 0.0;
     double var_energy = 0.0;
@@ -21,11 +22,19 @@ struct MCMC_data
     double avg_magnetization_squared = 0.0;
     double var_magnetization = 0.0;
 
-    double MCSE_energy = 0.0;
-    double MCSE_magnetization = 0.0;
-
+    // Derived quantities
     double heat_capacity = 0.0;
     double susceptibility = 0.0;
+
+    // Error estimates
+    double MCSE_energy = 0.0;
+    double MCSE_magnetization = 0.0;
+    double MCSE_magnetization_abs = 0.0;
+    
+    // Effective sample size estimates
+    double ESS_energy = 0.0;
+    double ESS_magnetization = 0.0;
+    double ESS_magnetization_abs = 0.0;
 };
 
 /**
