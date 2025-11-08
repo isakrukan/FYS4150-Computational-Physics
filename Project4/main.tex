@@ -135,27 +135,6 @@
 \end{abstract}
 \maketitle
 
-
-\section{Problems (reorganize later)}
-
-\subsection{Problem 1}
-To count the total energy from nearest neighbor interactions on a 2D lattice with periodic boundary conditions:
-\begin{itemize}
-    \item[1.] Loop through each spin
-    \item[2.] Count contributions from right and down neighbors only
-\end{itemize}
-Illustrated in Figure~\ref{fig:problem1}.
-
-\begin{figure}
-    \centering
-    \includestandalone[width=0.4\textwidth]{figs/lattice}
-    \caption{Problem 1}
-    \label{fig:problem1}
-\end{figure}
-
-\subsubsection{2x2 example}
-
-
 \section{Introduction}
 Introduction
 
@@ -185,7 +164,14 @@ We may then choose to distinguish spin configurations based on the triplet $(N_\
 \subsection{Boundary conditions}
 In particular, we will be considering a square lattice of size $L \times L$ with periodic boundary conditions, such that the total number of spins is $N = L^2$.
 To compute the energy of a given spin configuration, we may in this case sum over all spins, counting only the contributions from only the right and down neighbors to avoid double counting.
-This is illustrated in Figure~\ref{fig:problem1}.
+This is illustrated in Figure~\ref{fig:counting_neighbors}.
+
+\begin{figure}
+    \centering
+    \includestandalone[width=0.4\textwidth]{figs/lattice}
+    \caption{Problem 1}
+    \label{fig:counting_neighbors}
+\end{figure}
 
 \subsection{Example: 2x2 lattice}
 We now consider analytical results for the case of a $2\times 2$ lattice, which will later be used to verify our numerical results.
@@ -193,6 +179,7 @@ Table~1 shows all possible types  for a $2\times 2$ lattice, along with their de
 \begin{table}
     \centering
     \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.1}
     \begin{tabular}{c|c|c|c}
     {$N_\uparrow$} & {$M(s)$} & {$E(s)$ [$J$]} & Degeneracy \\
     \hline
@@ -206,7 +193,7 @@ Table~1 shows all possible types  for a $2\times 2$ lattice, along with their de
 \end{table}
 From this we may easily compute the partition function
 \begin{align}
-    Z & = 4 \cosh(x) + 12\\
+    Z & = 4 \cosh(x) + 12
 \end{align}
 where we have defined $x = \frac{E_0}{T k_{B}}$ and $E_0 = 8J$ for convenience and clarity.
 From this we may compute the expectation values
@@ -214,19 +201,93 @@ From this we may compute the expectation values
     \langle E \rangle & = -E_0 \frac{\sinh(x)}{\cosh(x) + 3} \\
     \langle E^2 \rangle & = E_0^2 \frac{\cosh(x)}{\cosh(x) + 3}\\
     \langle |M| \rangle & = \frac{2e^{-x} + 4}{\cosh(x) + 3}\\
-    \langle M^2 \rangle & = 4 \langle |M| \rangle\\
+    \langle M^2 \rangle & = 4 \langle |M| \rangle
 \end{align}
 Here, expectation values for the energy have been computed using standard differentiation formulas for the partition function, while the those for the magnetization are computed directly from the definition.  
 This further results in the following expressions for the heat capacity $C_V$ and magnetic susceptibility $\chi$:
 \begin{align}
     C_V & = \frac{E_0^2}{k_B T^2} \frac{\cosh(x) + 1}{(\cosh(x) + 3)^2}\\
-    \chi & = \frac{4}{k_B T} \langle |M| \rangle\\
+    \chi & = \frac{4}{k_B T} \langle |M| \rangle
 \end{align}
 
+\subsection{Estimating the critical temperature}
+To give a numerical estimate the critical temperature $T_c(L=\infty)$ of the infinite lattice, we use finite size scaling relations
+\begin{align}
+    T_c(L) - T_c(L=\infty) = a L^{-1},
+\end{align}
+We may then simulate the Ising model at different \textit{finite} lattice sizes $L$ to estimate $T_c(L)$, and perform a linear regression of $T_c(L)$ against $L^{-1}$ to estimate both $a$ and $T_c(L=\infty)$.
 
+\subsection{MCMC \& Metropolis-Hastings}
 
 
 \section{Results}
+
+\subsection{Equilibration time}
+For a Monte Carlo simulation of the $L=20$ lattice, an example evolution of the energy per spin $\epsilon = E/N$ and its running average $\langle \epsilon \rangle$ is shown in Figure~\ref{fig:equilibration}.
+In this case, the system seems to have burned in after roughly $2\times 10^3$ Monte Carlo cycles.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/equilibration.pdf}
+    \caption{Burn-in plot.}
+    \label{fig:equilibration}
+\end{figure}
+
+\subsection{Energy distribution}
+The distribution of the energy per spin $\epsilon = E/N$ has been estimated for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.
+The results of this is shown in Figure~\ref{fig:epsilon_distribution}, with corresponding variances tabulated in Table~\ref{table:epsilon_distribution}.
+As expected, the variance is much smaller in the low-temperature, as the system is likely to be in an ordered state.
+On the other hand, the higher-temperature distribution is noticeably wider.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/epsilon_distribution.pdf}
+    \caption{Estimates for the distribution of $\epsilon$ for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.}
+    \label{fig:epsilon_distribution}
+\end{figure}
+\begin{table}
+    \centering
+    \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{c|cc}
+        & Unordered & Ordered \\
+        \hline
+        $T = 1.0\ J/k_B$ &  $5.876\times10^{-5}$ & $5.984\times10^{-5}$ \\
+        $T = 2.4\ J/k_B$ &  $2.069\times10^{-2}$ & $1.996\times10^{-2}$ \\
+    \end{tabular}
+    \caption{In units of $J^2$, the variances of the estimated energy distributions $p(\epsilon;T)$ shown in Figure~\ref{fig:epsilon_distribution}.}
+    \label{table:epsilon_distribution}
+\end{table}
+
+\subsection{Phase transitions \& critical phenomena}
+We have plotted the average energy, magnetization, heat capacity and magnetic susceptibility per spin as functions of temperature for lattice sizes $L = 40, 60, 80, 100$ in Figure~\ref{fig:thermodynamics}.
+In particular, we see a drop in the magnetization near the (supposed) critical region, typical of a transition from an ordered to a disordered phase.
+Additionally, we see peaks in both the heat capacity and magnetic susceptibility, both of which grow sharper and taller as the lattice size is increased.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/T_scan_n100.pdf}
+    \caption{Caption.}
+    \label{fig:thermodynamics}
+\end{figure}
+
+\subsubsection{The critical temperature}
+To estimate the critical temperature at finite lattice sizes, we simply identify the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility.
+These are tabulated in Table~\ref{table:crit_temps}.
+\begin{table}
+    \centering
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{c|c|c}
+    {$L$} & {$T_c^{(C_V)}$} [$J/k_B$] & {$T_c^{(\chi)}$} [$J/k_B$] \\
+    \hline
+        40  & 0 & 0 \\
+        60  & 0 & 0 \\
+        80  & 0 & 0 \\
+        100 & 0 & 0 \\
+    \end{tabular}
+    \caption{Temporary numbers.}
+    \label{table:crit_temps}
+\end{table}
+
+
 
 \section{Discussion}
 
