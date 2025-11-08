@@ -71,12 +71,12 @@ void MCMC::run(int total_cycles, int steps_per_cycle, int burn_in_cycles)
     // Perform main MCMC cycles
     for (int cycle = 1; cycle < total_cycles; ++cycle)
     {
+        cycle_MCMC(steps_per_cycle);
 
         simulation_data( cycle, 0 ) = cycle + 1;
         simulation_data( cycle, 1 ) = lattice.get_energy();
         simulation_data( cycle, 2 ) = lattice.get_magnetization();
 
-        cycle_MCMC(steps_per_cycle);
     }
     
     // Compute final averages, variances, etc.

@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     if (args.run)
     {
         // Generate run name if not provided
-        args.out_dir  = args.out_dir.empty() ? "out/" : args.out_dir;
+        args.out_dir  = args.out_dir.empty() ? "out/" + generate_run_name(args) : args.out_dir;
 
         // Set and create output directory
         std::string out_dir = args.out_dir + "/";

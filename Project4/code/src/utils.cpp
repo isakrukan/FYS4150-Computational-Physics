@@ -30,16 +30,15 @@ std::string generate_run_name(const Args &args)
 {
     // 1) Format temperature: precision 1 & replace '.' with 'p'
     std::ostringstream oss;
-    oss.precision(0);
     oss << "MCMC" 
         << (args.ordered ? "-ordered" : "-unordered")
         << "-L" << args.lattice_size
+        << std::fixed << std::setprecision(1)
         << "-T" << args.temperature;
 
     std::string name = oss.str();
     std::replace(name.begin(), name.end(), '.', 'p');
     
-    name += ".csv";
     return name;
 }
 
