@@ -120,3 +120,4 @@ build/
 
 # Project 4 data stuff
 Project4/**/stats.json
+Project4/**/info.json
