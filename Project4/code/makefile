@@ -83,6 +83,7 @@ link:
 # OpenMP build
 # - - - - - - -  
 compile_openmp:
+	g++ -fopenmp -c $(wildcard src/*.cpp) $(INCL) $(LIB) $(CXXFLAGS)
 	g++ -fopenmp -c main.cpp -o main_openmp.o $(INCL) $(LIB) $(CXXFLAGS)
 
 link_openmp:
@@ -91,7 +92,8 @@ link_openmp:
 clean:
 	-$(DELETE) *.o
 
-all: outfolder compile link compile_openmp link_openmp clean
+# Clean between serial and OpenMP builds for debugging/safety
+all: outfolder compile link clean compile_openmp link_openmp clean
 
 run_problem_5:
 	@$(BUILD)/main --run --seed 1 -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000
