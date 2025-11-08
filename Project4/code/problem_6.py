@@ -15,7 +15,7 @@ variances = []
 
 # Create histograms of epsilon after burn-in for T=1.0 and T=2.4:
 
-fig, ax = plt.subplots(nrows=2, figsize=(9,6), sharex=True)
+fig, ax = plt.subplots(nrows=2, figsize=(6,4), sharex=True)
 
 for i, T in enumerate([1.0, 2.4]):
 
@@ -25,7 +25,7 @@ for i, T in enumerate([1.0, 2.4]):
         identifier = f"MCMC-{type}-L{L}-T{str(T).replace('.', 'p')}/"
         filename = DIR + identifier + "raw_data.csv"
         
-        epsilon = np.loadtxt(filename, delimiter=",", skiprows=1)[burnin_cycles:, 1] / N
+        epsilon = np.loadtxt(filename, delimiter=",")[burnin_cycles:, 1] / N
         bins = np.arange(epsilon.min() - bin_width/2, epsilon.max() + bin_width/2, bin_width)
 
         ax[i].hist(epsilon, bins=bins, density=True, alpha=0.7, label=type.capitalize(), color=f"C{j}")

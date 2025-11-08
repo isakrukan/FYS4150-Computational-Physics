@@ -1,70 +1,50 @@
 from problem_1 import states
-import sympy as sp
+from tabulate import tabulate
+import numpy as np
 
-T = sp.symbols('T', positive=True, real=True)
-J = sp.symbols('J', real=True)
-k = sp.symbols('k', positive=True, real=True)
+N = 4
+J   = 1.0
+k_B = 1.0
+T   = J / k_B
 
+data_predicted = np.zeros(5)  
 Z = 0
-M_avg  = 0
-M_avg_abs  = 0
-M2_avg = 0
-E_avg  = 0
-E2_avg = 0
 
 for state in states:
-    M    = state["M"]
-    E    = state["E"]
-    deg  = state["deg"]
-    n_up = state["n_up"]
-    weight = deg * sp.exp(-E*J/(k*T))
-    
+    M   = state["M"]
+    E   = state["E"]
+    deg = state["deg"]
+    weight = deg * np.exp(-E*J/(k_B*T))
 
-    Z         += weight
-    M_avg     += weight * M
-    M_avg_abs += weight * sp.Abs(M)
-    M2_avg    += weight * M**2
-    E_avg     += weight * E
-    E2_avg    += weight * E**2
+    data_predicted[0] = weight * E 
+    data_predicted[1] = weight * E**2
+    data_predicted[2] = weight * M
+    data_predicted[3] = weight * M**2
+    data_predicted[4] = weight * np.abs(M)
 
-M_avg  = M_avg / Z
-M_avg_abs  = M_avg_abs / Z
-M2_avg = M2_avg / Z
-E_avg  = E_avg / Z
-E2_avg = E2_avg / Z
-    
-N = 4
-    
-def print_numeric(T_val, J_val, k_val):
+    Z += weight
 
-    Z_val = Z.evalf(subs={T:T_val, J:J_val, k:k_val})
+data_predicted /= Z
 
-    m_avg  = M_avg.evalf(subs={T:T_val, J:J_val, k:k_val}) / N
-    m_avg_abs  = M_avg_abs.evalf(subs={T:T_val, J:J_val, k:k_val}) / N
-    m2_avg = M2_avg.evalf(subs={T:T_val, J:J_val, k:k_val}) / N**2
-    eps_avg  = E_avg.evalf(subs={T:T_val, J:J_val, k:k_val}) / N
-    eps2_avg = E2_avg.evalf(subs={T:T_val, J:J_val, k:k_val}) / N**2
+eps_avg     = data_predicted[0] / N
+eps_sqr_avg = data_predicted[1] / N**2
+eps_var     = eps_sqr_avg - eps_avg**2
 
-    m_var = m2_avg - m_avg**2
-    eps_var = eps2_avg - eps_avg**2
+m_avg     = data_predicted[2] / N
+m_avg_abs = data_predicted[4] / N
+m_sqr_avg = data_predicted[3] / N**2
+m_var     = m_sqr_avg - m_avg**2
 
-    C   = N * eps_var / (k_val * T_val**2)
-    chi = N * m_var   / (k_val * T_val)
+C_V = (eps_sqr_avg - eps_avg**2) * (J**2) / (k_B * T**2)
+chi = (m_sqr_avg - m_avg**2) * (J**2) / (k_B * T)
 
-    print(f"\nFor T={T_val}, J={J_val}, k={k_val}:")
-    #print(f"Z = {Z_val}")
-    print(f"<ε> = {eps_avg}")
-    print(f"<ε>_var = {eps_var}")
-    print(f"<m> = {m_avg}")
-    print(f"<|m|> = {m_avg_abs}")
-    print(f"<m>_var = {m_var}")
-    print(f"C = {C}")
-    print(f"chi = {chi}")
-    
+header = ["Observable", "Value"]
+col_1 = ["Mean(ε)", "Var(ε)", "Mean(m)", "Mean(|m|)", "Var(m)", "C", "chi"]
+col_2 = data_predicted.tolist() + [C_V, chi]
 
-k_val = 1.0
-J_val = 1.0
-T_val = J_val / k_val
+table = tabulate(zip(col_1, col_2), headers=header, tablefmt="rounded_grid")
+print("Problem 1b:\n")
+print(table)
+
 
     
-print_numeric(T_val, J_val, k_val)

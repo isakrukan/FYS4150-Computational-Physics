@@ -12,13 +12,13 @@ DIR = "out/"
 colors = ['#377eb8', '#e41a1c', '#4daf4a', '#984ea3']
 color_idx = 0
 
-plt.figure(figsize=(9,6))
+plt.figure(figsize=(6,4), tight_layout=True)
 for type in ["unordered", "ordered"]:
 
     for T in [1.0, 2.4]:
 
         identifier = f"MCMC-{type}-L{L}-T{str(T).replace('.', 'p')}/"
-        raw_data = np.loadtxt(DIR + identifier + "raw_data.csv", delimiter=",", skiprows=1)
+        raw_data = np.loadtxt(DIR + identifier + "raw_data.csv", delimiter=",")
 
         n_cycles = raw_data[:, 0]
         eps = raw_data[:, 1] / N
@@ -29,9 +29,8 @@ for type in ["unordered", "ordered"]:
 
         color_idx += 1
 
-
+plt.xlim([1, 1e4])
 plt.xlabel("No. of MC cycles")
 plt.ylabel("Energy per spin")
 plt.legend()
 plt.savefig(DIR + "equilibration.pdf")
-plt.show()

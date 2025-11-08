@@ -10,7 +10,8 @@ fig_err, ax_err = plt.subplots(nrows=2, sharex=True, figsize=(8, 5))
 n = 100
 
 for L in [40, 60, 80, 100]:
-    data = np.loadtxt(DIR + f'temp_scan-n{n}-L{L}.csv', delimiter=',')
+    
+    data = np.loadtxt(DIR + f'temperature_scans/temp_scan-n{n}-L{L}.csv', delimiter=',')
 
     T = data[:, 0]
     E = data[:, 1]
