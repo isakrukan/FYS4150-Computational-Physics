@@ -117,3 +117,6 @@ build/
 
 # Do not ignore python requirements txt
 !**/requirements.txt
+
+# Project 4 data stuff
+Project4/**/stats.json
