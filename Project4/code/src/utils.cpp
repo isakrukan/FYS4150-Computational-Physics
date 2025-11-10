@@ -50,7 +50,7 @@ void temperature_scan(Args &args)
 
     // Define vectors to hold temperature, heat capacity, and susceptibility
     arma::colvec T = arma::linspace(T_min, T_max, T_steps + 1);
-    arma::mat results = arma::zeros(T_steps + 1, 7);
+    arma::mat results = arma::zeros(T_steps + 1, 9);
     
     // Check for OpenMP compiler flags
     #ifdef _OPENMP

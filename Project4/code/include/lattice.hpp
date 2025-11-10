@@ -14,7 +14,7 @@ struct Location
 
     int s = 0;              ///< Spin state (\f$s = \pm 1\f$) of location. Initialized to zero for debugging.
 
-    Location(int s): s(s) {};
+    Location(int s_): s(s_) {};
     Location() = default; // To avoid possible errors from resizing grid in Lattice.
 };
 
@@ -52,7 +52,7 @@ private:
     void initialize_magnetization();
 
 public:
-    Lattice(int L, double J, double T) : L(L), rows(L), cols(L), T(T), J(J), N(L * L) {};
+    Lattice(int L_, double J_, double T_) : L(L_), rows(L_), cols(L_), T(T_), J(J_), N(L_ * L_) {};
 
     const int rows;
     const int cols;

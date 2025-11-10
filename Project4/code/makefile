@@ -100,6 +100,7 @@ run_problem_5:
 	@$(BUILD)/main --run --seed 2 -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000 --ordered
 	@$(BUILD)/main --run --seed 3 -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000
 	@$(BUILD)/main --run --seed 4 -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000 --ordered
+	@$(BUILD)/main --run --temperature_scan
 
 py_plots:
 	@$(PY) problem_5.py
@@ -111,5 +112,5 @@ run_tests:
 
 
 # Build first (via 'all'), then run everything and plot
-project: all run_problem_5 py_plots run_tests
+project: all run_tests run_problem_5 py_plots
 	@echo "Complete project finished."
