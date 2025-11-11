@@ -17,7 +17,7 @@ struct Args
     
     // MCMC parameters
     bool run = false;
-    int steps_per_cycle = 1000;
+    int steps_per_cycle = 0;    // If not changed, will be set to L^2
     int total_cycles = 1000;
     int burn_in_cycles = 0;
     int seed = 1234;
