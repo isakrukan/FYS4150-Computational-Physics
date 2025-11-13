@@ -20,7 +20,7 @@ struct MCMC_data
     double avg_magnetization = 0.0;
     double avg_magnetization_abs = 0.0;
     double avg_magnetization_squared = 0.0;
-    double var_magnetization = 0.0;
+    double var_magnetization_abs = 0.0;
 
     // Derived quantities
     double heat_capacity = 0.0;

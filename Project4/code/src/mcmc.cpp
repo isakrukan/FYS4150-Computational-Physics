@@ -81,7 +81,6 @@ void MCMC::run(int total_cycles, int steps_per_cycle, int burn_in_cycles)
     
     // Compute final averages, variances, etc.
     process_results();
-
 }
 
 
@@ -102,12 +101,11 @@ void MCMC::process_results()
     results.avg_magnetization_squared = arma::mean(magnetizations % magnetizations);
 
     results.var_energy = results.avg_energy_squared - results.avg_energy * results.avg_energy;
-    results.var_magnetization = results.avg_magnetization_squared - results.avg_magnetization_abs * results.avg_magnetization_abs;
+    results.var_magnetization_abs = results.avg_magnetization_squared - results.avg_magnetization_abs * results.avg_magnetization_abs;
 
     // Derived quantities
     results.heat_capacity = results.var_energy / (lattice.T * lattice.T);
-    results.susceptibility = results.var_magnetization / lattice.T;
-
+    results.susceptibility = results.var_magnetization_abs / lattice.T;
     // MCSE errors & effective samples accounting for autocorrelation:
     int max_lag = std::min(total_cycles / 2, 5000);
     
@@ -117,6 +115,7 @@ void MCMC::process_results()
     results.MCSE_magnetization = standard_error(magnetizations);
     results.MCSE_magnetization_abs = standard_error(magnetizations_abs);
     results.ESS_magnetization = n_eff(magnetizations, max_lag);
+    results.ESS_magnetization_abs = n_eff(magnetizations_abs, max_lag);
 }
 
 void MCMC::save_data(const std::string &out_dir) const
@@ -125,18 +124,18 @@ void MCMC::save_data(const std::string &out_dir) const
     std::ofstream stats_file(out_dir + "stats.json");
 
     stats_file << "{\n";
-    stats_file << "  \"avg_energy\": " << results.avg_energy << ",\n";
-    stats_file << "  \"avg_energy_squared\": " << results.avg_energy_squared << ",\n";
-    stats_file << "  \"var_energy\": " << results.var_energy << ",\n";
-    stats_file << "  \"avg_magnetization\": " << results.avg_magnetization << ",\n";
-    stats_file << "  \"avg_magnetization_abs\": " << results.avg_magnetization_abs << ",\n";
-    stats_file << "  \"avg_magnetization_squared\": " << results.avg_magnetization_squared << ",\n";
-    stats_file << "  \"var_magnetization\": " << results.var_magnetization << ",\n";
-    stats_file << "  \"MCSE_energy\": " << results.MCSE_energy << ",\n";
-    stats_file << "  \"MCSE_magnetization\": " << results.MCSE_magnetization << ",\n";
-    stats_file << "  \"MCSE_magnetization_abs\": " << results.MCSE_magnetization_abs << ",\n";
-    stats_file << "  \"heat_capacity\": " << results.heat_capacity << ",\n";
-    stats_file << "  \"susceptibility\": " << results.susceptibility << "\n";
+    stats_file << "  \"avg_energy\": "                << results.avg_energy                 << ",\n";
+    stats_file << "  \"avg_energy_squared\": "        << results.avg_energy_squared         << ",\n";
+    stats_file << "  \"var_energy\": "                << results.var_energy                 << ",\n";
+    stats_file << "  \"avg_magnetization\": "         << results.avg_magnetization          << ",\n";
+    stats_file << "  \"avg_magnetization_abs\": "     << results.avg_magnetization_abs      << ",\n";
+    stats_file << "  \"avg_magnetization_squared\": " << results.avg_magnetization_squared  << ",\n";
+    stats_file << "  \"var_magnetization_abs\": "     << results.var_magnetization_abs      << ",\n";
+    stats_file << "  \"MCSE_energy\": "               << results.MCSE_energy                << ",\n";
+    stats_file << "  \"MCSE_magnetization\": "        << results.MCSE_magnetization         << ",\n";
+    stats_file << "  \"MCSE_magnetization_abs\": "    << results.MCSE_magnetization_abs     << ",\n";
+    stats_file << "  \"heat_capacity\": "             << results.heat_capacity              << ",\n";
+    stats_file << "  \"susceptibility\": "            << results.susceptibility             << "\n";
     stats_file << "}\n";
 
     stats_file.close();
