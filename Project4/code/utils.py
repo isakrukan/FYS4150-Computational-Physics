@@ -19,7 +19,7 @@ def combine_runs(DATA_DIR, L, num_temps=100):
 
     # Average all except ESS (indices 6 and 8), which are just summed:
     data_combined[:, :6] = data_combined[:, :6] / num_repeats
-    data_combined[:,  7] = data_combined[:, 7] / num_repeats
+    data_combined[:,  7] = data_combined[:,  7] / num_repeats
 
 
     return data_combined
