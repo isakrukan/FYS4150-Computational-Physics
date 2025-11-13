@@ -101,10 +101,17 @@
 
 % \algrenewcommand\algorithmiccomment[1]{\hfill\textcolor{green}{// #1}}
 
+\usepackage[acronym]{glossaries}    % e.g. partial density function (pdf)
+\makeglossaries
+
+% Acronyms:
+\newacronym{pdf}{PDF}{partial density function}
+\newacronym{mcmc}{MCMC}{Markov chain Monte Carlo}
+
 \usepackage{tikz}
-\usepackage{quantikz}          % <-- package, not tikzlibrary
+\usepackage{quantikz}          
 \usepackage{hyperref}
-\usepackage{float}             % optional, if you want [H] placement
+\usepackage{float}             % optional, for [H] placement
 
 
 \hypersetup{
@@ -146,24 +153,44 @@ When working with this project we have occasionally consulted with the language 
 
 \subsection{The Ising model}
 We will be considering the two-dimensional Ising model with no external magnetic field. 
-The model consists of an 2D lattice of spins $\vec{s} = {s_1,\dots, s_N}$ with nearest neighbor interactions.
+The model consists of an 2D lattice of spins $\vec{s} = (s_1,\dots, s_N)$ with nearest neighbor interactions.
 Here $N$ is the number of spins, and each spin is taken discretely to be either up ($s_i = +1$) or down ($s_i = -1$).
 The Ising Hamiltonian is given by
 \begin{equation}
-    H(s) = -J \sum_{\langle ij \rangle} s_i s_j,
+    H(\vec{s}) = -J \sum_{\langle ij \rangle} s_i s_j,
 \end{equation}
 where ${\langle ij \rangle}$ indicates the sum runs over all nearest neighbor pairs $ij$.
-This is generally dependent on the specific configuration of spins $s$.
+This is generally dependent on the specific configuration of spins $\vec{s}$.
 On the other hand, the total magnetization
 \begin{align}
-    M(s) & = \sum_{i=1}^N s_i,
+    M(\vec{s}) & = \sum_{i=1}^N s_i,
 \end{align}
 is dependent only on the number of up-spins $N_\uparrow$.
-We may then choose to distinguish spin configurations based on the triplet $(N_\uparrow, M(s), E(s))$.
-\\
+Hence, we may distinguish different spin configurations based on the triplet $(N_\uparrow, M(s), E(s))$.
+
+
+\subsection{Statistics}
+Generally, the \gls{pdf} \(p(x)\) of a random variable \(x\) is a function that assigns a `probability density', which when integrated over a given domain \([a,b]\), yields the probability \(P(a \leq x\leq b)\) for that random variable to take a value inside that domain.
+That is, 
+\begin{align}
+    P(a \leq x \leq b) = \int_a^b p(X)dx.
+\end{align} 
+For a given function \(y(X)\) 
+For the Ising model, the \gls{pdf} \(p(\vec{s}; T)\) for a state \(\vec{s}\) with a temperature \(T\), is given by the \emph{Boltzmann distribution}:
+\begin{align}
+    p(\vec{s}, T) = \frac{1}{Z}e^{-\beta E(\vec{s})},
+\end{align}
+where \(\beta = 1/(k_BT)\), with \(k_B\) being the Boltzmann constant, and \(Z\) the so-called \emph{partition function}. The latter quantity is given by 
+\begin{align}
+    Z = \sum_{\text{all possible }\vec{s}} e^{-\beta E(\vec{s})},   \label{eq:partial_function}
+\end{align}
+which is a function of \(T\). 
+
+In this project, we aim at estimating the \gls{pdf} for the energy and magnetization of the Ising model. We will do so using the \gls{mcmc} method (see section \ref{sec:MCMC}) to sample microstates from \(p(\vec{s}; T)\) and then computing the corresponding \(E(\vec{s})\) and \(M(\vec{s})\). 
+
 \subsection{Boundary conditions}
-In particular, we will be considering a square lattice of size $L \times L$ with periodic boundary conditions, such that the total number of spins is $N = L^2$.
-To compute the energy of a given spin configuration, we may in this case sum over all spins, counting only the contributions from only the right and down neighbors to avoid double counting.
+We will be considering a square lattice of size $L \times L$ with periodic boundary conditions, which then will have a  total number of spins $N = L^2$.
+To compute the energy of a given spin configuration, we may in this case sum over all spins, counting only the contributions from the neighbors to the right and below, avoiding double counting.
 This is illustrated in Figure~\ref{fig:counting_neighbors}.
 
 \begin{figure}
@@ -174,8 +201,9 @@ This is illustrated in Figure~\ref{fig:counting_neighbors}.
 \end{figure}
 
 \subsection{Example: 2x2 lattice}
-We now consider analytical results for the case of a $2\times 2$ lattice, which will later be used to verify our numerical results.
-Table~1 shows all possible types  for a $2\times 2$ lattice, along with their degeneracies.
+To verify our numerical implementation of a general \(L\times L\) lattice, we will compare with the analytic results 
+for the case of a $2\times 2$ lattice.
+Table~\ref{table:2x2_possible_configs} shows all possible configurations of \(N_{\uparrow}\), \(M(s)\) and \(E(s)\) for a $2\times 2$ lattice, including their degeneracy.
 \begin{table}
     \centering
     \setlength{\tabcolsep}{4pt}
@@ -190,12 +218,13 @@ Table~1 shows all possible types  for a $2\times 2$ lattice, along with their de
         3 &   2 &   0 & 4 \\
         4 &   4 &  -8 & 1 \\
     \end{tabular}
+    \label{table:2x2_possible_configs}
 \end{table}
-From this we may easily compute the partition function
+Using Table~\ref{table:2x2_possible_configs} and \eqref{eq:partial_function} we obtain the following expression for the partition function
 \begin{align}
-    Z & = 4 \cosh(x) + 12
+    Z & = 4 \cosh(x) + 12.
 \end{align}
-where we have defined $x = \frac{E_0}{T k_{B}}$ and $E_0 = 8J$ for convenience and clarity.
+Here we have defined $x = \frac{E_0}{T k_{B}}$ and $E_0 = 8J$ for convenience and clarity.
 From this we may compute the expectation values
 \begin{align}
     \langle E \rangle & = -E_0 \frac{\sinh(x)}{\cosh(x) + 3} \\
@@ -221,7 +250,7 @@ Due to noise, the maximums in the simulated data may not correspond exactly to t
 To correct for this, we instead fit a second degree polynomial to a small window of data points around this maximum.
 We then take the critical temperature to be the that which maximizes this polynomial.
 
-\subsection{MCMC \& Metropolis-Hastings}
+\subsection{MCMC \& Metropolis-Hastings}    \label{sec:MCMC}
 
 \subsection{Hardware}
 The simulations were run on the \textsc{bioint01} server provided by the University of Oslo (see \href{https://www.mn.uio.no/ifi/tjenester/it/tjenester/compute/hpc/bioinfo-cluster/}{here}).

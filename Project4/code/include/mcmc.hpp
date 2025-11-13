@@ -3,6 +3,7 @@
 
 #include <random>
 #include <fstream>
+#include <array>
 #include "lattice.hpp"
 #include "stats.hpp"
 

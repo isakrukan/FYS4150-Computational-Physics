@@ -1,8 +1,9 @@
 #include "mcmc.hpp"
 #include "utils.hpp"
 
-MCMC::MCMC(Lattice &lattice, int seed)
-    : lattice(lattice), total_cycles(total_cycles), steps_per_cycle(steps_per_cycle)
+MCMC::MCMC(Lattice &lattice_, int seed)
+    : lattice(lattice_)
+    // , total_cycles(total_cycles), steps_per_cycle(steps_per_cycle) // De to siste her må/kan vell fjernes?
     {
     if (seed == 0)
     {
