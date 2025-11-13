@@ -6,7 +6,6 @@ BUILD 		:= build
 TESTS		:= tests
 LIB			:= 
 INCL 		:= -I./include
-#CXXFLAGS 	:= -DARMA_USE_HDF5 -std=c++17 -O2 
 CXXFLAGS 	:= -std=c++17 -O3 -march=native
 LDFLAGS 	:= -larmadillo
 PY			:= 
@@ -95,21 +94,36 @@ clean:
 # Clean between serial and OpenMP builds for debugging/safety
 all: outfolder compile link clean compile_openmp link_openmp clean
 
+
+# Generates data for problems 5 & 6
+# Should take around ~30 sec w/ 1e6 MC cycles
 run_problem_5:
-	@$(BUILD)/main --run --seed 1 -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000
-	@$(BUILD)/main --run --seed 2 -L 20 -T 1.0 -n_cycles 10000 -n_steps 10000 --ordered
-	@$(BUILD)/main --run --seed 3 -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000
-	@$(BUILD)/main --run --seed 4 -L 20 -T 2.4 -n_cycles 10000 -n_steps 10000 --ordered
+	@$(BUILD)/main --run --seed 1 -L 20 -T 1.0 -n_cycles 1000000
+	@$(BUILD)/main --run --seed 2 -L 20 -T 1.0 -n_cycles 1000000 --ordered
+	@$(BUILD)/main --run --seed 3 -L 20 -T 2.4 -n_cycles 1000000
+	@$(BUILD)/main --run --seed 4 -L 20 -T 2.4 -n_cycles 1000000 --ordered
+
+# NOTE: Runs a smaller test version of problem 8, meant to verify that the code
+# is working (more accurate runs take a long time and should be done manually).
+# These should take around 2-4 minutes in total.
+run_downscaled_problem_8:
+	@$(BUILD)/main_openmp --temperature_scan --seed 42*1 --outdir out/temperature_scans/tests/results-L40 --name scan_1 -T_steps 10 -L 40 -n_cycles 100000 -n_burn 10000
+	@$(BUILD)/main_openmp --temperature_scan --seed 42*2 --outdir out/temperature_scans/tests/results-L60 --name scan_1 -T_steps 10 -L 60 -n_cycles 100000 -n_burn 10000
+	@$(BUILD)/main_openmp --temperature_scan --seed 42*3 --outdir out/temperature_scans/tests/results-L80 --name scan_1 -T_steps 10 -L 80 -n_cycles 100000 -n_burn 10000
+	@$(BUILD)/main_openmp --temperature_scan --seed 42*4 --outdir out/temperature_scans/tests/results-L100 --name scan_1 -T_steps 10 -L 100 -n_cycles 100000 -n_burn 10000
+			
 
 py_plots:
+	@$(PY) problem_4.py
 	@$(PY) problem_5.py
 	@$(PY) problem_6.py
 	@$(PY) problem_8.py
+	@$(PY) problem_9.py
 
 run_tests:
 	@$(BUILD)/test_lattice$(EXE)
 
 
 # Build first (via 'all'), then run everything and plot
-project: all run_problem_5 py_plots run_tests
+project: all run_problem_5 run_downscaled_problem_8 py_plots run_tests
 	@echo "Complete project finished."
