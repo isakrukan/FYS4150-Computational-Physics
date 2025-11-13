@@ -1,6 +1,11 @@
 # Project 4: Computational Physics
 This repository contains the code and documentation for Project 4 in the FYS3150 - Computational Physics course at the University of Oslo.
 
+# TO DO
+- Finish this README
+- Run timing tests (problem 7)
+- Finish report
+
 ## About the project
 TODO
 
