@@ -10,9 +10,9 @@ std::string generate_temp_scan_name(const Args &args)
     std::ostringstream oss;
     oss << std::setprecision(0);
 
-    oss << "temp_scan_"
-        << "n" << args.temperature_steps 
-        << "L" << args.lattice_size;
+    oss << "temp_scan"
+        << "-n" << args.temperature_steps 
+        << "-L" << args.lattice_size;
     // oss << "L"              << args.lattice_size 
     //    << "-T"             << args.temperature_steps 
     //    << std::scientific
@@ -50,7 +50,7 @@ void temperature_scan(Args &args)
 
     // Define vectors to hold temperature, heat capacity, and susceptibility
     arma::colvec T = arma::linspace(T_min, T_max, T_steps + 1);
-    arma::mat results = arma::zeros(T_steps + 1, 7);
+    arma::mat results = arma::zeros(T_steps + 1, 9);
     
     // Check for OpenMP compiler flags
     #ifdef _OPENMP
@@ -74,9 +74,11 @@ void temperature_scan(Args &args)
 
         results(i, 0) = T(i);
         results(i, 1) = solver.results.avg_energy / lattice.N;
-        results(i, 2) = solver.results.avg_magnetization_abs / lattice.N;
-        results(i, 3) = solver.results.heat_capacity / lattice.N;
-        results(i, 4) = solver.results.susceptibility / lattice.N;
+        results(i, 2) = solver.results.var_energy / (lattice.N * lattice.N);
+        results(i, 3) = solver.results.avg_magnetization_abs / lattice.N;
+        results(i, 4) = solver.results.var_magnetization_abs / (lattice.N * lattice.N);
+        //results(i, 3) = solver.results.heat_capacity / lattice.N;
+        //results(i, 4) = solver.results.susceptibility / lattice.N;
 
         results(i, 5) = solver.results.MCSE_energy / lattice.N;
         results(i, 6) = solver.results.ESS_energy;
