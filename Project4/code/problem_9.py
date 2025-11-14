@@ -1,42 +1,57 @@
+import os
 import numpy as np 
 from scipy.stats import linregress
+import utils
 
-L_vals = np.array([40, 60, 80, 100])
-repeat_idx = [1, 2]
-n_repeats = len(repeat_idx)
-DATA_DIR = "out/temperature_scans/repeat_runs/"
+# Set directories
+OUT_DIR = "out/"
+DATA_DIR = OUT_DIR + "temperature_scans/repeat_runs/"
 
-T = np.linspace(2.1, 2.4, 101)
-steps_T = len(T)
+num_temps = 101                                # Number of temperature points
+lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
+window = 5                                     # Fitting window size (see below)
 
-T_C = np.zeros(len(L_vals))
-T_X = np.zeros(len(L_vals))
+if not os.path.exists(os.path.join(os.getcwd(), DATA_DIR)):
+    DATA_DIR = OUT_DIR + "temperature_scans/tests/"
+    num_temps = 11
+    print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
 
-for i, L in enumerate(L_vals):
-    data_averaged = np.zeros((steps_T, 7))
-    for j in repeat_idx:
-        data_averaged += np.loadtxt(DATA_DIR + f'results-L{L}/scan_{j}.csv', delimiter=',')
-        
-    data_averaged /= n_repeats
+# Temperature values & arrays for T_C and T_X estimates
+T = np.linspace(2.1, 2.4, num_temps)
+T_C = np.zeros(len(lattice_sizes))
+T_X = np.zeros(len(lattice_sizes))
 
-    maxidx_C = np.argmax(data_averaged[:, 5])
-    maxidx_X = np.argmax(data_averaged[:, 6])
+for i, L in enumerate(lattice_sizes):
+    N = L * L
+    
+    # --- Load data ---
+    data = utils.combine_runs(DATA_DIR, L, num_temps=num_temps)
+    C = data[:, 2] * N / (T * T) 
+    X = data[:, 4] * N / T
+    
+    # --- Problem 9 ---
+    maxidx_C = np.argmax(C)
+    maxidx_X = np.argmax(X)
+    
+    # ---
+    # NOTE: Due to noisy data, picking out the max point directly may give the wrong 
+    # estimate for the critical temperature. Instead, fit a quadratic polynomial to 
+    # a small window around the max and use the peak of this polynomial:
+    # ---
+    T_fit_C = T[maxidx_C - window : maxidx_C + window + 1]
+    T_fit_X = T[maxidx_X - window : maxidx_X + window + 1]
+    C_fit = C[maxidx_C - window : maxidx_C + window + 1]
+    X_fit = X[maxidx_X - window : maxidx_X + window + 1]
 
-    T_C[i] = data_averaged[maxidx_C, 0]
-    T_X[i] = data_averaged[maxidx_X, 0]
+    coeffs_C = np.polyfit(T_fit_C, C_fit, 2)
+    coeffs_X = np.polyfit(T_fit_X, X_fit, 2)
+
+    T_C[i] = -coeffs_C[1] / (2 * coeffs_C[0])
+    T_X[i] = -coeffs_X[1] / (2 * coeffs_X[0])
 
 
-
-def estimate_T_infinite(L_vals, T_vals):
-    x = 1 / L_vals
-    y = T_vals
-
-    slope, intercept, r_value, p_value, std_err = linregress(x, y)
-    T_infinite = intercept
-    return T_infinite, std_err
-
-T_C_infinite, T_C_std_err = estimate_T_infinite(L_vals, T_C)
-T_X_infinite, T_X_std_err = estimate_T_infinite(L_vals, T_X)
+T_C_infinite, T_C_std_err = utils.estimate_T_infinite(lattice_sizes, T_C)
+T_X_infinite, T_X_std_err = utils.estimate_T_infinite(lattice_sizes, T_X)
 
 print(f"Estimated T(∞) using heat capacity: {T_C_infinite} ± {T_C_std_err}")
 print(f"Estimated T(∞) using susceptibility: {T_X_infinite} ± {T_X_std_err}")

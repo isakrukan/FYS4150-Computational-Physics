@@ -1,101 +1,118 @@
+import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
+import utils
 
-DIR = "out/"
+# Set directories
+OUT_DIR = "out/"
+DATA_DIR = OUT_DIR + "temperature_scans/repeat_runs/"
 
-use_repeat_runs = True
+num_temps = 101                                # Number of temperature points
+lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
 
-if use_repeat_runs:
-    num_repeats = 6
-    DATA_DIR = f"out/temperature_scans/repeat_runs_1e5/"
+if not os.path.exists(os.path.join(os.getcwd(), DATA_DIR)):
+    DATA_DIR = OUT_DIR + "temperature_scans/tests/"
+    num_temps = 11
+    print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
 
-else:
-    num_repeats = 1
-    DATA_DIR = "out/temperature_scans/"
 
-n = 100 # temperature steps in original data
-
+# Create figures for main results + error estimates
 fig, ax = plt.subplots(nrows=4, sharex=True, tight_layout=True, figsize=(6, 8))
-fig_err, ax_err = plt.subplots(nrows=3, sharex=True, tight_layout=True, figsize=(6, 6))
+fig_err, ax_err = plt.subplots(nrows=2, sharex=True, constrained_layout=True, figsize=(6, 4))
 
-sum_inv_var_E = np.zeros(n+1)
-sum_inv_var_M = np.zeros(n+1)
-
-for L in [40, 60, 80, 100]:
-    data_sum = np.zeros((n+1, 9))
-
-    for i in range(1, num_repeats + 1):
-
-        if use_repeat_runs:
-            filename = DATA_DIR + f'results-L{L}/scan_{i}.csv'
-        else:
-            filename = DATA_DIR + f'temp_scan-n{n}-L{L}.csv'
-
-        data = np.loadtxt(filename.format(L=L, scan=i), delimiter=',')
-
-        data_sum += data
-
-        sum_inv_var_E += 1/data[:, 5]**2
-        sum_inv_var_M += 1/data[:, 7]**2
-
-    T = data_sum[:, 0] / num_repeats
-    E = data_sum[:, 1] / num_repeats
-    M = data_sum[:, 2] / num_repeats
-    C = data_sum[:, 3] / num_repeats
-    X = data_sum[:, 4] / num_repeats
-
-    E_ESS  = data_sum[:, 6]*L**2
-    M_ESS  = data_sum[:, 8]*L**2
-    E_MSCE = 1/np.sqrt(sum_inv_var_E)
-    M_MSCE = 1/np.sqrt(sum_inv_var_M)
-
-    M_rel_error = M_MSCE / np.abs(M)
-    E_rel_error = E_MSCE / np.abs(E)
+for i, L in enumerate(lattice_sizes):
+    N = L * L
     
-    # Multiply errors to see better on plot
-    #E_MSCE *= 50
-    #M_MSCE *= 50
-
-    # Plot main results, with error bands on E and M
-    ax[0].fill_between(T, E - E_MSCE, E + E_MSCE, alpha=0.2)
-    ax[1].fill_between(T, M - M_MSCE, M + M_MSCE, alpha=0.2)
-
-    ax[0].plot(T, E, linestyle='-', label=f'L={L}')
-    ax[1].plot(T, M, linestyle='-', label=f'L={L}')
+    # --- Load data ---
+    data = utils.combine_runs(DATA_DIR, L, num_temps=num_temps)
+    
+    T = data[:, 0]
+    E_avg = data[:, 1]
+    E_var = data[:, 2]
+    M_avg = data[:, 3]
+    M_var = data[:, 4]
+    
+    E_MCSE = data[:, 5]
+    E_ESS  = data[:, 6]
+    M_MCSE = data[:, 7]
+    M_ESS  = data[:, 8]
+    
+    C = (E_var) * N / (T * T) 
+    X = (M_var) * N / T
+    
+    # --- Plot main results ---
+    ax[0].fill_between(T, E_avg - E_MCSE, E_avg + E_MCSE, alpha=0.2)
+    ax[1].fill_between(T, M_avg - M_MCSE, M_avg + M_MCSE, alpha=0.2)
+    ax[0].plot(T, E_avg, linestyle='-', label=f'L={L}')
+    ax[1].plot(T, M_avg, linestyle='-', label=f'L={L}')
     ax[2].plot(T, C, linestyle='-', label=f'L={L}')
     ax[3].plot(T, X, linestyle='-', label=f'L={L}')
 
 
-    # Also plot error estimates separately
-    ax_err[0].semilogy(T, E_rel_error, linestyle='-', label=f'L={L}')
-    ax_err[1].semilogy(T, M_rel_error, linestyle='-', label=f'L={L}')
+    # --- Plot error estimates ---
+    M_rel_error = M_MCSE / np.abs(M_avg)
+    E_rel_error = E_MCSE / np.abs(E_avg)
+    
+    ax_err[0].semilogy(T, E_rel_error)
+    ax_err[1].semilogy(T, E_ESS)
 
-    line_E = ax_err[2].semilogy(T, E_ESS, label=f'L={L} ESS')
-    line_M = ax_err[2].semilogy(T, M_ESS, linestyle='--', label=f'L={L} ESS', color=line_E[0].get_color(), alpha=0.5)
+    color = ax_err[0].lines[-1].get_color()
+    ax_err[0].semilogy(T, M_rel_error, linestyle='--', color=color, alpha=0.5)
+    ax_err[1].semilogy(T, M_ESS, linestyle='--', color=color, alpha=0.5)
 
-# Label axes and save figures
+
+
+# --- Main plots ---:
 ax[0].set_ylabel(r'$\langle \epsilon \rangle$')
 ax[1].set_ylabel(r'$\langle |m| \rangle$')
 ax[2].set_ylabel(r'$C_V/N$')
 ax[3].set_ylabel(r'$\chi/N$')
 ax[3].set_xlabel('Temperature $[k_B T / J]$')
 ax[3].set_xlim([2.1, 2.4])
-
 ax[0].legend()
-fig.savefig(DIR + f'temp_scan.pdf')
+fig.savefig(OUT_DIR + f'temp_scan.pdf')
 
-ax_err[0].set_ylabel(r'$\mathrm{MCSE}(\epsilon)$')
-ax_err[1].set_ylabel(r'$\mathrm{MCSE}(|m|)$')
-ax_err[2].legend()
-ax_err[2].set_ylabel('ESS Estimates')
-ax_err[2].set_xlabel('Temperature $[k_B T / J]$')
-ax_err[2].set_xlim([2.1, 2.4])
 
-linestyles_ESS = ['-', '--']
-alphas_ESS = [1.0, 0.5]
-handles = [plt.Line2D([0], [0], color='dimgray', alpha=alpha, linestyle=ls) for alpha, ls in zip(alphas_ESS, linestyles_ESS)]
+# --- Error plots ---:
+ax_err[0].set_ylabel('MCSE')
+ax_err[1].set_ylabel('ESS')
+ax_err[1].set_xlabel('Temperature $[k_B T / J]$')
+ax_err[1].set_xlim([2.1, 2.4])
 
-ax_err[0].legend(loc='upper left')
-ax_err[2].legend(handles, ['ESS(ε)', 'ESS(|m|)'])
-fig_err.savefig(DIR + f'temp_scan_error.pdf')
+# Create legends manually:
+
+# -----------------------------------
+# LEGEND #2: colors (lattice size L)
+# -----------------------------------
+handles_color = [plt.Line2D([0], [0], color=f"C{i}") for i in range(len(lattice_sizes))]
+labels_color = [f"$L = {L}$" for L in lattice_sizes]
+
+legend_color = ax_err[0].legend(handles_color, 
+                                labels_color,
+                                framealpha=0,
+                                title="Lattice size",
+                                loc="upper left",
+                                bbox_to_anchor=(1.0, 1.07))
+
+legend_color._legend_box.align = "left"
+ 
+# ---------------------------------
+# LEGEND #1: linestyles (ε vs |m|)
+# ---------------------------------
+handles_style = [plt.Line2D([0], [0], linestyle='-',  color='black', alpha=1.0),
+                 plt.Line2D([0], [0], linestyle='--', color='black', alpha=0.5)]
+labels_style = [r'$\epsilon$', r'$|m|$']
+
+legend_style = ax_err[1].legend(handles_style, 
+                                labels_style, 
+                                framealpha=0,
+                                title="Observable",
+                                loc="upper left",
+                                bbox_to_anchor=(1.0, 1.5),
+                                )
+
+ax_err[1].add_artist(legend_style)
+
+fig_err.savefig(OUT_DIR + f'temp_scan_error.pdf')

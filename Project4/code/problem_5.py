@@ -7,8 +7,6 @@ N = L * L
 
 DIR = "out/"
 
-
-
 colors = ['#377eb8', '#e41a1c', '#4daf4a', '#984ea3']
 color_idx = 0
 
@@ -29,8 +27,8 @@ for type in ["unordered", "ordered"]:
 
         color_idx += 1
 
-plt.xlim([1, 1e4])
+plt.xlim([1, n_cycles[-1]])
 plt.xlabel("No. of MC cycles")
 plt.ylabel("Energy per spin")
-plt.legend()
+plt.legend(loc="upper right")
 plt.savefig(DIR + "equilibration.pdf")

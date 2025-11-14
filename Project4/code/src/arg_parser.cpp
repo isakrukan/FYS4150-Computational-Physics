@@ -140,5 +140,10 @@ Args parse_args(int argc, char *argv[])
         }
     }
 
+    // If no value set for steps_per_cycle, set to L^2
+    if( args.steps_per_cycle == 0) {
+        args.steps_per_cycle = args.lattice_size * args.lattice_size;
+    }
+
     return args;
 }

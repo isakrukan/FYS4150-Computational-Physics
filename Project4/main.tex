@@ -296,7 +296,23 @@ This further results in the following expressions for the heat capacity $C_V$ an
     \chi & = \frac{4}{k_B T} \langle |M| \rangle
 \end{align}
 
+
+\subsection{Estimating the critical temperature}
+To give a numerical estimate the critical temperature $T_c(L=\infty)$ of the infinite lattice, we use finite size scaling relations
+\begin{align}
+    T_c(L) - T_c(L=\infty) = a L^{-1},
+\end{align}
+We may then simulate the Ising model at different \textit{finite} lattice sizes $L$ to estimate $T_c(L)$, and perform a linear regression of $T_c(L)$ against $L^{-1}$ to estimate both $a$ and $T_c(L=\infty)$.
+The critical temperatures $T_c(L)$ at finite lattice sizes may in turn be estimated as the temperatures corresponding to the peaks in either the heat capacity $C_V$ or magnetic susceptibility $\chi$.
+Due to noise, the maximums in the simulated data may not correspond exactly to the true peaks.
+To correct for this, we instead fit a second degree polynomial to a small window of data points around this maximum.
+We then take the critical temperature to be the that which maximizes this polynomial.
+
 \subsection{MCMC \& Metropolis-Hastings}    \label{sec:MCMC}
+
+\subsection{Hardware}
+The simulations were run on the \textsc{bioint01} server provided by the University of Oslo (see \href{https://www.mn.uio.no/ifi/tjenester/it/tjenester/compute/hpc/bioinfo-cluster/}{here}).
+The temperature simulations were parallelized \textsc{OpenMP} utilizing 32 of \textsc{bioint01}'s 128 cores.
 
 
 \subsection{Tools and code documentation}
@@ -312,25 +328,26 @@ We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation 
 \subsection{Equilibration time}
 For a Monte Carlo simulation of the $L=20$ lattice, an example evolution of the energy per spin $\epsilon = E/N$ and its running average $\langle \epsilon \rangle$ is shown in Figure~\ref{fig:equilibration}.
 In this case, the system seems to have burned in after roughly $2\times 10^3$ Monte Carlo cycles.
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.45\textwidth]{figs/equilibration.pdf}
-%     \caption{Burn-in plot.}
-%     \label{fig:equilibration}
-% \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/equilibration.pdf}
+    \caption{Plot showing the evolution of the energy per spin $\epsilon$ and its running average $\langle \epsilon \rangle$ during a Monte Carlo simulation of the $L=20$ Ising model at temperature $T=2.4\ J/k_B$.}
+    \label{fig:equilibration}
+\end{figure}
+
 
 \subsection{Energy distribution}
 The distribution of the energy per spin $\epsilon = E/N$ has been estimated for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.
 The results of this is shown in Figure~\ref{fig:epsilon_distribution}, with corresponding variances tabulated in Table~\ref{table:epsilon_distribution}.
 As expected, the variance is much smaller in the low-temperature, as the system is likely to be in an ordered state.
 On the other hand, the higher-temperature distribution is noticeably wider.
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.45\textwidth]{figs/epsilon_distribution.pdf}
-%     \caption{Estimates for the distribution of $\epsilon$ for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.}
-%     \label{fig:epsilon_distribution}
-% \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/epsilon_distribution.pdf}
+    \caption{Estimates for the distribution of $\epsilon$ for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.}
+    \label{fig:epsilon_distribution}
+\end{figure}
 \begin{table}
     \centering
     \setlength{\tabcolsep}{6pt}
@@ -338,8 +355,8 @@ On the other hand, the higher-temperature distribution is noticeably wider.
     \begin{tabular}{c|cc}
         & Unordered & Ordered \\
         \hline
-        $T = 1.0\ J/k_B$ &  $5.876\times10^{-5}$ & $5.984\times10^{-5}$ \\
-        $T = 2.4\ J/k_B$ &  $2.069\times10^{-2}$ & $1.996\times10^{-2}$ \\
+        $T = 1.0\ J/k_B$ &  $5.879\times10^{-5}$ & $5.836\times10^{-5}$ \\
+        $T = 2.4\ J/k_B$ &  $2.021\times10^{-2}$ & $2.024\times10^{-2}$ \\
     \end{tabular}
     \caption{In units of $J^2$, the variances of the estimated energy distributions $p(\epsilon;T)$ shown in Figure~\ref{fig:epsilon_distribution}.}
     \label{table:epsilon_distribution}
@@ -349,25 +366,33 @@ On the other hand, the higher-temperature distribution is noticeably wider.
 We have plotted the average energy, magnetization, heat capacity and magnetic susceptibility per spin as functions of temperature for lattice sizes $L = 40, 60, 80, 100$ in Figure~\ref{fig:temp_scan}.
 In particular, we see a drop in the magnetization near the (supposed) critical region, typical of a transition from an ordered to a disordered phase.
 Additionally, we see peaks in both the heat capacity and magnetic susceptibility, both of which grow sharper and taller as the lattice size is increased.
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.45\textwidth]{figs/temp_scan.pdf}
-%     \caption{Caption.}
-%     \label{fig:temp_scan}
-% \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/temp_scan.pdf}
+    \caption{
+        Results of Monte Carlo simulations at different temperatures and lattice sizes.
+        From top to bottom, we have the average energy per spin $\langle \epsilon \rangle$, average magnetization per spin $\langle |m| \rangle$, heat capacity per spin $C_V/N$ and magnetic susceptibility per spin $\chi/N$.
+        The shaded regions represent the Monte Carlo standard errors scaled by a factor of $100$ for visibility.
+    }
+    \label{fig:temp_scan}
+\end{figure}
 
 \subsection{MCMC errors}
 Additionally, we have estimated errors and effective sample sizes associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
 The results of this is shown in Figure~\ref{fig:temp_scan_error}.
 Here we see that the energy generally has a larger effective sample size and smaller error than the magnetization.
 Both quantities do however see a dip in effective sample size and increase in error near the critical region.
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.45\textwidth]{figs/temp_scan_error.pdf}
-%     \caption{Caption.}
-%     \label{fig:temp_scan_error}
-% \end{figure}
+This is as expected, as the correlation length grows and approaches the system size $L$.
+As a consequence, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated.
+This in turn reduces the effective sample size, as more spin flips are required to produce an effectively independent sample.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/temp_scan_error.pdf}
+    \caption{
+        Estimates of the Monte Carlo standard errors (MCSE) and effective sample sizes (ESS) for the average energy per spin $\langle \epsilon \rangle$ and average magnetization per spin $\langle |m| \rangle$ at different temperatures and lattice sizes.
+        }
+    \label{fig:temp_scan_error}
+\end{figure}
 
 \subsection{The critical temperature}
 To find the critical temperature at finite lattice sizes, we identify the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility.

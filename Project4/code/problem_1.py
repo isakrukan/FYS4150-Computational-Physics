@@ -17,5 +17,5 @@ if __name__ == "__main__":
     contents = [(state["n_up"], state["M"], state["E"], state["deg"]) for state in states]
 
     table = tabulate(contents, headers=headers, tablefmt="rounded_grid")
-    print("Problem 1:\n")
+    print("\n--- Problem 1 ---\n")
     print(table)
