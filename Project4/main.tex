@@ -39,8 +39,8 @@
 
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
-\documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
-% \documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
+% \documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
+\documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
 % If you want a single-column, remove "reprint"
 % \raggedbottom
 
@@ -84,14 +84,14 @@
 % \providecommand\ttfontsize{12pt}
 
 %%%%%%%%%%% Important packages %%%%%%%%%%%
-\usepackage[justification=raggedright,singlelinecheck=false]{caption}
+% \usepackage[justification=raggedright,singlelinecheck=false]{caption}
 \usepackage{physics,amssymb}   % physics already loads amsmath
 % \usepackage{amsmath}         
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{xcolor}
 \usepackage{listings}
-\usepackage{subcaption}
+% \usepackage{subcaption}
 \usepackage{standalone}   % for \includestandalone
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
@@ -107,7 +107,8 @@
 % Acronyms:
 \newacronym{pdf}{PDF}{partial density function}
 \newacronym{mcmc}{MCMC}{Markov chain Monte Carlo}
-
+\newacronym{wlln}{WLLN}{Weak Law Of Large Numbers}
+\newacronym{lln}{WLLN}{Law Of Large Numbers}
 \usepackage{tikz}
 \usepackage{quantikz}          
 \usepackage{hyperref}
@@ -130,8 +131,8 @@
 
 \begin{document}
 
-\title{FYS4150 - Project 3\\[0.5em]
-  \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3}{\texttt{github.uio.no/icrukan/FYS4150/Project3}}
+\title{Obtaining the critical temperature of the Ising model using the Markov chain Monte Carlo\\[0.5em]
+  \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project4}{\texttt{github.uio.no/icrukan/FYS4150/Project4}}
 }
 \author{Magnus Axelsen and Isak Cecil Onsager Rukan} % self-explanatory
 \date{\today}                             % self-explanatory
@@ -143,31 +144,93 @@
 \maketitle
 
 \section{Introduction}
-Introduction
+In thermodynamics, the critical temperature is the temperature at which a system undergoes a phase transition. 
+An example of a phase transition is the liquid-vapor transition, where a liquid evaporates, turning into a gas. 
+More generally, the phase of a system refers to a state in which the macrostate of a system is smoothly dependent on a set of parameters, such as temperature or pressure. A phase transition occurs when this smooth behavior breaks down and one or several macroscopic quantities experience a jump or discontinuity.
 
-\subsection*{Disclaimer and Code Documentation}
-When working with this project we have occasionally consulted with the language model ChatGPT and Copilot. However, all of our analysis, code implementation, results and language are produced by ourselves. Our code, which can be found \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project3/code}{\texttt{here}}, relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, and \textsc{Armadillo}~\cite{armadillo}. We have used doxygen to create a thorough documentation of our code, found \href{https://github.uio.no/icrukan/FYS4150/blob/master/Project3/docs/doc.pdf}{\texttt{here}}. Before handing in, we made the unfortunate mistake of spilling \href{https://ctan.org/pkg/coffeestains?lang=en}{coffee} on our report...we can only hope it has concealed potential mistakes. 
+% Critical temperatures arise in many systems beyond simple fluid phase transitions. One remarkable example is the case of a ferromagnet.  
+% Ferromagnets are a special kind of material that, in the presence of an external magnetic field, will tend to magnetize in the direction of the applied field and can retain a nonzero magnetization even after the applied field is turned off.
+% If the temperature of a ferromagnet is increased it will eventually reach a certain critical temperature, the so-called Curie temperature, where the ferromagnet will undergo a phase transition, loosing its ability to magnetize spontaneously.
+% A paramagnet is a type of material which is only weakly affected by an applied magnetic field and whose weak magnetization disappears completely when the applied field is turned off. 
+
+Ferromagnets are a special kind of material that, at sufficiently low temperature, can sustain a nonzero magnetization without the presence of any external magnetic field. 
+If an external magnetic field is applied, the ferromagnet will tend to magnetize in the direction of the applied field and can retain a nonzero magnetization even after the applied field is turned off. 
+The nonzero magnetization at zero external field is referred to as spontaneous magnetization. 
+Remarkably, if the temperature of a ferromagnet is increased it will eventually reach a certain critical temperature, the so-called Curie temperature, where the ferromagnet will undergo a phase transition and lose its ability to magnetize spontaneously.
+
+Ernst Ising investigated in his Ph.D. thesis whether a ferromagnet could be modelled and explained by statistical mechanics~\cite{kulske_ising_2025}. 
+% He solved a one-dimensional version of what later became known as the `Ising chain' version of the Ising model, and found that this model does not exhibit a phase transition at any non-zero temperature~\cite[p. 431]{IntroStatMekSwendsen}.
+He solved a one-dimensional version of what later became known as the `Ising chain' version of the Ising model (see e.g.~Chapter 31 in~\cite{IntroStatMekSwendsen} for a thorough review of the model).
+Generally, the Ising model imagines a lattice of spin-locations, each with either spin `up' or spin `down'. 
+As a model of a ferromagnet, the phenomenon of spontaneous magnetization can be understood by how neighboring spin-locations tend to align at lower temperature, as this minimizes the total energy of the system~\footnote{This will become clearer once we introduce the Hamiltonian of the Ising model in Section \ref{sec:theory_and_method}.}.
+When Ising first solved the Ising chain, he found that this model did not exhibit a phase transition at any nonzero temperature~\cite[p. 431]{IntroStatMekSwendsen}. 
+% However, in 1944, Lars Onsager solved the two-dimensional Ising model with a zero external magnetic field and derived an analytic expression for the critical temperature~\cite{LarsOnsager}. 
+However, in 1944, Lars Onsager solved the two-dimensional Ising model with a zero external magnetic field and did indeed find a nonzero critical temperature, and even derived an analytic expression for it in the limit of an infinite lattice~\cite{LarsOnsager}. 
 
 
-\section{Theory and Method}
+In any case, the Ising model is an elegant and simple (in design) model which exceeds remarkably at illustrating statistical phenomenon, not necessarily directly tied to ferromagnets. 
+For instance, if one imagines sampling microstates of the Ising model at random according to a given probability distribution, it is intuitive that the average of these microstates should converge toward the typical or most probable configuration.
+This intuition is justified under the assumption that the \gls{lln} holds~\footnote{Informally, \gls{lln} states that the average of a set of measures should approach the expectation value. Different interpretations of probability lead to different views on the status and meaning of the \gls{lln}. See for instance~\cite{philosophies2030020} for a discussion on the topic.}.
+
+Some 18 years prior to Ising's Ph.D. thesis and its introduction of the Ising model, Andrey Markov imagined a way of constructing a sequence of random variables, each variable dependent on the immediately preceding one. 
+At the time, Markov were debating a colleague named Pavel Alekseevich Nekrasov, a member of the Russian Orthodox Church, on the topic of free will~\cite{lifeOfMarkov}. 
+Nekrasov believed that pairwise independence of two events is necessary for the observation of the \gls{wlln} in everyday life observations~\footnote{See~\cite{Markov_and_birth_of_chain}. Informally, the \gls{wlln} only demands `likeliness' that the average approximates the expectation value.}. 
+However, Markov applied his sequence of random variables to the distribution of vowels and consonants in A.S. Pushkin's poem ``Eugeny Onegin'', and showed that the \gls{wlln} could be derived even in situations where successive events are, in fact, not independent~\cite{lifeOfMarkov}.
+
+Markov's sequence of random variables is now referred to as Markov chains and has proven to be remarkably applicable to a wide range of applications, from ranking webpages~\footnote{PageRank is an algorithm owned by Google, which makes use of Markov chains to efficiently rank webpages, see for instance~\cite{borkar2025smallnoiselimitsmarkov}.} to nuclear physics (see for instance~\cite{HALASZ2018429}). 
+In this report, we consider a two-dimensional Ising model and implement a Markov chain numerically. 
+Sampling from the Markov chain, we implement the \gls{mcmc} procedure and estimate the energy and magnetization distributions as functions of temperature. 
+By varying the temperature over several \gls{mcmc} runs, we estimate the Ising model's critical temperature, and in the end extrapolate towards the infinite-size Ising model and Onsager's analytic expression.
+
+
+\section{Theory and Method} \label{sec:theory_and_method}
 
 \subsection{The Ising model}
-We will be considering the two-dimensional Ising model with no external magnetic field. 
-The model consists of an 2D lattice of spins $\vec{s} = (s_1,\dots, s_N)$ with nearest neighbor interactions.
-Here $N$ is the number of spins, and each spin is taken discretely to be either up ($s_i = +1$) or down ($s_i = -1$).
-The Ising Hamiltonian is given by
-\begin{equation}
-    H(\vec{s}) = -J \sum_{\langle ij \rangle} s_i s_j,
-\end{equation}
-where ${\langle ij \rangle}$ indicates the sum runs over all nearest neighbor pairs $ij$.
-This is generally dependent on the specific configuration of spins $\vec{s}$.
-On the other hand, the total magnetization
-\begin{align}
-    M(\vec{s}) & = \sum_{i=1}^N s_i,
-\end{align}
-is dependent only on the number of up-spins $N_\uparrow$.
-Hence, we may distinguish different spin configurations based on the triplet $(N_\uparrow, M(s), E(s))$.
+% We consider the two-dimensional Ising model with no external magnetic field. 
 
+
+The Ising model imagines a collection of equispaced and interacting spin-locations, which typically can be thought of as interacting single atoms placed on a lattice.
+Here, we consider an Ising model on a two-dimensional \(L\times L\) lattice with \(N=L^2\) interacting spin-locations and no external magnetic field.
+Each location's spin \(s_i\) is taken discretely to be either $s_i = +1$ (up) or $s_i = -1$ (down), and we denote $\vec{s} = (s_1,\dots, s_N)$ as a particular spin-configuration (microstate). 
+We limit the model to nearest neighbor interactions, excluding diagonal interactions. 
+The Hamiltonian of the system can then be taken to be of the form (see e.g.~\cite[p. 424]{IntroStatMekSwendsen})
+\begin{equation}
+    H(\vec{s}) = -J \sum_{\langle ij \rangle} s_i s_j,  \label{eq:Hamiltonian}
+\end{equation}
+where \(J>0\) is called the coupling constant and the sum runs over all nearest neighbor pairs, avoiding double counting. 
+This sum can be carried out by summing over all spins, counting only the contributions from the neighbors to the right and below. 
+This is illustrated in Figure~\ref{fig:counting_neighbors}.
+\begin{figure}[h!]
+    \centering
+    \includestandalone[width=0.4\textwidth]{figs/lattice}
+    \caption{\color{red}We should either change \(\sigma\) to \(s\) or introduce \(\sigma\) in the text as a single location.\color{black}}
+    \label{fig:counting_neighbors}
+\end{figure}
+
+A single term in \eqref{eq:Hamiltonian} can be though of as approximating the exchange interaction between the local magnetic moments of two neighboring cites \footnote{See~\cite[p. 325]{kittel2004introduction} for the case of two atoms \(i,j\) containing electrons with spin \(s_i, s_j\).}. 
+Generally, the value of \(H(\vec{s})\) decreases if neighboring pairs of spins are aligned, and increases if neighboring pairs are not. 
+This behavior can be understood in the context of the Pauli exclusion principle and Coulomb interactions~\cite[p. 325]{kittel2004introduction}: as two neighboring fermionic particles align their spins, they are "repelled" from occupying the same positional state, reducing their electrostatic energy compared to the anti-parallel case. 
+
+Another useful quantity in the Ising model is the total magnetization, given by
+\begin{align}
+    M(\vec{s}) & = \sum_{i=1}^N s_i.
+\end{align}
+To distinguish between different macrostates, we consider the triplet $(N_\uparrow, M(s), E(s))$, where \(N_{\uparrow}\) is the number of up-spins. Lastly, as a measure of the average energy and magnetization at a single location in the Ising model, we introdce 
+\begin{align}
+    \epsilon(\vec{s}) = \frac{H{\vec{s}}}{N},
+\end{align}
+and 
+\begin{align}
+    m(\vec{s}) = \frac{M({\vec{s}})}{N}.
+\end{align}
+
+
+\subsection{The critical temperature of the Ising model}
+To give a numerical estimate the critical temperature $T_c(L=\infty)$ of the infinite lattice, we use finite size scaling relations
+\begin{align}
+    T_c(L) - T_c(L=\infty) = a L^{-1},
+\end{align}
+We may then simulate the Ising model at different \textit{finite} lattice sizes $L$ to estimate $T_c(L)$, and perform a linear regression of $T_c(L)$ against $L^{-1}$ to estimate both $a$ and $T_c(L=\infty)$.
 
 \subsection{Statistics}
 Generally, the \gls{pdf} \(p(x)\) of a random variable \(x\) is a function that assigns a `probability density', which when integrated over a given domain \([a,b]\), yields the probability \(P(a \leq x\leq b)\) for that random variable to take a value inside that domain.
@@ -188,17 +251,11 @@ which is a function of \(T\).
 
 In this project, we aim at estimating the \gls{pdf} for the energy and magnetization of the Ising model. We will do so using the \gls{mcmc} method (see section \ref{sec:MCMC}) to sample microstates from \(p(\vec{s}; T)\) and then computing the corresponding \(E(\vec{s})\) and \(M(\vec{s})\). 
 
-\subsection{Boundary conditions}
-We will be considering a square lattice of size $L \times L$ with periodic boundary conditions, which then will have a  total number of spins $N = L^2$.
-To compute the energy of a given spin configuration, we may in this case sum over all spins, counting only the contributions from the neighbors to the right and below, avoiding double counting.
-This is illustrated in Figure~\ref{fig:counting_neighbors}.
+% \subsection{Boundary conditions}
+% We will be considering a square lattice of size $L \times L$ with periodic boundary conditions, which then will have a  total number of spins $N = L^2$.
+% To compute the energy of a given spin configuration, we may in this case sum over all spins, counting only the contributions from the neighbors to the right and below, avoiding double counting.
+% This is illustrated in Figure~\ref{fig:counting_neighbors}.
 
-\begin{figure}
-    \centering
-    \includestandalone[width=0.4\textwidth]{figs/lattice}
-    \caption{Problem 1}
-    \label{fig:counting_neighbors}
-\end{figure}
 
 \subsection{Example: 2x2 lattice}
 To verify our numerical implementation of a general \(L\times L\) lattice, we will compare with the analytic results 
@@ -239,6 +296,7 @@ This further results in the following expressions for the heat capacity $C_V$ an
     \chi & = \frac{4}{k_B T} \langle |M| \rangle
 \end{align}
 
+
 \subsection{Estimating the critical temperature}
 To give a numerical estimate the critical temperature $T_c(L=\infty)$ of the infinite lattice, we use finite size scaling relations
 \begin{align}
@@ -257,17 +315,27 @@ The simulations were run on the \textsc{bioint01} server provided by the Univers
 The temperature simulations were parallelized \textsc{OpenMP} utilizing 32 of \textsc{bioint01}'s 128 cores.
 
 
+\subsection{Tools and code documentation}
+When working with this report we have occasionally consulted with the language model ChatGPT and Copilot. 
+However, all of our analysis, code implementation, results and language are produced by ourselves. 
+
+Our code can be found here~\cite{FYS4150Project4} and relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, \textsc{Armadillo}~\cite{armadillo} and \textsc{OpenMP}~\cite{openmp}. 
+We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation of our code, see~\cite{FYS4150Project4_doc}. 
+
+
 \section{Results}
 
 \subsection{Equilibration time}
 For a Monte Carlo simulation of the $L=20$ lattice, an example evolution of the energy per spin $\epsilon = E/N$ and its running average $\langle \epsilon \rangle$ is shown in Figure~\ref{fig:equilibration}.
 In this case, the system seems to have burned in after roughly $2\times 10^3$ Monte Carlo cycles.
+
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{figs/equilibration.pdf}
     \caption{Plot showing the evolution of the energy per spin $\epsilon$ and its running average $\langle \epsilon \rangle$ during a Monte Carlo simulation of the $L=20$ Ising model at temperature $T=2.4\ J/k_B$.}
     \label{fig:equilibration}
 \end{figure}
+
 
 \subsection{Energy distribution}
 The distribution of the energy per spin $\epsilon = E/N$ has been estimated for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.
@@ -317,7 +385,6 @@ Both quantities do however see a dip in effective sample size and increase in er
 This is as expected, as the correlation length grows and approaches the system size $L$.
 As a consequence, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated.
 This in turn reduces the effective sample size, as more spin flips are required to produce an effectively independent sample.
-
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{figs/temp_scan_error.pdf}
