@@ -25,14 +25,13 @@ a, b = popt
 print("\n--- Problem 7 ---")
 print("Fitted function for times:")
 print(f" T(N) = a/N + b")
-print(f" a={a}")
-print(f" b={b}")
+print(f" a={a} ± {np.sqrt(pcov[0,0])}")
+print(f" b={b} ± {np.sqrt(pcov[1,1])}")
 
 plt.figure(figsize=(6,4), tight_layout=True)
 plt.plot(threads, data_avg, marker='o', linestyle='--', label="Measured data")
 plt.fill_between(threads, data_avg - data_err, data_avg + data_err, alpha=0.4)
 plt.plot(threads, inv_model(threads, *popt), color='k', alpha=0.5, label=f"$T(N) = a/N + b$")
-
 
 plt.xlabel("No. of threads")
 plt.ylabel(r"Time  [$T_\mathrm{serial}$]")
