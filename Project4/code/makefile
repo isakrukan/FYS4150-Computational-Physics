@@ -91,9 +91,7 @@ link_openmp:
 clean:
 	-$(DELETE) *.o
 
-# Clean between serial and OpenMP builds for debugging/safety
-all: outfolder compile link clean compile_openmp link_openmp clean
-
+all: outfolder compile link compile_openmp link_openmp clean
 
 # Generates data for problems 5 & 6
 # Should take around ~30 sec w/ 1e6 MC cycles
