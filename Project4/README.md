@@ -3,7 +3,6 @@ This repository contains the code and documentation for Project 4 in the FYS3150
 
 # TO DO
 - Finish this README
-- Run timing tests (problem 7)
 - Finish report
 
 ## About the project
@@ -21,6 +20,7 @@ To build and run the code, enter the **`code/`** directory, structured as follow
 - **`src/`**: Contains all source code files for the project.
 - **`include/`** Contains relevant header files for the project.
 - **`out/`**: Save location for data from main program.
+- **`scripts/`**: Contains Python scripts for plotting & analyzing results 
 
 ## Requirements
 ### Main program
@@ -33,7 +33,7 @@ Additionally, compiling using the `makefile` requires
 - CMake
 
 
-On Debian-based systems, for instance, all of the above can be installed by running the following in your terminal: 
+On Debian-based systems, for instance, these can be installed by running the following in your terminal: 
 ```bash
 sudo apt-get install g++ cmake libarmadillo-dev libomp-dev
 ```
