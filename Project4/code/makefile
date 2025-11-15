@@ -116,12 +116,12 @@ run_downscaled_problem_8:
 			
 
 py_plots:
-	@$(PY) problem_4.py
-	@$(PY) problem_5.py
-	@$(PY) problem_6.py
-	@$(PY) problem_7.py
-	@$(PY) problem_8.py
-	@$(PY) problem_9.py
+	@$(PY) scripts/problem_4.py
+	@$(PY) scripts/problem_5.py
+	@$(PY) scripts/problem_6.py
+	@$(PY) scripts/problem_7.py
+	@$(PY) scripts/problem_8.py
+	@$(PY) scripts/problem_9.py
 
 run_tests:
 	@$(BUILD)/test_lattice$(EXE)
