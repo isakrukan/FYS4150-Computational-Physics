@@ -207,7 +207,7 @@ This is illustrated in Figure~\ref{fig:counting_neighbors}.
     \label{fig:counting_neighbors}
 \end{figure}
 
-A single term in \eqref{eq:Hamiltonian} can be though of as approximating the exchange interaction between the local magnetic moments of two neighboring cites \footnote{See~\cite[p. 325]{kittel2004introduction} for the case of two atoms \(i,j\) containing electrons with spin \(s_i, s_j\).}. 
+A single term in \eqref{eq:Hamiltonian} can be though of as approximating the exchange interaction between the local magnetic moments of two neighboring sites \footnote{See~\cite[p. 325]{kittel2004introduction} for the case of two atoms \(i,j\) containing electrons with spin \(s_i, s_j\).}. 
 Generally, the value of \(H(\vec{s})\) decreases if neighboring pairs of spins are aligned, and increases if neighboring pairs are not. 
 This behavior can be understood in the context of the Pauli exclusion principle and Coulomb interactions~\cite[p. 325]{kittel2004introduction}: as two neighboring fermionic particles align their spins, they are "repelled" from occupying the same positional state, reducing their electrostatic energy compared to the anti-parallel case. 
 
@@ -226,7 +226,7 @@ and
 
 
 \subsection{The critical temperature of the Ising model}
-To give a numerical estimate the critical temperature $T_c(L=\infty)$ of the infinite lattice, we use finite size scaling relations
+To give a numerical estimate for the critical temperature $T_c(L=\infty)$ of the infinite lattice, we use finite size scaling relations
 \begin{align}
     T_c(L) - T_c(L=\infty) = a L^{-1},
 \end{align}
@@ -258,8 +258,8 @@ In this project, we aim at estimating the \gls{pdf} for the energy and magnetiza
 
 
 \subsection{Example: 2x2 lattice}
-To verify our numerical implementation of a general \(L\times L\) lattice, we will compare with the analytic results 
-for the case of a $2\times 2$ lattice.
+To verify our numerical implementation of a general \(L\times L\) lattice, we will compare with analytic results 
+for a $2\times 2$ lattice.
 Table~\ref{table:2x2_possible_configs} shows all possible configurations of \(N_{\uparrow}\), \(M(s)\) and \(E(s)\) for a $2\times 2$ lattice, including their degeneracy.
 \begin{table}
     \centering
@@ -304,24 +304,43 @@ To give a numerical estimate the critical temperature $T_c(L=\infty)$ of the inf
 \end{align}
 We may then simulate the Ising model at different \textit{finite} lattice sizes $L$ to estimate $T_c(L)$, and perform a linear regression of $T_c(L)$ against $L^{-1}$ to estimate both $a$ and $T_c(L=\infty)$.
 The critical temperatures $T_c(L)$ at finite lattice sizes may in turn be estimated as the temperatures corresponding to the peaks in either the heat capacity $C_V$ or magnetic susceptibility $\chi$.
-Due to noise, the maximums in the simulated data may not correspond exactly to the true peaks.
+Due to noise in the MCMC simulations, the maximums in the raw data may not correspond exactly to the true peaks, however.
 To correct for this, we instead fit a second degree polynomial to a small window of data points around this maximum.
-We then take the critical temperature to be the that which maximizes this polynomial.
+We then take the critical temperature to be the that which maximizes this polynomial instead.
 
 \subsection{MCMC \& Metropolis-Hastings}    \label{sec:MCMC}
+There are two important ingredients in constructing a Markov chain that actually samples from the given probability distribution \(p(x)\).
+The first of these is that the Markov chain must be \emph{ergodic}, which is the idea that any state in phase space can be reached from any other state in a finite number of steps.
+For the second, we must maintain \emph{detailed balance}.
+This is the idea that every process at equilibrium is balanced by its reverse process.
+\newline
+Together, ergodicity ensures we are properly sampling our entire space, while detailed balance ensures convergence towards the desired stationary distribution.
+\newline
+We may convince ourselves that the 2D Ising model is indeed ergodic, as any spin configuration may be reached from any other by flipping the appropriate spins.
+To ensure detailed balance however, we will have to implement a Metropolis-Hastings acceptance rule to our MCMC procedure.
+The Metropolis-Hastings algorithm for the 2D Ising model is summarized in Algorithm~\ref{algo:MCMC}.
+
+\begin{algorithm}[H]
+    \caption{Metropolis-Hastings (2D Ising))}\label{algo:MCMC}
+    \begin{algorithmic}
+        \For{$n = 1, ..., N_\mathrm{steps}$} 
+        \State i = rand(1, N)
+        \State j = rand(1, N)
+        \State r = rand(0, 1)
+        \newline
+        \State $\Delta E = 2 s_{i,j} (s_{i+1,j} + s_{i-1,j} + s_{i,j+1} + s_{i,j-1})$
+        \newline
+        \If{$r \leq e^{-\beta \Delta E}$}
+            \State $s_{i,j} = -s_{i,j}$
+        \Else
+            \State do nothing
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
 
 \subsection{Hardware}
 The simulations were run on the \textsc{bioint01} server provided by the University of Oslo (see \href{https://www.mn.uio.no/ifi/tjenester/it/tjenester/compute/hpc/bioinfo-cluster/}{here}).
 The temperature simulations were parallelized \textsc{OpenMP} utilizing 32 of \textsc{bioint01}'s 128 cores.
-
-
-\subsection{Tools and code documentation}
-When working with this report we have occasionally consulted with the language model ChatGPT and Copilot. 
-However, all of our analysis, code implementation, results and language are produced by ourselves. 
-
-Our code can be found here~\cite{FYS4150Project4} and relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, \textsc{Armadillo}~\cite{armadillo} and \textsc{OpenMP}~\cite{openmp}. 
-We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation of our code, see~\cite{FYS4150Project4_doc}. 
-
 
 \section{Results}
 
@@ -362,6 +381,23 @@ On the other hand, the higher-temperature distribution is noticeably wider.
     \label{table:epsilon_distribution}
 \end{table}
 
+\subsection{Parallelization}
+To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $100$ temperatures in the range $T \in [1.0, 3.5]\ J/k_B$ using different numbers of threads.
+The results of this is shown in Figure~\ref{fig:parallelization}.
+Here we have additionally fitted a curve 
+\begin{align}
+    T(N) =  \frac{a}{N} + b,
+\end{align}
+to the data, where \(T(N)\) is the time taken to run the simulation using \(N\) threads.
+In units of the serial time $T_\mathrm{serial} = T(1)$, the parameters obtained from the fit are $a = 0.824$ and $b = 0.163$.
+This suggests that we can optimally achieve a speedup of roughly $80\%$ by parallelizing the code. 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/timing_tests.pdf}
+    \caption{Time taken to run simulations of the $L=5$ lattice for $100$ temperatures in the range $T \in [1.0, 3.5]\ J/k_B$ using different numbers of threads.}
+    \label{fig:parallelization}
+\end{figure}
+
 \subsection{Phase transitions \& temperature scans}
 We have plotted the average energy, magnetization, heat capacity and magnetic susceptibility per spin as functions of temperature for lattice sizes $L = 40, 60, 80, 100$ in Figure~\ref{fig:temp_scan}.
 In particular, we see a drop in the magnetization near the (supposed) critical region, typical of a transition from an ordered to a disordered phase.
@@ -380,6 +416,7 @@ Additionally, we see peaks in both the heat capacity and magnetic susceptibility
 \subsection{MCMC errors}
 Additionally, we have estimated errors and effective sample sizes associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
 The results of this is shown in Figure~\ref{fig:temp_scan_error}.
+This is done according to the method described in Chapter 11 of \cite{bayesian2013}, in order to account for autocorrelation in the Markov chain.
 Here we see that the energy generally has a larger effective sample size and smaller error than the magnetization.
 Both quantities do however see a dip in effective sample size and increase in error near the critical region.
 This is as expected, as the correlation length grows and approaches the system size $L$.
@@ -411,8 +448,7 @@ These are tabulated in Table~\ref{table:crit_temps}.
     \caption{Temporary numbers.}
     \label{table:crit_temps}
 \end{table}
-The finite size scaling relations can then be used to estimate the critical temperature of the infinite lattice.
-The estimates obtained using the heat capacity and magnetic susceptibility respectively are shown in table~\ref{table:crit_temp_infinite}.
+The finite size scaling relations have then been used to estimate the critical temperature of the infinite lattice, the results of which are shown in table~\ref{table:crit_temp_infinite}.
 Here we emphasize that the uncertainties shown are those from the linear regression \textit{only}, and may underestimate the true uncertainty.
 For the future, a better approach could be to estimate the variances of the critical temperatures $T_c(L)$ and use these as weights in a weighted linear regression.
 \begin{table}
@@ -444,14 +480,17 @@ Things to note:
 
 \section{Conclusion}
 
+\subsection{Tools and code documentation}
+When working with this report we have occasionally consulted with the language model ChatGPT and Copilot. 
+However, all of our analysis, code implementation, results and language are produced by ourselves. 
+
+Our code can be found here~\cite{FYS4150Project4} and relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, \textsc{Armadillo}~\cite{armadillo} and \textsc{OpenMP}~\cite{openmp}. 
+We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation of our code, see~\cite{FYS4150Project4_doc}. 
+
 \newpage
 \clearpage
 \onecolumngrid
 \appendix
-
-\section{Additional plots}\label{sec:appendix_plots}
-
-
 
 % \bibliographystyle{apalike}
 % \bibliographystyle{unsrt}
