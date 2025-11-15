@@ -53,5 +53,6 @@ for i, L in enumerate(lattice_sizes):
 T_C_infinite, T_C_std_err = utils.estimate_T_infinite(lattice_sizes, T_C)
 T_X_infinite, T_X_std_err = utils.estimate_T_infinite(lattice_sizes, T_X)
 
+print("\n--- Problem 9 ---")
 print(f"Estimated T(∞) using heat capacity: {T_C_infinite} ± {T_C_std_err}")
 print(f"Estimated T(∞) using susceptibility: {T_X_infinite} ± {T_X_std_err}")
