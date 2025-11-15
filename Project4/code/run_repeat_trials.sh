@@ -37,8 +37,8 @@ echo "-----------------------------------------------------" >> "${log}" 2>&1
 for repeat_idx in {1..10}; do
     for L in 40 60 80 100; do
         
-    outdir="out/temperature_scans/repeat_runs/results-L${L}"
-    mkdir -p "${outdir}"
+        outdir="out/temperature_scans/repeat_runs/results-L${L}"
+        mkdir -p "${outdir}"
 
         echo "[$(date +"%H:%M:%S")] Running L=${L}, repeat=${repeat_idx}" >> "${log}" 2>&1
         
