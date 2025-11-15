@@ -29,6 +29,7 @@ struct Args
     int temperature_steps = 30;
 
     // Output parameters
+    bool save_data = true;
     std::string run_name = "";
     std::string out_dir = "";
 };
