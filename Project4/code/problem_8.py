@@ -43,8 +43,10 @@ for i, L in enumerate(lattice_sizes):
     X = (M_var) * N / T
     
     # --- Plot main results ---
-    ax[0].fill_between(T, E_avg - E_MCSE, E_avg + E_MCSE, alpha=0.2)
-    ax[1].fill_between(T, M_avg - M_MCSE, M_avg + M_MCSE, alpha=0.2)
+    err_scale = 10
+    
+    ax[0].fill_between(T, E_avg - err_scale * E_MCSE, E_avg + err_scale * E_MCSE, alpha=0.2)
+    ax[1].fill_between(T, M_avg - err_scale * M_MCSE, M_avg + err_scale * M_MCSE, alpha=0.2)
     ax[0].plot(T, E_avg, linestyle='-', label=f'L={L}')
     ax[1].plot(T, M_avg, linestyle='-', label=f'L={L}')
     ax[2].plot(T, C, linestyle='-', label=f'L={L}')
