@@ -50,7 +50,7 @@ class MCMC
 {
 private:
     Lattice &lattice;
-    std::mt19937_64 generator;
+    std::mt19937 generator;
     std::uniform_int_distribution<int> idx_distr;
     std::uniform_real_distribution<double> spin_distr;
     

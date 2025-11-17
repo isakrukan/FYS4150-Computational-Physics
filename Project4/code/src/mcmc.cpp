@@ -11,7 +11,10 @@ MCMC::MCMC(Lattice &lattice_, int seed)
     }
     // Initialize random number generators
     generator.seed(seed);
-    idx_distr = std::uniform_int_distribution<int>(0, lattice.L - 1);
+
+    // NOTE: 
+    // Changed to generating idx ∈ [0, N-1] to avoid multiple RNG calls per step
+    idx_distr = std::uniform_int_distribution<int>(0, lattice.N - 1);
     spin_distr = std::uniform_real_distribution<double>(0.0, 1.0);
 
     // Precompute Boltzmann factors for MCMC cycles
@@ -34,8 +37,11 @@ void MCMC::cycle_MCMC(int steps)
 
     for (int step = 0; step < steps; ++step)
     {
-        int i = idx_distr(generator);
-        int j = idx_distr(generator);
+        //int rand_idx = idx_distr(generator);
+        int rand_idx = generator() % lattice.N;
+        //int j = idx_distr(generator);
+        int i = rand_idx / ncols;
+        int j = rand_idx % ncols;
 
         Location &location = lattice[i][j];
 
@@ -43,7 +49,14 @@ void MCMC::cycle_MCMC(int steps)
                                  (*location.down).s +
                                  (*location.left).s +
                                  (*location.right).s);
-        
+
+        // Always accept if ΔE is negative (avoids unnecessary RNG calls)
+        if (diff <= 0)
+        {
+            lattice.flip_spin(i, j);
+            continue;
+        }
+        // Otherwise, do RNG call for acceptance rule
         if (spin_distr(generator) < boltzmann[(diff + 8) / 4])
         {
             lattice.flip_spin(i, j);
