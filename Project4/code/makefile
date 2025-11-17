@@ -91,9 +91,7 @@ link_openmp:
 clean:
 	-$(DELETE) *.o
 
-# Clean between serial and OpenMP builds for debugging/safety
-all: outfolder compile link clean compile_openmp link_openmp clean
-
+all: outfolder compile link compile_openmp link_openmp clean
 
 # Generates data for problems 4 (elapsed time (2017 mac, 1e6 MC cycles): ~ 30-40 seconds
 run_problem_4:
@@ -107,6 +105,10 @@ run_problem_5:
 	@$(BUILD)/main --run --seed 3 -L 20 -T 2.4 -n_cycles 1000000
 	@$(BUILD)/main --run --seed 4 -L 20 -T 2.4 -n_cycles 1000000 --ordered
 
+# Runs timing tests for problem 7 (see run_timing_tests.sh for details)
+run_problem_7:
+	bash run_timing_tests.sh
+
 # NOTE: Runs a smaller test version of problem 8, meant to verify that the code
 # is working (more accurate runs take a long time and should be done manually using run_repeat_trials.sh).
 # These should take around 2-4 minutes in total.
@@ -118,16 +120,17 @@ run_downscaled_problem_8:
 			
 
 py_plots:
-	@$(PY) problem_4.py
-	@$(PY) problem_5.py
-	@$(PY) problem_6.py
-	@$(PY) problem_8.py
-	@$(PY) problem_9.py
+	@$(PY) scripts/problem_4.py
+	@$(PY) scripts/problem_5.py
+	@$(PY) scripts/problem_6.py
+	@$(PY) scripts/problem_7.py
+	@$(PY) scripts/problem_8.py
+	@$(PY) scripts/problem_9.py
 
 run_tests:
 	@$(BUILD)/test_lattice$(EXE)
 
 
 # Build first (via 'all'), then run everything and plot
-project: all run_tests run_problem_4 run_problem_5 run_downscaled_problem_8 py_plots
+project: all run_tests run_problem_4 run_problem_5 run_downscaled_problem_8 run_problem_7 py_plots
 	@echo "Complete project finished."

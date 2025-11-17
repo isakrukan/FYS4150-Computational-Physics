@@ -93,6 +93,22 @@ Args parse_args(int argc, char *argv[])
         // ---------------
         // Misc.
         // ---------------
+        else if (arg == "--save_data" && i + 1 < argc)
+        {
+            if (std::string(argv[++i]) == "false")
+            {
+                args.save_data = false;
+            }
+            else if (std::string(argv[i]) == "true")
+            {
+                args.save_data = true;
+            }
+            else
+            {
+                std::cerr << "Invalid value for --save_data. Use true or false.\n";
+                exit(1);
+            }
+        }
         else if (arg == "--name" && i + 1 < argc)
         {
             args.run_name = argv[++i];

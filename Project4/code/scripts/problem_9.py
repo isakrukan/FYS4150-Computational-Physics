@@ -1,6 +1,7 @@
 import os
 import numpy as np 
 from scipy.stats import linregress
+from tabulate import tabulate
 import utils
 
 # Set directories
@@ -54,5 +55,13 @@ for i, L in enumerate(lattice_sizes):
 T_C_infinite, T_C_std_err = utils.estimate_T_infinite(lattice_sizes, T_C)
 T_X_infinite, T_X_std_err = utils.estimate_T_infinite(lattice_sizes, T_X)
 
-print(f"Estimated T(ing) using heat capacity: {T_C_infinite} ± {T_C_std_err}")
-print(f"Estimated T(ing) using susceptibility: {T_X_infinite} ± {T_X_std_err}")
+print("\n--- Problem 9 ---")
+
+col_1 = ["40", "60", "80", "100"]
+col_2 = [f"{temp:.5f}" for temp in T_C]
+col_3 = [f"{temp:.5f}" for temp in T_X]
+table = tabulate(zip(col_1, col_2, col_3), headers=["L", "T_C (J/k_B)", "T_X (J/k_B)"], tablefmt="rounded_grid")
+print(table)
+
+print(f"Estimated T(∞) using heat capacity: {T_C_infinite} ± {T_C_std_err}")
+print(f"Estimated T(∞) using susceptibility: {T_X_infinite} ± {T_X_std_err}")
