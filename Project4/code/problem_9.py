@@ -4,7 +4,8 @@ from scipy.stats import linregress
 import utils
 
 # Set directories
-OUT_DIR = "out/"
+DIR = "out/"
+OUT_DIR = "../figs/"
 DATA_DIR = OUT_DIR + "temperature_scans/repeat_runs/"
 
 num_temps = 101                                # Number of temperature points
@@ -12,7 +13,7 @@ lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
 window = 5                                     # Fitting window size (see below)
 
 if not os.path.exists(os.path.join(os.getcwd(), DATA_DIR)):
-    DATA_DIR = OUT_DIR + "temperature_scans/tests/"
+    DATA_DIR = DIR + "temperature_scans/tests/"
     num_temps = 11
     print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
 
@@ -53,5 +54,5 @@ for i, L in enumerate(lattice_sizes):
 T_C_infinite, T_C_std_err = utils.estimate_T_infinite(lattice_sizes, T_C)
 T_X_infinite, T_X_std_err = utils.estimate_T_infinite(lattice_sizes, T_X)
 
-print(f"Estimated T(∞) using heat capacity: {T_C_infinite} ± {T_C_std_err}")
-print(f"Estimated T(∞) using susceptibility: {T_X_infinite} ± {T_X_std_err}")
+print(f"Estimated T(ing) using heat capacity: {T_C_infinite} ± {T_C_std_err}")
+print(f"Estimated T(ing) using susceptibility: {T_X_infinite} ± {T_X_std_err}")

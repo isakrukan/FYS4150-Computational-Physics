@@ -6,14 +6,15 @@ plt.style.use('ggplot')
 import utils
 
 # Set directories
-OUT_DIR = "out/"
+DIR = "out/"
+OUT_DIR = "../figs/"
 DATA_DIR = OUT_DIR + "temperature_scans/repeat_runs/"
 
 num_temps = 101                                # Number of temperature points
 lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
 
 if not os.path.exists(os.path.join(os.getcwd(), DATA_DIR)):
-    DATA_DIR = OUT_DIR + "temperature_scans/tests/"
+    DATA_DIR = DIR + "temperature_scans/tests/"
     num_temps = 11
     print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
 
@@ -99,7 +100,7 @@ legend_color = ax_err[0].legend(handles_color,
 legend_color._legend_box.align = "left"
  
 # ---------------------------------
-# LEGEND #1: linestyles (ε vs |m|)
+# LEGEND #1: linestyles (epsilon vs |m|)
 # ---------------------------------
 handles_style = [plt.Line2D([0], [0], linestyle='-',  color='black', alpha=1.0),
                  plt.Line2D([0], [0], linestyle='--', color='black', alpha=0.5)]

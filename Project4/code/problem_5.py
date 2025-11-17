@@ -5,6 +5,7 @@ plt.style.use('ggplot')
 L = 20
 N = L * L
 
+OUT_DIR = "../figs/"
 DIR = "out/"
 
 colors = ['#377eb8', '#e41a1c', '#4daf4a', '#984ea3']
@@ -31,4 +32,4 @@ plt.xlim([1, n_cycles[-1]])
 plt.xlabel("No. of MC cycles")
 plt.ylabel("Energy per spin")
 plt.legend(loc="upper right")
-plt.savefig(DIR + "equilibration.pdf")
+plt.savefig(OUT_DIR + "equilibration.pdf")

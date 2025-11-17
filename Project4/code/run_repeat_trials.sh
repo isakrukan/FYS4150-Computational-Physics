@@ -6,7 +6,7 @@
 # It runs 10 repeat simulations w/ 1e6 MC cycles for each
 # lattice size L ∈ [40, 60, 80, 100].
 #
-# Not reccomended to run locally due to long runtimes.
+# Not recommended to run locally due to long runtimes.
 #
 # Ex: I ran this on bioint01 from
 # https://www.uio.no/english/services/it/research/hpc/lightweighthpc/

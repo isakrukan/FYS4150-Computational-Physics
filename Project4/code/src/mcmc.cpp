@@ -3,22 +3,22 @@
 
 MCMC::MCMC(Lattice &lattice_, int seed)
     : lattice(lattice_)
-    // , total_cycles(total_cycles), steps_per_cycle(steps_per_cycle) // De to siste her må/kan vell fjernes?
     {
     if (seed == 0)
     {
         seed = std::random_device{}();
     }
-    // Initialize random number generators
+
+    // Initialize random number generators using the uniform distribution as proposal distribution. 
     generator.seed(seed);
     idx_distr = std::uniform_int_distribution<int>(0, lattice.L - 1);
     spin_distr = std::uniform_real_distribution<double>(0.0, 1.0);
 
     // Precompute Boltzmann factors for MCMC cycles
-    for (double diff : {-8, -4, 0, 4, 8})
+    for (double diff_initialize : {-8, -4, 0, 4, 8})
     {
-        int idx = (diff + 8) / 4;
-        boltzmann[idx] = std::exp(-lattice.J * diff / lattice.T);
+        int idx = (diff_initialize + 8) / 4;
+        boltzmann[idx] = std::exp(-lattice.J * diff_initialize / lattice.T);
     }
 }
 
@@ -26,18 +26,12 @@ MCMC::MCMC(Lattice &lattice_, int seed)
 void MCMC::cycle_MCMC(int steps)
 {
 
-    double diff;
-    double random_number;
-
-    int nrows = lattice.rows;
-    int ncols = lattice.cols;
-
-    for (int step = 0; step < steps; ++step)
+    for (int step = 0; step < steps; step++)
     {
-        int i = idx_distr(generator);
-        int j = idx_distr(generator);
-
-        Location &location = lattice[i][j];
+        // Drawing random proposal location
+        i_cycle_location = idx_distr(generator);
+        j_cycle_location = idx_distr(generator);
+        Location &location = lattice[i_cycle_location][j_cycle_location];
 
         diff = 2 * location.s * ((*location.up).s +
                                  (*location.down).s +
@@ -46,7 +40,7 @@ void MCMC::cycle_MCMC(int steps)
         
         if (spin_distr(generator) < boltzmann[(diff + 8) / 4])
         {
-            lattice.flip_spin(i, j);
+            lattice.flip_spin(i_cycle_location, j_cycle_location); // Energy and magnetization is updated within lattice.
         }
     }
 }
@@ -55,28 +49,28 @@ void MCMC::run(int total_cycles, int steps_per_cycle, int burn_in_cycles)
 {
 
     // Burn-in cycles
-    for (int cycle = 0; cycle < burn_in_cycles; ++cycle)
+    for (int cycle = 0; cycle < burn_in_cycles; cycle++)
     {
         cycle_MCMC(steps_per_cycle);
     }
 
     
     // Initialize storage for simulation data
-    simulation_data.set_size(total_cycles, 3);
+    simulation_data.set_size(total_cycles, 3); // of the form (#cycles, energy, magnetization)
     simulation_data.zeros();
     
-    simulation_data(0, 0) = 1;
-    simulation_data(0, 1) = lattice.get_energy();
-    simulation_data(0, 2) = lattice.get_magnetization();
+    simulation_data(0, 0) = 1; // Number of cycles
+    simulation_data(0, 1) = lattice.get_energy(); // Energy
+    simulation_data(0, 2) = lattice.get_magnetization(); // Magnetization
     
     // Perform main MCMC cycles
-    for (int cycle = 1; cycle < total_cycles; ++cycle)
+    for (int cycle = 1; cycle < total_cycles; cycle++)
     {
         cycle_MCMC(steps_per_cycle);
 
-        simulation_data( cycle, 0 ) = cycle + 1;
-        simulation_data( cycle, 1 ) = lattice.get_energy();
-        simulation_data( cycle, 2 ) = lattice.get_magnetization();
+        simulation_data(cycle, 0) = cycle + 1;
+        simulation_data(cycle, 1) = lattice.get_energy();
+        simulation_data(cycle, 2) = lattice.get_magnetization();
 
     }
     

@@ -95,8 +95,12 @@ clean:
 all: outfolder compile link clean compile_openmp link_openmp clean
 
 
-# Generates data for problems 5 & 6
-# Should take around ~30 sec w/ 1e6 MC cycles
+# Generates data for problems 4 (elapsed time (2017 mac, 1e6 MC cycles): ~ 30-40 seconds
+run_problem_4:
+	@$(BUILD)/main --run --seed 2 -L 2 -T 1.0 -n_cycles 1000000
+
+
+# Generates data for problems 5 & 6 (elapsed time (2017 mac, four 1e6 MC cycles): ~ 120-160 seconds 
 run_problem_5:
 	@$(BUILD)/main --run --seed 1 -L 20 -T 1.0 -n_cycles 1000000
 	@$(BUILD)/main --run --seed 2 -L 20 -T 1.0 -n_cycles 1000000 --ordered
@@ -104,7 +108,7 @@ run_problem_5:
 	@$(BUILD)/main --run --seed 4 -L 20 -T 2.4 -n_cycles 1000000 --ordered
 
 # NOTE: Runs a smaller test version of problem 8, meant to verify that the code
-# is working (more accurate runs take a long time and should be done manually).
+# is working (more accurate runs take a long time and should be done manually using run_repeat_trials.sh).
 # These should take around 2-4 minutes in total.
 run_downscaled_problem_8:
 	@$(BUILD)/main_openmp --temperature_scan --seed 42*1 --outdir out/temperature_scans/tests/results-L40 --name scan_1 -T_steps 10 -L 40 -n_cycles 100000 -n_burn 10000
@@ -125,5 +129,5 @@ run_tests:
 
 
 # Build first (via 'all'), then run everything and plot
-project: all run_tests run_problem_5 run_downscaled_problem_8 py_plots
+project: all run_tests run_problem_4 run_problem_5 run_downscaled_problem_8 py_plots
 	@echo "Complete project finished."
