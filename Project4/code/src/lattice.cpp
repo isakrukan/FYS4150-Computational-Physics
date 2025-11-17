@@ -36,12 +36,15 @@ void Lattice::initialize_spins(bool ordered)
 }
 
 void Lattice::assign_pointers(){
-    // Periodic boundary condition means that the boundary locations point "back" to the other side (respectively) of the lattice.
+    /*
+    Assigns pointers to each location in the directions up, down, left and right. 
+    Implementing periodic boundary condition, meaning that the boundary locations point "back" to the other side (respectively) of the lattice. 
+    */
 
     for (int i=0; i<rows; i++){
         for (int j=0; j<cols; j++){
             int i_up = (i-1) * (i>0) + (rows-1) * (i==0);
-            int i_down = (i+1) * (i<rows-1);
+            int i_down = (i+1) * (i<rows-1); 
 
             int j_left = (j-1) * (j>0) + (cols-1) * (j==0);
             int j_right = (j+1) * (j<cols-1);
@@ -57,6 +60,10 @@ void Lattice::assign_pointers(){
 
 void Lattice::initialize_energy()
 {
+    /*
+    Sums over all spin locations, adding up the contribution from up and down, avoiding double counting. Only supposed to be called at initialization of class instance. 
+    */
+
     E = 0.0;
     for (int i = 0; i < rows; ++i)
     {
@@ -70,6 +77,10 @@ void Lattice::initialize_energy()
 
 void Lattice::initialize_magnetization()
 {
+    /*
+    Computes total magnetization. Only supposed to be called at initialization of class instance. 
+    */
+
     M = 0;
     for (int i=0; i<rows; i++){
         for (int j=0; j<cols; j++){
@@ -80,6 +91,10 @@ void Lattice::initialize_magnetization()
 
 void Lattice::flip_spin(int i, int j)
 {
+    /*
+    Flips the spin at location (i,j) and updates energy and magnetization.
+    */
+
     // Flip the spin at (i, j)
     grid[i][j].s *= -1;
 

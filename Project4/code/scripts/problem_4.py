@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 plt.style.use('ggplot')
 
+
+DIR = "../figs/"
+
 N = 4
 J   = 1.0
 k_B = 1.0
@@ -48,7 +51,7 @@ X_num = np.var(np.abs(m_num)) * N / (k_B * T)
 
 # --- Problem 4b: compare analytical and numerical ---
 header = ["Analytical", "Numerical"]
-col_1 = ["Mean(ε)", "Mean(|m|)", "C_V/N", "X/N"]
+col_1 = ["Mean(eps)", "Mean(|m|)", "C_V/N", "X/N"]
 col_2 = [data_predicted[0], data_predicted[2], C, X]
 col_3 = [np.mean(eps_num), np.mean(np.abs(m_num)), C_num, X_num]
 
@@ -57,7 +60,7 @@ print("\n--- Problem 4b ---\n")
 print(table)
 
 
-# --- Problem 4c: plot equilibration of <ε> ---
+# --- Problem 4c: plot equilibration of <eps> ---
 cycles  = data[:,0]
 eps_num = data[:,1] / N
 m_num   = data[:,2] / N
@@ -65,10 +68,10 @@ m_num   = data[:,2] / N
 eps_avg_num = np.cumsum(eps_num) / (np.arange(len(eps_num)) + 1)
 
 plt.figure(figsize=(6,4), constrained_layout=True)
-plt.semilogx(cycles, eps_avg_num, label="Numerical <ε>")
-plt.axhline(data_predicted[0], color='C1', linestyle='--', label="Predicted <ε>")
+plt.semilogx(cycles, eps_avg_num, label=r"Numerical $<\epsilon>$")
+plt.axhline(data_predicted[0], color='C1', linestyle='--', label=r"Predicted $<\epsilon>$")
 plt.xlim([1, cycles[-1]])
 plt.xlabel("No. of MC cycles")
 plt.ylabel("Energy per spin")
 plt.legend()
-plt.savefig("out/problem_4.pdf")
+plt.savefig(DIR + "problem_4.pdf")

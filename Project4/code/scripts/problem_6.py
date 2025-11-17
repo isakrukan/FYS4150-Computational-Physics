@@ -8,7 +8,8 @@ plt.style.use('ggplot')
 # must be discarded manually here, before doing the analysis.
 
 
-DIR = "out/"                # output directory & data location
+DIR = "out/"                # data location
+OUT_DIR = "../figs/"        # output directory
 
 L = 20                      # lattice size
 N = L * L                   # number of spins
@@ -45,7 +46,7 @@ for i, T in enumerate([1.0, 2.4]):
 # Finalize & save figure
 fig.supxlabel("Energy per spin")
 fig.supylabel("Probability density")
-plt.savefig(DIR + "epsilon_distribution.pdf")
+plt.savefig(OUT_DIR + "epsilon_distribution.pdf")
 
 
 
@@ -56,7 +57,7 @@ data = [ ["T = 1.0 J/k_B", *variances[0:2]],
 
 headers = ["", "unordered", "ordered"]
 
-title = f"Variance of ε for L={L} over 100,000 MC w/ burn-in of 10,000"
+title = f"Variance of eps for L={L} over 100,000 MC w/ burn-in of 10,000"
 
 table = tabulate(data, headers=headers, tablefmt="rounded_grid")
 
