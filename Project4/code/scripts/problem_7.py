@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 plt.style.use('ggplot')
 
-def inv_model(N, a, b):
-    return a / N + b
+def amdahl_model(N, f):
+    return (1-f) / N + f
 
 data = np.loadtxt("out/times_openmp.txt")
 
@@ -20,19 +20,19 @@ data_var /= time_serial**2
 data_err /= time_serial
 
 
-popt, pcov = curve_fit(inv_model, threads, data_avg)
-a, b = popt
+popt, pcov = curve_fit(amdahl_model, threads, data_avg)
+f = popt
 print("\n--- Problem 7 ---")
 print("Fitted function for times:")
-print(f" T(N) = a/N + b")
-print(f" a={a} ± {np.sqrt(pcov[0,0])}")
-print(f" b={b} ± {np.sqrt(pcov[1,1])}")
+print(f" T(N) = (1-f)/N + f")
+print(f" f={f[0]:.4f} ± {np.sqrt(pcov[0,0]):.4f}")
 
 plt.figure(figsize=(6,4), tight_layout=True)
 plt.plot(threads, data_avg, marker='o', linestyle='--', label="Measured data")
 plt.fill_between(threads, data_avg - data_err, data_avg + data_err, alpha=0.4)
-plt.plot(threads, inv_model(threads, *popt), color='k', alpha=0.5, label=f"$T(N) = a/N + b$")
+plt.plot(threads, amdahl_model(threads, *popt), color='k', alpha=0.5, label=f"$T(N) = (1-f)/N + f$")
 
+plt.ylim(0,1.05)
 plt.xlabel("No. of threads")
 plt.ylabel(r"Time  [$T_\mathrm{serial}$]")
 plt.title("Timing tests for OpenMP implementation")
