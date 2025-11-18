@@ -14,26 +14,26 @@
 struct MCMC_data
 {
     // Averages and variances of main observables
-    double avg_energy = 0.0;
-    double avg_energy_squared = 0.0;
-    double var_energy = 0.0;
+    double avg_energy = 0.0;                ///< Average energy of \ref Lattice "Lattice".
+    double avg_energy_squared = 0.0;        ///< Average energy squared of \ref Lattice "Lattice".
+    double var_energy = 0.0;                ///< Variance of energy of \ref Lattice "Lattice".
 
-    double avg_magnetization = 0.0;
-    double avg_magnetization_abs = 0.0;
-    double avg_magnetization_squared = 0.0;
-    double var_magnetization_abs = 0.0;
+    double avg_magnetization = 0.0;         ///< Average magnetization of \ref Lattice "Lattice".
+    double avg_magnetization_abs = 0.0;     ///< Average magnetization of \ref Lattice "Lattice" in absolute value.
+    double avg_magnetization_squared = 0.0; ///< Average magnetization squared of \ref Lattice "Lattice".
+    double var_magnetization_abs = 0.0;     ///< Variance of magnetization of \ref Lattice "Lattice" in absolute value.
 
     // Derived quantities
-    double heat_capacity = 0.0;
-    double susceptibility = 0.0;
+    double heat_capacity = 0.0;             ///< Heat capacity of \ref Lattice "Lattice".
+    double susceptibility = 0.0;            ///< Susceptibility of \ref Lattice "Lattice".
 
     // Error estimates
-    double MCSE_energy = 0.0;
-    double MCSE_magnetization = 0.0;
-    double MCSE_magnetization_abs = 0.0;
+    double MCSE_energy = 0.0;               ///< Average energy of \ref MCMC "MCMC" simulation.
+    double MCSE_magnetization = 0.0;        ///< Average magnetization of \ref MCMC "MCMC" simulation.
+    double MCSE_magnetization_abs = 0.0;    ///< Average magnetization of \ref MCMC "MCMC" simulation in absolute value.
     
     // Effective sample size estimates
-    double ESS_energy = 0.0;
+    double ESS_energy = 0.0;                
     double ESS_magnetization = 0.0;
     double ESS_magnetization_abs = 0.0;
 };
@@ -41,10 +41,10 @@ struct MCMC_data
 /**
  * @brief Class representing a Markov Chain Monte Carlo (MCMC) solver for the Lattice class.
  * 
- * @param lattice: Reference to the Lattice object to perform MCMC on.
- * @param generator: Mersenne Twister random number generator.
- * @param idx_distr: Uniform integer distribution for selecting lattice indices.
- * @param spin_distr: Uniform real distribution for spin flip decisions.
+ * @param lattice Reference to the \ref Lattice "Lattice" object to perform MCMC on.
+ * @param generator Mersenne Twister random number generator.
+ * @param idx_distr Uniform integer distribution for selecting lattice indices.
+ * @param spin_distr Uniform real distribution for spin flip decisions.
  */
 class MCMC
 {
@@ -57,10 +57,14 @@ private:
     int total_cycles;
     int steps_per_cycle;
     int burn_in_cycles = 0;
+    
+    double diff;                ///< Used to calculate energy difference in \ref MCMC::cycle_MCMC "cycle_MCMC".
+    int randint;                ///< Used in calculation of random location in \ref MCMC::cycle_MCMC "cycle_MCMC".
+    int i_cycle_location;       ///< Used in calculation random vertical location in \ref MCMC::cycle_MCMC "cycle_MCMC".
+    int j_cycle_location;       ///< Used in calculation random horizontal location in \ref MCMC::cycle_MCMC "cycle_MCMC".
+    arma::mat simulation_data;  ///< Data container for simulation data.
 
-    arma::mat simulation_data;
-
-    std::array<double, 5> boltzmann;
+    std::array<double, 5> boltzmann;    ///< To hold precomputed energy differences.
 
 public:
 

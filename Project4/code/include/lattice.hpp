@@ -4,7 +4,9 @@
 
 #include <armadillo>
 
-
+/**
+ * @brief A single location on the \ref Lattice "Lattice" class.
+ */
 struct Location
 {
     Location *left = nullptr;     ///< Pointer to the location to the left.
@@ -20,21 +22,14 @@ struct Location
 
 
 /**
- * @brief Class representing a 2D lattice for MCMC simulations.
- *
- * @param L: Size of the lattice (L x L).
- * @param T: Temperature of the system, in units of 1/kB.
- * @param J: Interaction strength between neighboring spins.
- * @param E: Total energy of the lattice.
- * @param M: Total magnetization of the lattice.
- * @param grid: 2D nested vector of `Location` representing lattice spins.
+ * @brief Representations of a 2D Ising lattice for MCMC simulations.
  */
 class Lattice
 {
     friend class MCMC;
 
 private:
-    std::vector<std::vector<Location>> grid;
+    std::vector<std::vector<Location>> grid;    ///< 2D nested vector of \ref Location "Locations".
 
     /**
      * @brief Sets up the pointers in the lattice.
@@ -52,17 +47,23 @@ private:
     void initialize_magnetization();
 
 public:
+
+    /**
+     * @brief Only possible constructor for \ref Lattice "Lattice" class, assigns values to 
+     * \ref L "L", \ref J "J", \ref T "T", and calls 
+     * \ref assign_pointers "assign_pointers", \ref initialize_energy "initialize_energy" and \ref initialize_magnetization "initialize_magnetization".
+     */
     Lattice(int L_, double J_, double T_) : L(L_), rows(L_), cols(L_), T(T_), J(J_), N(L_ * L_) {};
 
-    const int rows;
-    const int cols;
-    const int L;
-    const int N;
+    const int rows; ///< Number of rows
+    const int cols; ///< Number of cols
+    const int L;    ///< Size of the lattice (L x L).
+    const int N;    ///< Number of spin locations.
 
-    double T;
-    double J;
-    double E;
-    double M;
+    double T;       ///< Temperature of the system, in units of 1/kB.
+    double J;       ///< Interaction strength between neighboring spins.
+    double E;       ///< Total energy of the lattice.
+    double M;       ///< Total magnetization of the lattice.
     
     /**
      * @brief Set initial spin configuration and compute initial E and M.
