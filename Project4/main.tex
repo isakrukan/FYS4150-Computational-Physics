@@ -427,23 +427,31 @@ where \(s_i\) is the spin at location \(i\) after the spin-flip, and \(s_{i}^{\t
 Considering all possible values \(s_{i}^{\text{up}}\), \(s_{i}^{\text{down}}\), \(s_{i}^{\text{left}}\) and \(s_{i}^{\text{right}}\) can take, we find \(\Delta E/(Js_i)\in\{-8,-4,0,4,8\}\).
 Hence, to avoid computational cost, \texttt{MCMC} precomputes the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take.
 
-\subsubsection{Parameters and }
+\subsubsection{Parameters and simulations}
 The two classes \texttt{Lattice} and \texttt{MCMC} are the core features of our numerical implementation. 
-Using these two, we simulate the Ising model using \(L\in\{2,20\}\), \(T\in\{1,2.4\}\) and the total number of Monte Carlo cycles set to \(10^6\).
-Additionally, we perform temperature scans, by simulating the Ising model for various \(T\in[1,2.4]\).
-The temperature simulations were parallelized \textsc{OpenMP} utilizing 32 of \textsc{bioint01}'s 128 cores.
-This part of the code, see \texttt{utils::temperature\_scan}, is parallelized using \textsc{OpenMP}~\cite{openmp}.
-The \color{red}simulations (kunne du spesifisert litt mer her?)\color{black} were run on the \textsc{bioint01} server provided by the University of Oslo (see \href{https://www.mn.uio.no/ifi/tjenester/it/tjenester/compute/hpc/bioinfo-cluster/}{here}).
+As a test of our implementation, we first simulate the Ising model on a \(2\times 2\) lattice, and compare our numerical estimates of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) against the analytic expressions provided in Appendix \ref{sec:example_2times2lattice}.
+
+After this, we move on to simulations with lattice size $L=20$ and temperatures \(T\in\{1.0, 2.4\}\ \si{J/k_B}\), using a total number of \(10^6\) Monte Carlo cycles.
+These are used to study the burn-in time, as well as estimating the distribution of \(\epsilon\) at the given temperatures.
+
+Lastly, we perform temperature scans, simulating the Ising model for various temperatures \(T\in[2.0, 2.4]\ \si{J/k_B}\).
+This is done for lattice sizes \(L\in\{40, 60, 80, 100\}\), in order to estimate the critical temperature \(T_c(L)\) for each size, and then extrapolate towards \(L\rightarrow\infty\) using the scaling relations \eqref{eq:scaling_relations}.
+%Additionally, we perform temperature scans, by simulating the Ising model for various \(T\in[1,2.4]\).
+%This part of the code, see \texttt{utils::temperature\_scan}, is parallelized using \textsc{OpenMP}~\cite{openmp}.
+In this part of the code, see \texttt{utils::temperature\_scan}, textsc{OpenMP}~\cite{openmp} is ussed to parallelize the temperature scans.
+This was done using the \texttt{parallel for} directive to automatically distribute iterations of the temperature loop over the available cores.
+The program was then run using 24 cores, on the \textsc{freebio3}/\textsc{freebio4} resources provided by the University of Oslo (see \href{https://www.mn.uio.no/ifi/tjenester/it/tjenester/compute/hpc/bioinfo-cluster/}{Lightweight HPC}). 
+({\color{red}kunne du spesifisert litt mer her?})
+Although clock speeds on \textsc{freebio3}/\textsc{freebio4} are smaller compared to many modern personal computers, some quick experiments showed that these are better optimized for parallel workloads, which is why they were chosen for this project.
+
+
 To reproduce a minimal version of the results of this project, navigate to the code directory in \cite{FYS4150Project4}, and run the command \texttt{make project}. 
-
-
-
 
 \section{Results}
 
 \subsection{Equilibration time}
 For a Monte Carlo simulation of the $L=20$ lattice, an example evolution of the energy per spin $\epsilon = E/N$ and its running average $\langle \epsilon \rangle$ is shown in Figure~\ref{fig:equilibration}.
-In this case, the system seems to have burned in after roughly $2\times 10^3$ Monte Carlo cycles.
+In this case, the system seems to have burned in after roughly $10^3$ Monte Carlo cycles.
 
 \begin{figure}
     \centering
@@ -456,8 +464,10 @@ In this case, the system seems to have burned in after roughly $2\times 10^3$ Mo
 \subsection{Energy distribution}
 The distribution of the energy per spin $\epsilon = E/N$ has been estimated for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.
 The results of this is shown in Figure~\ref{fig:epsilon_distribution}, with corresponding variances tabulated in Table~\ref{table:epsilon_distribution}.
-As expected, the variance is much smaller in the low-temperature, as the system is likely to be in an ordered state.
-On the other hand, the higher-temperature distribution is noticeably wider.
+As expected, the variance is much smaller in the low-temperature, indicating the system is in an ordered phase.
+On the other hand, the higher-temperature distribution is noticeably wider, which is consistent with a disordered phase.
+Based on this, we should thus expect to find a phase transition somewhere between these two temperatures.
+This is indeed what we will investigate next, by performing temperature scans and various lattice sizes.
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{figs/epsilon_distribution.pdf}
@@ -478,25 +488,6 @@ On the other hand, the higher-temperature distribution is noticeably wider.
     \label{table:epsilon_distribution}
 \end{table}
 
-\subsection{Parallelization}
-To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.
-The results of this is shown in Figure~\ref{fig:parallelization}.
-Here we have additionally fitted a model 
-\begin{align}
-   T(N) =  \frac{1-f}{N} + f,
-\end{align}
-to the data. 
-Here \(T(N)\) is the runtime (taken in units of the serial runtime $T_\mathrm{serial} = T(1)$) when parallelizing with \(N\) threads.
-In particular, we may then interpret \(f\) as the strictly serial contribution to the runtime, while \(1-f\) is the parallelizable portion.
-We then find that the serial fraction is $f \approx 5.27 \pm 0.41 \%$.
-According to Amdahl's law [REF], this further suggests the maximum theoretical speedup we may achieve is then given by \(1/f \approx 19.0\).
-\begin{figure}
-    \centering
-    \includegraphics[width=0.45\textwidth]{figs/timing_tests.pdf}
-    \caption{Time taken to run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.}
-    \label{fig:parallelization}
-\end{figure}
-
 \subsection{Phase transitions \& temperature scans}
 We have plotted the average energy, magnetization, heat capacity and magnetic susceptibility per spin as functions of temperature for lattice sizes $L = 40, 60, 80, 100$ in Figure~\ref{fig:temp_scan}.
 In particular, we see a drop in the magnetization near the (supposed) critical region, typical of a transition from an ordered to a disordered phase.
@@ -511,15 +502,12 @@ Additionally, we see peaks in both the heat capacity and magnetic susceptibility
     }
     \label{fig:temp_scan}
 \end{figure}
-
-\subsection{MCMC errors}
 Additionally, we have estimated errors and effective sample sizes associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
 The results of this is shown in Figure~\ref{fig:temp_scan_error}.
 Here we see that the energy generally has a larger effective sample size and smaller error than the magnetization.
 Both quantities do however see a dip in effective sample size and increase in error near the critical region.
 This is as expected, as the correlation length grows and approaches the system size $L$.
-As a consequence, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated.
-This in turn reduces the effective sample size, as more spin flips are required to produce an effectively independent sample.
+Consequently, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated, reducing the effective sample size.
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{figs/temp_scan_error.pdf}
@@ -538,10 +526,10 @@ These are tabulated in Table~\ref{table:crit_temps}.
     \begin{tabular}{c|c|c}
     {$L$} & {$T_c^{(C_V)}$} [$J/k_B$] & {$T_c^{(\chi)}$} [$J/k_B$] \\
     \hline
-        40  & 0 & 0 \\
-        60  & 0 & 0 \\
-        80  & 0 & 0 \\
-        100 & 0 & 0 \\
+        40  & 2.290 & 2.321 \\
+        60  & 2.282 & 2.305 \\
+        80  & 2.279 & 2.294 \\
+        100 & 2.277 & 2.290 \\
     \end{tabular}
     \caption{Temporary numbers.}
     \label{table:crit_temps}
@@ -557,8 +545,8 @@ For the future, a better approach could be to estimate the variances of the crit
     \begin{tabular}{c|c}
     {Method} & {$T_c(L\rightarrow\infty)$ [$J/k_B$]} \\
     \hline
-        $C_V$  & $0 \pm 0$ \\
-        $\chi$ & $0 \pm 0$ \\
+        $C_V$  & $2.268 \pm 0.029$ \\
+        $\chi$ & $2.270 \pm 0.071$ \\
     \end{tabular}
     \caption{
         Estimates for the critical temperature of the infinite lattice using finite size scaling relations.
@@ -567,6 +555,26 @@ For the future, a better approach could be to estimate the variances of the crit
     \label{table:crit_temp_infinite}
 \end{table}
 
+\subsection{Timing tests and parallelization}
+To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.
+The results of this is shown in Figure~\ref{fig:parallelization}.
+Here we have additionally fitted a model 
+\begin{align}
+   T(N) =  \frac{1-f}{N} + f,
+\end{align}
+to the data. 
+Here \(T(N)\) is the runtime (taken in units of the serial runtime $T_\mathrm{serial} = T(1)$) when parallelizing with \(N\) threads.
+In particular, we may then interpret \(f\) as the strictly serial contribution to the runtime, while \(1-f\) is the parallelizable portion.
+We then find that the serial fraction is $f \approx 6.48 \pm 0.70 \%$.
+According to Amdahl's law [REF], this further suggests we may theoretically achieve maximum speedup roughly \(1/f \approx 15.4\) times faster than the serial implementation. 
+This may of course be highly dependent on the specific hardware used.
+In particular, we may expect this number to be lower on a typical personal computer, as these may be less optimized for parallel workloads compared to the resources used here.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/timing_tests.pdf}
+    \caption{Time taken to run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.}
+    \label{fig:parallelization}
+\end{figure}
 
 \section{Discussion}
 
@@ -632,10 +640,6 @@ Further, using \eqref{eq:expectation_values_2times2} we obtain the following exp
     C_V &\equiv \frac{1}{k_BT^2}\text{Var}(E) = \frac{E_0^2}{k_B T^2} \frac{\cosh(x) + 1}{(\cosh(x) + 3)^2}, \\
     \chi &\equiv \frac{1}{k_BT}\text{Var}(M) = \frac{4}{k_B T} \langle |M| \rangle.
 \end{align}
-
-\section{Additional plots}\label{sec:appendix_plots}
-
-
 
 % \bibliographystyle{apalike}
 % \bibliographystyle{unsrt}
