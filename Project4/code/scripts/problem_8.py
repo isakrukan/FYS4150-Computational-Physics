@@ -8,14 +8,14 @@ import utils
 # Set directories
 DIR = "out/"
 OUT_DIR = "../figs/"
-DATA_DIR = OUT_DIR + "temperature_scans/repeat_runs/"
+DATA_DIR = DIR + "temperature_scans/repeat_runs/"
 
 num_temps = 101                                # Number of temperature points
 lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
 
 if not os.path.exists(os.path.join(os.getcwd(), DATA_DIR)):
     DATA_DIR = DIR + "temperature_scans/tests/"
-    num_temps = 11
+    num_temps = 1
     print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
 
 

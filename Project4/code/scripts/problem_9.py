@@ -7,7 +7,7 @@ import utils
 # Set directories
 DIR = "out/"
 OUT_DIR = "../figs/"
-DATA_DIR = OUT_DIR + "temperature_scans/repeat_runs/"
+DATA_DIR = DIR + "temperature_scans/repeat_runs/"
 
 num_temps = 101                                # Number of temperature points
 lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used

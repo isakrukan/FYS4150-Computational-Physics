@@ -25,7 +25,10 @@ f = popt
 print("\n--- Problem 7 ---")
 print("Fitted function for times:")
 print(f" T(N) = (1-f)/N + f")
-print(f" f={f[0]:.4f} ± {np.sqrt(pcov[0,0]):.4f}")
+print(f" f={f[0]:.4f} ± {np.sqrt(pcov[0,0]):.4f}\n")
+print(f" Maximum speedup:")
+print(f" S_max = 1/f = {1/f[0]:.2f}\n")
+
 
 plt.figure(figsize=(6,4), tight_layout=True)
 plt.plot(threads, data_avg, marker='o', linestyle='--', label="Measured data")
