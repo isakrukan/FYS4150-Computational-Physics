@@ -9,17 +9,13 @@
 #
 # ---
 
-
 # Parameters
 n_cycles=10000
 n_burn=$((n_cycles/10))
-T_steps=100
+T_steps=128
 L=5
 
-
-# Set number of available threads for OpenMP
-# Here: Use 32 to not exceed 1/4 of available cores on bioint01
-
+# Set number of available threads for OpenMP (adjust as needed)
 NUM_TRIALS=5
 MAX_NUM_THREADS=16
 

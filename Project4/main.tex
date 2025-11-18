@@ -382,19 +382,21 @@ On the other hand, the higher-temperature distribution is noticeably wider.
 \end{table}
 
 \subsection{Parallelization}
-To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $100$ temperatures in the range $T \in [1.0, 3.5]\ J/k_B$ using different numbers of threads.
+To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.
 The results of this is shown in Figure~\ref{fig:parallelization}.
-Here we have additionally fitted a curve 
+Here we have additionally fitted a model 
 \begin{align}
-    T(N) =  \frac{a}{N} + b,
+   T(N) =  \frac{1-f}{N} + f,
 \end{align}
-to the data, where \(T(N)\) is the time taken to run the simulation using \(N\) threads.
-In units of the serial time $T_\mathrm{serial} = T(1)$, the parameters obtained from the fit are $a = 0.824$ and $b = 0.163$.
-This suggests that we can optimally achieve a speedup of roughly $80\%$ by parallelizing the code. 
+to the data. 
+Here \(T(N)\) is the runtime (taken in units of the serial runtime $T_\mathrm{serial} = T(1)$) when parallelizing with \(N\) threads.
+In particular, we may then interpret \(f\) as the strictly serial contribution to the runtime, while \(1-f\) is the parallelizable portion.
+We then find that the serial fraction is $f \approx 5.27 \pm 0.41 \%$.
+According to Amdahl's law [REF], this further suggests the maximum theoretical speedup we may achieve is then given by \(1/f \approx 19.0\).
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{figs/timing_tests.pdf}
-    \caption{Time taken to run simulations of the $L=5$ lattice for $100$ temperatures in the range $T \in [1.0, 3.5]\ J/k_B$ using different numbers of threads.}
+    \caption{Time taken to run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.}
     \label{fig:parallelization}
 \end{figure}
 
