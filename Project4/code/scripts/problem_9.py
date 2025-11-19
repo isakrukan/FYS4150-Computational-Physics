@@ -9,14 +9,20 @@ DIR = "out/"
 OUT_DIR = "../figs/"
 DATA_DIR = DIR + "temperature_scans/repeat_runs/"
 
-num_temps = 101                                # Number of temperature points
 lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
 window = 5                                     # Fitting window size (see below)
 
-if not os.path.exists(os.path.join(os.getcwd(), DATA_DIR)):
-    DATA_DIR = DIR + "temperature_scans/tests/"
-    num_temps = 11
-    print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
+# Checking whether full-scaled runs exists (which we create using bioint01 and 'run_repeat_trials.sh')
+for i, L in enumerate(lattice_sizes):
+    filename = DATA_DIR + f"/results-L{L}"
+    if not os.path.exists(os.path.join(os.getcwd(), filename)): # If not, switch to downscaled versions
+        DATA_DIR = DIR + "temperature_scans/tests/"
+        print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
+        break 
+
+# Getting number of temperatures
+data = np.loadtxt(DATA_DIR + f'results-L{lattice_sizes[0]}/scan_{1}.csv', delimiter=',') # First run (should always exist)
+num_temps = np.shape(data)[0]
 
 # Temperature values & arrays for T_C and T_X estimates
 T = np.linspace(2.1, 2.4, num_temps)
@@ -27,7 +33,7 @@ for i, L in enumerate(lattice_sizes):
     N = L * L
     
     # --- Load data ---
-    data = utils.combine_runs(DATA_DIR, L, num_temps=num_temps)
+    data = utils.combine_runs(DATA_DIR, L)
     C = data[:, 2] * N / (T * T) 
     X = data[:, 4] * N / T
     

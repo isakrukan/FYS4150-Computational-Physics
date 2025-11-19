@@ -29,6 +29,7 @@ struct Args
     int temperature_steps = 30;     ///< Number of temperatures to scan over, ranging from \ref Args::temperature_min "temperature_min" to \ref Args::temperature_max "temperature_max".
 
     // Output parameters
+    bool save_data = true;          ///< Whether to save data or not.
     std::string run_name = "";      ///< Name identifier for run.
     std::string out_dir = "";       ///< Where to store data.
 };
