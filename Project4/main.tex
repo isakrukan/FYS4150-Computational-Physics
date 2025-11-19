@@ -442,21 +442,22 @@ A sketch of the innermost loop of our Metropolis-Hastings implementation is summ
     \caption{Metropolis-Hastings (2D Ising)}\label{algo:MCMC}
     \begin{algorithmic}
         \For{$n = 1, ..., N_\mathrm{steps}$} 
-        \State $r_\text{idx} = \text{rand}(1, N)$
-        \State $i = r_\text{idx} \ // \ L$
-        \State $j = r_\text{idx} \ \% \ L$
-        \newline
-        \State $\Delta E = 2 s_{i,j} (s_{i+1,j} + s_{i-1,j} + s_{i,j+1} + s_{i,j-1})$
-        \newline
-        \If {$\Delta E \leq 0$}
-            \State $s_{i,j} = -s_{i,j}$
-            \State \textbf{continue}
-        \EndIf
-        \newline
-        \State $r_\text{flip} = \text{rand}(0, 1)$
-        \If{$r_\text{flip} \leq e^{-\beta \Delta E}$}
-            \State $s_{i,j} = -s_{i,j}$
-        \EndIf
+            \State $r_\text{idx} = \text{rand}(1, N)$
+            \State $i = r_\text{idx} \ // \ L$
+            \State $j = r_\text{idx} \ \% \ L$
+            \newline
+            \State $\Delta E = 2 s_{i,j} (s_{i+1,j} + s_{i-1,j} + s_{i,j+1} + s_{i,j-1})$
+            \newline
+            \If {$\Delta E \leq 0$}
+                \State $s_{i,j} = -s_{i,j}$
+                \State \textbf{continue}
+            \EndIf
+            \newline
+            \State $r_\text{flip} = \text{rand}(0, 1)$
+            \If{$r_\text{flip} \leq e^{-\beta \Delta E}$}
+                \State $s_{i,j} = -s_{i,j}$
+            \EndIf
+        \EndFor
     \end{algorithmic}
 \end{algorithm}
 
@@ -505,43 +506,54 @@ To reproduce a minimal version of the results of this project, navigate to the c
 \section{Results}
 
 \subsection{Equilibration time}
-For a Monte Carlo simulation of the $L=20$ lattice, an example evolution of the energy per spin $\epsilon = E/N$ and its running average $\langle \epsilon \rangle$ is shown in Figure~\ref{fig:equilibration}.
-In this case, the system seems to have burned in after roughly $10^3$ Monte Carlo cycles.
-
-\begin{figure}
+An evolution of the energy per spin $\epsilon$ and its running average $\langle \epsilon \rangle$ for a \(L=20\) lattice is shown in Figure~\ref{fig:equilibration}.
+The figure display displays four simulations: the temperature is either \(T=1.0 \ \si{J/k_B}\) or \(T=2.4 \ \si{J/k_B}\), and the initial configuration of the Ising model's lattice is either set up randomly or all spin-locations are initially set to \(s_i=-1\).
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.45\textwidth]{figs/equilibration.pdf}
-    \caption{Plot showing the evolution of the energy per spin $\epsilon$ and its running average $\langle \epsilon \rangle$ during a Monte Carlo simulation of the $L=20$ Ising model at temperature $T=2.4\ J/k_B$.}
+    \caption{Evolution of the energy per spin $\epsilon$ (thin lines) and its running average $\langle \epsilon \rangle$ (thick lines) during a Monte Carlo simulation of the $L=20$ Ising model at temperatures ${T=1.0\ J/k_B}$ and ${T=2.4\ J/k_B}$. The initial configuration of the lattice is either ordered (green and purple; all spins \({s_i=-1}\)) or unordered (blue and red; spins assigned randomly).}
     \label{fig:equilibration}
 \end{figure}
 
+For the first \(\sim 10^3\) Monte Carlo cycles, the evolution of \(\epsilon\) either is either decreasing or increasing, with the exception of the green line, corresponding to \({T=1.0 \ \si{J/k_B}}\), starting from a ordered initial configuration.
+At approximately \(10^3\) cycles, the running average \(\langle\epsilon\rangle\) for \(T=2.4\ \si{J/k_B}\) (both unordered and ordered initial configurations) begins to fluctuate around \(\langle \epsilon\rangle \approx -1.25\).
+Similarly, for \(T=1.0 \ \si{J/k_B}\), \(\langle\epsilon\rangle\) stabilizes around \(\langle \epsilon\rangle \approx -2.00\) after approximately the same number of cycles.
+Hence, the simulation appears to have burned in after roughly $10^3$ Monte Carlo cycles.
+
 
 \subsection{Energy distribution}
-The distribution of the energy per spin $\epsilon = E/N$ has been estimated for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.
-The results of this is shown in Figure~\ref{fig:epsilon_distribution}, with corresponding variances tabulated in Table~\ref{table:epsilon_distribution}.
-As expected, the variance is much smaller in the low-temperature, indicating the system is in an ordered phase.
-On the other hand, the higher-temperature distribution is noticeably wider, which is consistent with a disordered phase.
-Based on this, we should thus expect to find a phase transition somewhere between these two temperatures.
-This is indeed what we will investigate next, by performing temperature scans and various lattice sizes.
-\begin{figure}
+The distribution of the energy per spin \(\epsilon\) for a \(L=20\) lattice at temperatures $T=1.0\ \si{J/k_B}$ and $T=2.4\ \si{J/k_B}$ is displayed in Figure~\ref{fig:epsilon_distribution}.
+The corresponding variances are shown in Table~\ref{table:epsilon_distribution}.
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.45\textwidth]{figs/epsilon_distribution.pdf}
-    \caption{Estimates for the distribution of $\epsilon$ for a lattice of size $L=20$ at temperatures $T=1.0\ J/k_B$ and $T=2.4\ J/k_B$.}
+    \caption{Distributions of $\epsilon$ from \gls{mcmc} simulation of the \(L=20\) Ising model for temperatures $T=1.0\ \si{J/k_B}$ and $T=2.4\ \si{J/k_B}$. The distributions obtained from an unordered (red) and ordered (green) initial state appear indistinguishable, producing a blended color (brown) where they overlap.}
     \label{fig:epsilon_distribution}
 \end{figure}
-\begin{table}
+
+Figure~\ref{fig:epsilon_distribution} shows for \(T=1.0 \ \si{J/k_B}\) a distribution which is tightly centered around \(\epsilon=-2\ \si{J}\), whereas the distribution of \(T=2.4 \ \si{J/k_B}\) is centered around \(\epsilon\approx -1.2\ \si{J}\) but broader, with an approximately Gaussian-like, though not perfectly symmetrical, shape.
+Correspondingly, Table~\ref{table:epsilon_distribution} displays a much smaller variance for the case of \(T=1.0 \ \si{J/k_B}\) (of order \(\sim 10^{-5} \ \si{J^2}\)), compared to that of \(T=2.4 \ \si{J/k_B}\) (of order \(\sim 10^{-2} \ \si{J^2}\)).
+In other words, for \(T=1.0 \ \si{J/k_B}\), the system appears organized: the energy per spin is approximately the same everywhere on the lattice. On the other hand, for \(T=1.0 \ \si{J/k_B}\), the system appears disorganized: the energy per spin varies noticeably between different spin-locations.
+\begin{table}[h!]
     \centering
     \setlength{\tabcolsep}{6pt}
     \renewcommand{\arraystretch}{1.4}
     \begin{tabular}{c|cc}
         & Unordered & Ordered \\
         \hline
-        $T = 1.0\ J/k_B$ &  $5.879\times10^{-5}$ & $5.836\times10^{-5}$ \\
-        $T = 2.4\ J/k_B$ &  $2.021\times10^{-2}$ & $2.024\times10^{-2}$ \\
+        $T = 1.0\ \si{J/k_B}$ &  $5.879\times10^{-5}$ & $5.836\times10^{-5}$ \\
+        $T = 2.4\ \si{J/k_B}$ &  $2.021\times10^{-2}$ & $2.024\times10^{-2}$ \\
     \end{tabular}
-    \caption{In units of $J^2$, the variances of the estimated energy distributions $p(\epsilon;T)$ shown in Figure~\ref{fig:epsilon_distribution}.}
+    \caption{Variance of energy distributions $p(\epsilon;T)$ shown in Figure~\ref{fig:epsilon_distribution}, in units of $\si{J^2}$ }
     \label{table:epsilon_distribution}
 \end{table}
+
+
+\color{red} Det følgende er diskusjon vell? On the other hand, the higher-temperature distribution is noticeably wider, which is consistent with a disordered phase.
+Based on this, we should thus expect to find a phase transition somewhere between these two temperatures.
+This is indeed what we will investigate next, by performing temperature scans and various lattice sizes.
+\color{black}
+
 
 \subsection{Phase transitions \& temperature scans}
 We have plotted the average energy, magnetization, heat capacity and magnetic susceptibility per spin as functions of temperature for lattice sizes $L = 40, 60, 80, 100$ in Figure~\ref{fig:temp_scan}.
