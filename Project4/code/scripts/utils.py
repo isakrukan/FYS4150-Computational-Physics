@@ -2,10 +2,14 @@ import numpy as np
 from scipy.stats import linregress
 import os
 
-def combine_runs(DATA_DIR, L, num_temps=100):
+def combine_runs(DATA_DIR, L):
     N = L * L
     
-    data_combined = np.zeros((num_temps, 9))
+    # Loading first data_set to get shape
+    data = np.loadtxt(DATA_DIR + f'results-L{L}/scan_{1}.csv', delimiter=',')
+    data_shape = np.shape(data)
+    
+    data_combined = np.zeros((data_shape[0], 9)) # Should always be 9 on second axis
     num_repeats = len(os.listdir(DATA_DIR + f'results-L{L}/') )
     
     sum_inv_sqr_MCSE_E = 0.0

@@ -10,8 +10,8 @@
 int main(int argc, char *argv[])
 {
 
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    std::cout << "Starting script " << std::endl;
+    // std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    // std::cout << "Starting script " << std::endl;
 
     // Parse command-line arguments using (see `arg_parser.hpp/.cpp`)
     Args args = parse_args(argc, argv);
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
         temperature_scan(args);
     }
 
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    std::cout << "Finished running script, total elapsed time: " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << " seconds" << std::endl;
+    // std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    // std::cout << "Finished running script, total elapsed time: " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << " seconds" << std::endl;
 
     return 0;
 }

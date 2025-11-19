@@ -31,7 +31,7 @@ for NUM_CORES in $(seq 1 $MAX_NUM_THREADS); do
 
     # Set number of threads
     export OMP_NUM_THREADS=$NUM_CORES
-    echo -ne "\rCurrent: ${NUM_CORES} threads..."  
+    echo -ne "\rCurrent: ${NUM_CORES} threads... \n"  
 
     # Prepare to collect times
     TIMES=""
@@ -49,7 +49,8 @@ for NUM_CORES in $(seq 1 $MAX_NUM_THREADS); do
             --save_data false)
 
         # Extract time from output
-        TIMES="${TIMES} $(echo "$OUTPUT" | awk '{print $5}')"
+        echo "$OUTPUT"
+        TIMES="${TIMES} $(echo "$OUTPUT" | awk '{print $5}')" # Extracting the 5th column from each line (e.g. )
     done
 
     # Save trial times to new line in out/times_openmp.txt

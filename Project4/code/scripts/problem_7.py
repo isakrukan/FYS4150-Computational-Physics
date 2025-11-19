@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 plt.style.use('ggplot')
 
+
+OUT_DIR = "../figs/"
+
 def amdahl_model(N, f):
     return (1-f) / N + f
 
@@ -40,4 +43,4 @@ plt.xlabel("No. of threads")
 plt.ylabel(r"Time  [$T_\mathrm{serial}$]")
 plt.title("Timing tests for OpenMP implementation")
 plt.legend()
-plt.savefig("out/timing_tests.pdf")
+plt.savefig(OUT_DIR + "timing_tests.pdf")

@@ -13,21 +13,23 @@ DATA_DIR = DIR + "temperature_scans/repeat_runs/"
 num_temps = 101                                # Number of temperature points
 lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
 
-if not os.path.exists(os.path.join(os.getcwd(), DATA_DIR)):
-    DATA_DIR = DIR + "temperature_scans/tests/"
-    num_temps = 1
-    print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
+# Checking whether full-scaled runs exists (which we create using bioint01 and 'run_repeat_trials.sh')
+for i, L in enumerate(lattice_sizes):
+    filename = DATA_DIR + f"/results-L{L}"
+    if not os.path.exists(os.path.join(os.getcwd(), filename)): # If not, switch to downscaled versions
+        DATA_DIR = DIR + "temperature_scans/tests/"
+        print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
+        break 
 
-
-# Create figures for main results + error estimates
+# Creating figures for main results + error estimates
 fig, ax = plt.subplots(nrows=4, sharex=True, tight_layout=True, figsize=(6, 8))
 fig_err, ax_err = plt.subplots(nrows=2, sharex=True, constrained_layout=True, figsize=(6, 4))
 
 for i, L in enumerate(lattice_sizes):
     N = L * L
     
-    # --- Load data ---
-    data = utils.combine_runs(DATA_DIR, L, num_temps=num_temps)
+    # --- Loading data ---
+    data = utils.combine_runs(DATA_DIR, L)
     
     T = data[:, 0]
     E_avg = data[:, 1]
@@ -43,7 +45,7 @@ for i, L in enumerate(lattice_sizes):
     C = (E_var) * N / (T * T) 
     X = (M_var) * N / T
     
-    # --- Plot main results ---
+    # --- Plotting main results ---
     err_scale = 10
     
     ax[0].fill_between(T, E_avg - err_scale * E_MCSE, E_avg + err_scale * E_MCSE, alpha=0.2)
@@ -54,7 +56,7 @@ for i, L in enumerate(lattice_sizes):
     ax[3].plot(T, X, linestyle='-', label=f'L={L}')
 
 
-    # --- Plot error estimates ---
+    # --- Plotting error estimates ---
     M_rel_error = M_MCSE / np.abs(M_avg)
     E_rel_error = E_MCSE / np.abs(E_avg)
     
@@ -84,7 +86,7 @@ ax_err[1].set_ylabel('ESS')
 ax_err[1].set_xlabel('Temperature $[k_B T / J]$')
 ax_err[1].set_xlim([2.1, 2.4])
 
-# Create legends manually:
+# Creating legends manually:
 
 # -----------------------------------
 # LEGEND #2: colors (lattice size L)
