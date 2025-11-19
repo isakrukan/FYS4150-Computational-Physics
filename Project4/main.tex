@@ -109,6 +109,10 @@
 \newacronym{mcmc}{MCMC}{Markov chain Monte Carlo}
 \newacronym{wlln}{WLLN}{Weak Law Of Large Numbers}
 \newacronym{lln}{LLN}{Law Of Large Numbers}
+\newacronym{mcse}{MCSE}{Monte Carlo standard error}
+\newacronym{ess}{ESS}{effective sample size}
+
+
 \usepackage{tikz}
 \usepackage{quantikz}          
 \usepackage{hyperref}
@@ -427,10 +431,10 @@ The code used in this project can be found in \cite{FYS4150Project4} and relies 
 We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation of our code, see~\cite{FYS4150Project4_doc}. 
 
 We have implemented the lattice of the Ising model as a class called \texttt{Lattice}, which, most notably, contains a collection of instances of a struct called \texttt{Location}. 
-Each \texttt{Location} object contains a spin value and four pointers to neighboring spins.
+Each \texttt{Location} object contains a spin value and four pointers to be assigned.
 A pointer is an object which ``points'' to a given memory address in the computer's memory.
-By assigning every instance of \texttt{Location} a pointer to the `neighboring' instances, we avoid constantly checking whether the current location is a boundary or not (recall that we consider periodic boundary conditions).
-Once \texttt{Lattice} is initialized, the collection of \texttt{Location} objects is assigned the correct pointers and the initial energy and magnetization are computed.
+By assigning every instance of \texttt{Location} a pointer to the ``neighboring'' instances, we avoid constantly checking whether the current location is a boundary or not (recall that we consider periodic boundary conditions).
+Once \texttt{Lattice} is initialized, its collection of \texttt{Location} objects is assigned the correct pointers and the initial energy and magnetization are computed.
 
 The Metropolis-Hastings algorithm has been implemented in a class called \texttt{MCMC}, which is initialized by an instance of \texttt{Lattice} and a seed.
 %For the MCMC simulations, we have implemented a class called \texttt{MCMC} which is initialized by an instance of \texttt{Lattice} and a seed. The \texttt{MCMC} class implements the Metropolis-Hastings algorithm described in Section \ref{sec:Metropolis-Hastings}. 
@@ -461,21 +465,26 @@ A sketch of the innermost loop of our Metropolis-Hastings implementation is summ
     \end{algorithmic}
 \end{algorithm}
 
-There are especially two optimizations in Algorithm \ref{algo:MCMC} worth commenting on.
-First, in computing the fraction 
+
+There are several optimizations which we implement to Algorithm \ref{algo:MCMC}. 
+The first concerns how we select a random location on the lattice.
+Here, we use that the lattice can be thought of as a one-dimensional vector of length \(N\), and so we need only generate a random integer in the interval \([0,N-1]\) (instead of two integers from the interval \([0,L-1]\)).
+
+Secondly, when computing the fraction 
 \begin{align}
-    \frac{p(\vec{s'}; T)}{p(\vec{s}; T)} = e^{-\beta \Delta E}, \quad \text{w/} \quad \Delta E = E(\vec{s'}) - E(\vec{s}),
+    \frac{p(\vec{s'}; T)}{p(\vec{s}; T)} = e^{-\beta \Delta E}, 
 \end{align}
-from the acceptance rule, we may note that a single spin-flip allows only five different values for the difference in energy \(\Delta E\).
+where \(\Delta E = E(\vec{s'}) - E(\vec{s})\), we use that a single spin-flip allows only five different values for the difference in energy \(\Delta E\).
 In particular, considering the possible values of the four neighboring spins, one finds that 
 \begin{align}
     \Delta E\in\{-8J,\ -4J,\ 0,\ 4J,\ 8J\}.
 \end{align}
-Hence, to avoid computational cost, \texttt{MCMC} precomputes the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take, and stores these in a lookup table.
+To avoid computational cost, we thus precompute the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take, and stores these in a lookup table.
 
-Additionally, we may note that negative values of \(\Delta E\) will always pass the acceptance rule.
-We therefore check for this before attempting to calling the random number generator, as this is a relatively expensive operation.
-Another trick here is to think of the lattice as flattened into a one-dimensional vector of length \(N\), in which case both the indices $(i,j)$ may be generated from a single random integer \(r\in[0, N-1]\).
+Additionally, since the acceptance rule can only be passed if \(\Delta E\leq 0\), we check this before calling the random number generator, as the latter is a relatively expensive operation.
+
+Lastly, as mentioned in the beginning of this section, we use pointers to track neighboring spin-locations, instead of manually checking whether the current loop iteration handles a boundary point or not. 
+
 
 
 
@@ -505,7 +514,7 @@ To reproduce a minimal version of the results of this project, navigate to the c
 
 \section{Results}
 
-\subsection{Equilibration time}
+\subsection{Equilibration time (\color{red}Annen tittel eller introdusere `equilibration time' tidligere i teksten\color{black})}
 An evolution of the energy per spin $\epsilon$ and its running average $\langle \epsilon \rangle$ for a \(L=20\) lattice is shown in Figure~\ref{fig:equilibration}.
 The figure display displays four simulations: the temperature is either \(T=1.0 \ \si{J/k_B}\) or \(T=2.4 \ \si{J/k_B}\), and the initial configuration of the Ising model's lattice is either set up randomly or all spin-locations are initially set to \(s_i=-1\).
 \begin{figure}[h!]
@@ -579,25 +588,27 @@ In this temperature range, both \(C_V/N\) and \(\chi/N\) show a more noticeable 
 Both increase towards a critical temperature, \(2.25 \lesssim T_c\lesssim 2.30 \), and decrease again after reaching a certain peak.
 This peak becomes more pronounced as \(L\) increases. 
 
-Additionally, we have estimated errors and effective sample sizes associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
-The results of this is shown in Figure~\ref{fig:temp_scan_error}.
-Here we see that the energy generally has a larger effective sample size and smaller error than the magnetization.
-Both quantities do however see a dip in effective sample size and increase in error near the critical region.
-This is as expected, as the correlation length grows and approaches the system size $L$.
-Consequently, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated, reducing the effective sample size.
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{figs/temp_scan_error.pdf}
     \caption{
-        Estimates of the Monte Carlo standard errors (MCSE) and effective sample sizes (ESS) for the average energy per spin $\langle \epsilon \rangle$ and average magnetization per spin $\langle |m| \rangle$ at different temperatures and lattice sizes.
+        Estimates of the \gls{mcse} and \gls{ess} for the average energy per spin $\langle \epsilon \rangle$ and average magnetization per spin $\langle |m| \rangle$ at different temperatures and lattice sizes.
         }
     \label{fig:temp_scan_error}
 \end{figure}
 
+We have also estimated the \gls{mcse} and \gls{ess} associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}. (\color{red}We need to explain what \gls{mcse} and \gls{ess} are.\color{black})
+These measures are shown in Figure~\ref{fig:temp_scan_error}.
+The latter figure shows that the average energy per spin, generally, has a larger \gls{ess} and a smaller \gls{mcse} than the magnetization.
+Both quantities do however see a dip in \gls{ess} and increase in \gls{mcse} for \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\).
+\color{red} Kanskje flytte det følgende etter denne kommentaren til diskusjon eller konklusjon? Jeg skjønte det ikke helt heller...kanskje du kunne forklart meg?\color{black}
+This is as expected, as the correlation length grows and approaches the system size $L$.
+Consequently, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated, reducing the \gls{ess}.
+
 \subsection{The critical temperature}
 To find the critical temperature at finite lattice sizes, we identify the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility.
 These are tabulated in Table~\ref{table:crit_temps}.
-\begin{table}
+\begin{table}[h!]
     \centering
     \setlength{\tabcolsep}{4pt}
     \begin{tabular}{c|c|c}
@@ -608,13 +619,13 @@ These are tabulated in Table~\ref{table:crit_temps}.
         80  & 2.279 & 2.294 \\
         100 & 2.277 & 2.290 \\
     \end{tabular}
-    \caption{Temporary numbers.}
+    \caption{\color{red}Temporary numbers.\color{black} The critical temperatures for different lattice sizes \(L\), determined by the peak-values of the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) appearing in Figure~\ref{fig:temp_scan}.}
     \label{table:crit_temps}
 \end{table}
-The finite size scaling relations can then be used to estimate the critical temperature of the infinite lattice.
-The estimates obtained using the heat capacity and magnetic susceptibility respectively are shown in table~\ref{table:crit_temp_infinite}.
+Using the size scaling relations \eqref{eq:scaling_relations}, when then estimated the critical temperature of the infinite lattice.
+The estimates obtained using the heat capacity and magnetic susceptibility respectively are shown in Table~\ref{table:crit_temp_infinite}.
 Here we emphasize that the uncertainties shown are those from the linear regression \textit{only}, and may underestimate the true uncertainty.
-For the future, a better approach could be to estimate the variances of the critical temperatures $T_c(L)$ and use these as weights in a weighted linear regression.
+\color{red}Flytte den følgende til diskusjon?\color{black} For the future, a better approach could be to estimate the variances of the critical temperatures $T_c(L)$ and use these as weights in a weighted linear regression.
 \begin{table}
     \centering
     \setlength{\tabcolsep}{12pt}
@@ -634,7 +645,7 @@ For the future, a better approach could be to estimate the variances of the crit
 \subsection{Timing tests and parallelization}
 To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.
 The results of this is shown in Figure~\ref{fig:parallelization}.
-Here we have additionally fitted a model 
+Here we have additionally fitted a model (\color{red}Flytte dette til teori?\color{black})
 \begin{align}
    T(N) =  \frac{1-f}{N} + f,
 \end{align}
@@ -669,7 +680,7 @@ Things to note:
 \appendix
 
 \section{Example: \(2\times 2\) lattice}  \label{sec:example_2times2lattice}
-Here, we consider an analytic solution to the Ising model in the special case of a \(2\times 2\) lattice. 
+Here, we consider an analytic solution to the Ising model in the special case of a \(2\times 2\) lattice and compare with results from running our numerical simulation. 
 % To verify our numerical implementation of a general \(L\times L\) lattice, we will compare with the analytic results 
 % for the case of a $2\times 2$ lattice.
 Computing \(E(\vec{s})\) and \(M(\vec{s})\) for a given \(N_{\uparrow}\) for the case of a \(2\times 2\) is straightforward using \eqref{eq:Hamiltonian} and \eqref{eq:magnetization}. 
@@ -703,19 +714,29 @@ Furthermore,
 we find the following expectation values
 \begin{subequations}    \label{eq:expectation_values_2times2}
 \begin{align}
-    \langle E \rangle & = -E_0 \frac{\sinh(x)}{\cosh(x) + 3}, \\
+    \langle E \rangle & = -E_0 \frac{\sinh(x)}{\cosh(x) + 3}, \label{app:eq:langleErangle}\\
     \langle E^2 \rangle & = E_0^2 \frac{\cosh(x)}{\cosh(x) + 3}, \\
-    \langle |M| \rangle & = \frac{2e^{-x} + 4}{\cosh(x) + 3}, \label{app:eq:langleMrangle}\\   
-    \langle M^2 \rangle & = 4 \langle |M| \rangle.
+    \langle |M| \rangle & = \frac{2(e^{x} + 2)}{\cosh(x) + 3}, \label{app:eq:langleMrangle}\\   
+    \langle M^2 \rangle & = \frac{8(e^{x} + 1)}{\cosh(x) + 3}.
 \end{align}
 \end{subequations}
-The expectation values for \(E\) and \(E^2\) are computed using standard differentiation formulas for the partition function \footnote{See for instance Eqs. (19.53) and (19.59) in \cite{IntroStatMekSwendsen}.}, while the those for the magnetization are computed directly using \eqref{eq:general_expectation_vaue} and \eqref{eq:magnetization}.
+The expectation values for \(E\) and \(E^2\) are computed using standard differentiation formulas for the partition function \footnote{See for instance Eqs. (19.53) and (19.59) in \cite{IntroStatMekSwendsen}.}, while those for the magnetization are computed directly using \eqref{eq:general_expectation_vaue} and \eqref{eq:magnetization}.
 % Here, the expectation values for \(E\) have been computed using standard differentiation formulas for the partition function, while the those for the magnetization are computed directly from the definition   
 Further, using \eqref{eq:expectation_values_2times2} we obtain the following expressions for the heat capacity $C_V$ and magnetic susceptibility $\chi$
 \begin{align}
-    C_V &\equiv \frac{1}{k_BT^2}\text{Var}(E) = \frac{E_0^2}{k_B T^2} \frac{\cosh(x) + 1}{(\cosh(x) + 3)^2}, \\
-    \chi &\equiv \frac{1}{k_BT}\text{Var}(M) = \frac{4}{k_B T} \langle |M| \rangle.
+    C_V &\equiv \frac{1}{k_BT^2}\text{Var}(E) = \frac{E_0^2}{k_B T^2} \frac{3\cosh(x) + 1}{(\cosh(x) + 3)^2}, \label{app:eq:C_V}\\
+    \chi &\equiv \frac{1}{k_BT}\text{Var}(M) = \frac{8}{k_B T} \frac{e^x+1}{\cosh(x)+3}.\label{app:eq:chi}
 \end{align}
+
+Figure~\ref{fig:app:2x2lattice} shows the evolution of the relative errors for \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) evolve as functions of the number of Monte Carlo cycles.
+The figure shows that the relative errors are indeed decreasing for increasing number of cycles, though the relative error for the average energy and magnetization is overall smaller than those for the error for the heat capacity and magnetic susceptibility.
+Not before approaching \(\sim 10^6\) cycles do \emph{all} four observables fall below an relative error of \(\sim 10^{-2}\).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figs/errors_2x2.pdf}
+    \caption{Relative errors in the Monte Carlo estimates of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) for the \(2\times 2\) Ising model, shown as functions of the number of Monte Carlo cycles. The analytic values are given by \eqref{app:eq:langleErangle}, \eqref{app:eq:langleMrangle}, \eqref{app:eq:C_V} and \eqref{app:eq:chi}, respectively. The relative errors are displayed as functions of number of cycles.}
+    \label{fig:app:2x2lattice}
+\end{figure}
 
 % \bibliographystyle{apalike}
 % \bibliographystyle{unsrt}
