@@ -9,6 +9,7 @@ import utils
 DIR = "out/"
 OUT_DIR = "../figs/"
 DATA_DIR = DIR + "temperature_scans/repeat_runs/"
+NAME_MODIFIER = ""
 
 num_temps = 101                                # Number of temperature points
 lattice_sizes = np.array([40, 60, 80, 100])    # Lattice sizes used
@@ -19,6 +20,7 @@ for i, L in enumerate(lattice_sizes):
     if not os.path.exists(os.path.join(os.getcwd(), filename)): # If not, switch to downscaled versions
         DATA_DIR = DIR + "temperature_scans/tests/"
         print(f"WARNING: Default data directory not found. Using test data: {DATA_DIR}")
+        NAME_MODIFIER = "test" # As to not overwrite figures from full data
         break 
 
 # Creating figures for main results + error estimates
@@ -120,4 +122,4 @@ legend_style = ax_err[1].legend(handles_style,
 
 ax_err[1].add_artist(legend_style)
 
-fig_err.savefig(OUT_DIR + f'temp_scan_error.pdf')
+fig_err.savefig(OUT_DIR + f'temp_scan_error_{NAME_MODIFIER}.pdf')
