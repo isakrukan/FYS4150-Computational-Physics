@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate
-plt.style.use('ggplot')
+import utils
+
+utils.latex_fonts()
 
 # NOTE: In order to reuse data generated in Problem 5, we # of burn-in 
 # cycles is set to 0 in the raw data files. This means the burn-in cycles 

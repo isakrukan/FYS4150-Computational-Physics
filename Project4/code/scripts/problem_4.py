@@ -2,7 +2,9 @@ from problem_1 import states
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 import numpy as np
-plt.style.use('ggplot')
+import utils
+
+utils.latex_fonts()
 
 
 DIR = "../figs/"

@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-plt.style.use('ggplot')
+import utils
+
+utils.latex_fonts()
 
 L = 20
 N = L * L

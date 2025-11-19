@@ -510,24 +510,24 @@ An evolution of the energy per spin $\epsilon$ and its running average $\langle 
 The figure display displays four simulations: the temperature is either \(T=1.0 \ \si{J/k_B}\) or \(T=2.4 \ \si{J/k_B}\), and the initial configuration of the Ising model's lattice is either set up randomly or all spin-locations are initially set to \(s_i=-1\).
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figs/equilibration.pdf}
+    \includegraphics[width=0.5\textwidth]{figs/equilibration.pdf}
     \caption{Evolution of the energy per spin $\epsilon$ (thin lines) and its running average $\langle \epsilon \rangle$ (thick lines) during a Monte Carlo simulation of the $L=20$ Ising model at temperatures ${T=1.0\ J/k_B}$ and ${T=2.4\ J/k_B}$. The initial configuration of the lattice is either ordered (green and purple; all spins \({s_i=-1}\)) or unordered (blue and red; spins assigned randomly).}
     \label{fig:equilibration}
 \end{figure}
 
 For the first \(\sim 10^3\) Monte Carlo cycles, the evolution of \(\epsilon\) either is either decreasing or increasing, with the exception of the green line, corresponding to \({T=1.0 \ \si{J/k_B}}\), starting from a ordered initial configuration.
-At approximately \(10^3\) cycles, the running average \(\langle\epsilon\rangle\) for \(T=2.4\ \si{J/k_B}\) (both unordered and ordered initial configurations) begins to fluctuate around \(\langle \epsilon\rangle \approx -1.25\).
+At approximately \(10^3\) cycles, the running average \(\langle\epsilon\rangle\) for \({T=2.4\ \si{J/k_B}}\) (both unordered and ordered initial configurations) begins to fluctuate around \(\langle \epsilon\rangle \approx -1.25\).
 Similarly, for \(T=1.0 \ \si{J/k_B}\), \(\langle\epsilon\rangle\) stabilizes around \(\langle \epsilon\rangle \approx -2.00\) after approximately the same number of cycles.
 Hence, the simulation appears to have burned in after roughly $10^3$ Monte Carlo cycles.
 
 
 \subsection{Energy distribution}
-The distribution of the energy per spin \(\epsilon\) for a \(L=20\) lattice at temperatures $T=1.0\ \si{J/k_B}$ and $T=2.4\ \si{J/k_B}$ is displayed in Figure~\ref{fig:epsilon_distribution}.
+The distribution of the energy per spin \(\epsilon\) for a \(L=20\) lattice at temperatures $T=1.0\ \si{J/k_B}$ and ${T=2.4\ \si{J/k_B}}$ is displayed in Figure~\ref{fig:epsilon_distribution}.
 The corresponding variances are shown in Table~\ref{table:epsilon_distribution}.
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.45\textwidth]{figs/epsilon_distribution.pdf}
-    \caption{Distributions of $\epsilon$ from \gls{mcmc} simulation of the \(L=20\) Ising model for temperatures $T=1.0\ \si{J/k_B}$ and $T=2.4\ \si{J/k_B}$. The distributions obtained from an unordered (red) and ordered (green) initial state appear indistinguishable, producing a blended color (brown) where they overlap.}
+    \includegraphics[width=0.5\textwidth]{figs/epsilon_distribution.pdf}
+    \caption{Distributions of $\epsilon$ from \gls{mcmc} simulation of the \(L=20\) Ising model for temperatures $T=1.0\ \si{J/k_B}$ and ${T=2.4\ \si{J/k_B}}$. The distributions obtained from an unordered (red) and ordered (green) initial state appear indistinguishable, producing a blended color (brown) where they overlap.}
     \label{fig:epsilon_distribution}
 \end{figure}
 
@@ -548,18 +548,23 @@ In other words, for \(T=1.0 \ \si{J/k_B}\), the system appears organized: the en
     \label{table:epsilon_distribution}
 \end{table}
 
+The behavior described above suggests that a phase transition occurs somewhere between \({T=1.0 \ \si{J/k_B}}\) and \(T=2.4 \ \si{J/k_B}\).
+In the next section we present the results from running our simulation for various temperatures between these two temperatures.
+% , as to look for the critical temperature.
 
-\color{red} Det følgende er diskusjon vell? On the other hand, the higher-temperature distribution is noticeably wider, which is consistent with a disordered phase.
-Based on this, we should thus expect to find a phase transition somewhere between these two temperatures.
-This is indeed what we will investigate next, by performing temperature scans and various lattice sizes.
-\color{black}
+
+% On the other hand, the higher-temperature distribution is noticeably wider, which is consistent with a disordered phase.
+% Based on this, we should thus expect to find a phase transition somewhere between these two temperatures.
+% This is indeed what we will investigate next, by performing temperature scans and various lattice sizes.
 
 
 \subsection{Phase transitions \& temperature scans}
-We have plotted the average energy, magnetization, heat capacity and magnetic susceptibility per spin as functions of temperature for lattice sizes $L = 40, 60, 80, 100$ in Figure~\ref{fig:temp_scan}.
-In particular, we see a drop in the magnetization near the (supposed) critical region, typical of a transition from an ordered to a disordered phase.
-Additionally, we see peaks in both the heat capacity and magnetic susceptibility, both of which grow sharper and taller as the lattice size is increased.
-\begin{figure}
+Figure~\ref{fig:temp_scan} shows the running average of the energy, magnetization, heat capacity and magnetic susceptibility per spin \(\langle \epsilon\rangle, \ \langle |m|\rangle, \ C_V/N\) and \(\chi/N\), respectively, as functions of temperature \(T\in[2.10, 2.40] \ \si{J/k_b}\) for lattice sizes $L = 40, 60, 80, 100$.
+
+The average energy per spin is steadily increasing.
+However, for temperatures between approximately \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\), the curves for different lattice sizes begin to separate slightly. 
+The magnetization \(\langle |m|\rangle\) shows an opposite behavior, decreasing with increasing temperature, with the largest discrepancies between the different lattice sizes occurring in the same interval. 
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.45\textwidth]{figs/temp_scan.pdf}
     \caption{
@@ -569,6 +574,11 @@ Additionally, we see peaks in both the heat capacity and magnetic susceptibility
     }
     \label{fig:temp_scan}
 \end{figure}
+
+In this temperature range, both \(C_V/N\) and \(\chi/N\) show a more noticeable behavior.
+Both increase towards a critical temperature, \(2.25 \lesssim T_c\lesssim 2.30 \), and decrease again after reaching a certain peak.
+This peak becomes more pronounced as \(L\) increases. 
+
 Additionally, we have estimated errors and effective sample sizes associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
 The results of this is shown in Figure~\ref{fig:temp_scan_error}.
 Here we see that the energy generally has a larger effective sample size and smaller error than the magnetization.
@@ -577,7 +587,7 @@ This is as expected, as the correlation length grows and approaches the system s
 Consequently, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated, reducing the effective sample size.
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{figs/temp_scan_error.pdf}
+    \includegraphics[width=0.5\textwidth]{figs/temp_scan_error.pdf}
     \caption{
         Estimates of the Monte Carlo standard errors (MCSE) and effective sample sizes (ESS) for the average energy per spin $\langle \epsilon \rangle$ and average magnetization per spin $\langle |m| \rangle$ at different temperatures and lattice sizes.
         }
@@ -637,7 +647,7 @@ This may of course be highly dependent on the specific hardware used.
 In particular, we may expect this number to be lower on a typical personal computer, as these may be less optimized for parallel workloads compared to the resources used here.
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{figs/timing_tests.pdf}
+    \includegraphics[width=0.5\textwidth]{figs/timing_tests.pdf}
     \caption{Time taken to run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.}
     \label{fig:parallelization}
 \end{figure}
