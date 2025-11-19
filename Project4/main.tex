@@ -189,6 +189,11 @@ By varying the temperature over several \gls{mcmc} runs, we estimate the Ising m
 
 \color{red}(The siste avsnittet kan kanskje gjøres bedre/lengre?)\color{black}
 
+Mer om prosjektet
+\begin{itemize}
+    \item Nevne alle hovedresultater
+\end{itemize}
+
 \section{Theory and Method} \label{sec:theory_and_method}
 Here we present the theory behind the two-dimensional Ising model, the \gls{mcmc} method and our numerical implementation and strategy.
 The first two sections, Section \ref{sec:two_dim_ising} and Section \ref{sec:MCMC}, present the Ising model and \gls{mcmc} method with some generality, whilst the last section, Section \ref{sec:numerical_implementation}, is meant to explain how we have used the theory from the two preceding sections to numerically simulate the Ising model using the \gls{mcmc} method.
@@ -264,17 +269,24 @@ With the Boltzmann distribution in hand, the expectation value of a random varia
     \langle X\rangle = \sum_{\{\vec{s}\}} X(\vec{s}) p(\vec{s}; T). \label{eq:general_expectation_vaue}
 \end{align}
 (Formally, a random variable is a function whose domain and range is the set of possible outcomes and some sort of measurable space, respectively \footnote{A measurable space has a technical definition which we will not get in to. For the interested reader, we recommend \cite{Schilling_2005}.}.) 
-In our case we are interested in the expectation value of the following random variables \(E(\vec{s})\), \(M(\vec{s})\), \(\epsilon(\vec{s})\) and \(m(\vec{s})\). Moreover, we will also consider the heat capacity \(C_V\) and magnetic susceptibility \(\chi\), which can be expressed as 
+In our case we are interested in the expectation value of the following random variables \(\epsilon(\vec{s})\), \(|m(\vec{s})|\), \(\epsilon(\vec{s})^2\) and \(m(\vec{s})^2\). 
+This allows us to also consider the heat capacity and magnetic susceptibility (per spin), which may be expressed as 
+%Moreover, we will also consider the heat capacity \(C_V\) and magnetic susceptibility \(\chi\), which can be expressed as 
 \begin{subequations}
     \begin{align}
-        C_V = \frac{1}{k_BT^2}\text{Var}(E), \label{eq:C_V_definition}\\ 
-        \chi = \frac{1}{k_BT^2}\text{Var}(M), \label{eq:chi_definition}
+        \frac{C_V}{N} &= \frac{N}{k_BT^2}\text{Var}(\epsilon), \label{eq:C_V_definition}\\ 
+        \frac{\chi}{N} &= \frac{N}{k_BT^2}\text{Var}(|m|), \label{eq:chi_definition}
     \end{align}
 \end{subequations}
-where, generally, \(\text{Var}(X) = \langle X^2\rangle - \langle X\rangle^2 \). 
+where, generally, the variance $\text{Var(X)}$ is defined as
+\begin{align}
+    \text{Var}(X) = \langle X^2\rangle - \langle X\rangle^2.
+\end{align}
+
+{\color{red}Comment on using $|m|$ vs $m$?}
 
 \subsubsection{The critical temperature}    \label{sec:critical_temperature}
-Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average magnetization per cite, \(\langle m\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (`energy'), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle m\rangle\) \footnote{This `spike' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. The temperature at which this happens is called the critical temperature \(T_c\).  
+Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average magnetization per cite, \(\langle |m|\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (`energy'), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle |m|\rangle\) \footnote{This `spike' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. The temperature at which this happens is called the critical temperature \(T_c\).  
 
 Onsager showed in 1944 that the critical temperature of the Ising model in the limit \(L\rightarrow \infty\) takes the form~\cite{LarsOnsager}
 \begin{align}
@@ -336,6 +348,7 @@ In our case the target distribution is the Boltzmann distribution, introduced in
 The \gls{mcmc} method relies on two ingredients: a proposal distribution and an acceptance rule. 
 The general idea of the \gls{mcmc} method is to draw a sample from the proposal distribution, use the acceptance rule to determine whether to keep or discard the proposed sample, and repeat this procedure many times. 
 The collection of samples which are kept in accordance with the acceptance rule forms a Markov chain. 
+Formally, this acceptance rule is what ensures detailed balance, which we require for the stationary distribution of the Markov chain to indeed equal the target distribution \(p(x)\).
 % , namely the Metropolis-Hastings acceptance rule. 
 
 In our case, we will form a Markov chain using the \gls{mcmc} method with target distribution set to the Boltzmann distribution (recall \eqref{eq:Boltzmann_distribution}), where each element of the Markov chain is a microstate \(\vec{s}\). 
@@ -350,8 +363,9 @@ A possible resolution is to discard some number of the first elements of the Mar
 % In Section \ref{} we explain how we have estimated the number of needed burn-in cycles 
 
 The second issue is that simply keeping all the elements of the Markov chain can be quite demanding computationally, and the neighboring elements of the Markov chain may be quite correlated.
-Such a correlation may not necessarily be unfavorable, however, in our case the difference between one element of the Markov chain and the next is only a single spin-flip. Thus, neighboring elements differ very little from one another, and it can take many steps before we obtain a new microstate that is meaningfully different from the initial microstate.
-One possible solution to this issue, which we will use, it the method of \emph{thinning}. 
+Such a correlation may not necessarily be unfavorable, however. 
+In our case the difference between one element of the Markov chain and the next is only a single spin-flip. Thus, neighboring elements differ very little from one another, and it can take many steps before we obtain a new microstate that is meaningfully different from the initial microstate.
+One possible solution to this issue, which we will use, is the method of \emph{thinning}. 
 This is the process of simply skipping some amount of the elements of the Markov chain, only keeping the \(k\)-th element (for some \(k\)).
 
 
@@ -388,13 +402,20 @@ However, all of our analysis, code implementation, results and language are prod
 We consider a numerical implementation of the two-dimensional Ising model with periodic boundary conditions (see Section~\ref{sec:two_dim_ising}), whose statistical properties we study using the \gls{mcmc} method (see Section~\ref{sec:MCMC}) with target distribution given by the Boltzmann distribution. 
 When proposing a new microstate in the Metropolis-Hastings algorithm (see Section \ref{sec:Metropolis-Hastings}), we use a single spin flip as the proposal move.
 
-In particular, we are interested in estimating the distributions of the following quantities: \(E(\vec{s})\), \(M(\vec{s})\), \(\epsilon(\vec{s})\) and \(m(\vec{s})\), by setting the target distribution of the \gls{mcmc} method as the Boltzmamn distribution given in  \eqref{eq:Boltzmann_distribution}.
-By keeping track of the energy \(E\) and magnetization \(M\) along the Markov chain produced by the \gls{mcmc} method, we can estimate their distributions, and the distributions of \(\epsilon(\vec{s})\) and \(m(\vec{s})\) then follow directly, as they are just rescaled versions of the distributions of \(E\) and \(M\).
-
-By running our simulation for various temperatures we obtain estimates for the expectation values of \(E\) and \(M\) as functions of temperature. 
-Using these expectation values, we compute the heat capacity \(C_V\) and the magnetic susceptibility \(\chi\) using \eqref{eq:C_V_definition} and \eqref{eq:chi_definition}, respectively. 
+First, we will be interested in estimating the distribution of $\epsilon$.
+This is done by running the \gls{mcmc} method for a large number of cycles, keeping track of the energy \(\epsilon\) along the Markov chain.
+Next, we will be interested in estimating expectation values of the following quantities: \(\epsilon(\vec{s})\), \(|m(\vec{s})|\), \(\epsilon^2(\vec{s})\) and \(m(\vec{s})^2\).
+This is again done using the \gls{mcmc} method, but now averaging over the samples produced in the Markov chain.
+%, by setting the target distribution of the \gls{mcmc} method as the Boltzmann distribution given in  \eqref{eq:Boltzmann_distribution}.
+%By keeping track of the energy \(E\) and magnetization \(M\) along the Markov chain produced by the \gls{mcmc} method, we can estimate their distributions, and the distributions of \(\epsilon(\vec{s})\) and \(m(\vec{s})\) then follow directly, as they are just rescaled versions of the distributions of \(E\) and \(M\).
+From these, we may in turn estimate the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) at the given temperature, using \eqref{eq:C_V_definition} and \eqref{eq:chi_definition}, respectively.
 In Section \ref{sec:critical_temperature} we pointed out that \(C_V\) and \(\chi\) should blow up around the critical temperature \(T_c(L)\) (recall \eqref{eq:C_V_behavior_close} and \eqref{eq:chi_behavior_close}).
-Exploiting this behavior, we also aim at estimating \(T_C(L)\), and then compare this against Onsager's result for the limit \(L\rightarrow\infty\), using the scaling relations in \eqref{eq:scaling_relations}.
+%By running our simulation for various temperatures we also obtain estimates for the expectation values of \(\epsilon\) and \(|m|\) as functions of temperature. 
+%By running our simulation for various temperatures we also obtain estimates for the expectation values of \(\epsilon\) and \(|m|\) as functions of temperature. 
+%Using these expectation values, we compute the heat capacity \(C_V\) and the magnetic susceptibility \(\chi\) using \eqref{eq:C_V_definition} and \eqref{eq:chi_definition}, respectively. 
+Exploiting this behavior, we also aim at estimating \(T_C(L)\) by identifying the temperature at which \(C_V\) and \(\chi\) peak for various lattice sizes \(L\).
+This is then compared with Onsager's result for the limit \(L\rightarrow\infty\), given in \eqref{eq:T_c_infintie}, using the scaling relations in \eqref{eq:scaling_relations}.
+%and then compare this against Onsager's result for the limit \(L\rightarrow\infty\), using the scaling relations in \eqref{eq:scaling_relations}.
 
 We are also interested in investigating how many number of Monte Carlo cycles are needed before our numerical results converge to the expected values for the \(2\times 2\) Ising model, described in Appendix \ref{sec:example_2times2lattice}.
 This will give an estimate for an appropriate value for the number of burn-in cycles.
@@ -409,23 +430,57 @@ We have implemented the lattice of the Ising model as a class called \texttt{Lat
 Each \texttt{Location} object contains a spin value and four pointers to neighboring spins.
 A pointer is an object which ``points'' to a given memory address in the computer's memory.
 By assigning every instance of \texttt{Location} a pointer to the `neighboring' instances, we avoid constantly checking whether the current location is a boundary or not (recall that we consider periodic boundary conditions).
-
 Once \texttt{Lattice} is initialized, the collection of \texttt{Location} objects is assigned the correct pointers and the initial energy and magnetization are computed.
 
-We have implemented a class called \texttt{MCMC} which is initialized by an instance of \texttt{Lattice} and a seed. The \texttt{MCMC} class implements the Metropolis-Hastings algorithm described in Section \ref{sec:Metropolis-Hastings}. 
-We have implemented the possibility of adding a burn-in effect and we generally apply thinning, only keeping every \(N\)-th state (recall, \(N\) is the number of locations).
-The \texttt{MCMC} class uses the the Boltzmann distribution as its target distribution and a uniform distribution to compute a candidate next state \(\vec{s}'\). 
+The Metropolis-Hastings algorithm has been implemented in a class called \texttt{MCMC}, which is initialized by an instance of \texttt{Lattice} and a seed.
+%For the MCMC simulations, we have implemented a class called \texttt{MCMC} which is initialized by an instance of \texttt{Lattice} and a seed. The \texttt{MCMC} class implements the Metropolis-Hastings algorithm described in Section \ref{sec:Metropolis-Hastings}. 
+Here we have implemented the possibility of adding a burn-in effect and we generally apply thinning, only keeping every \(N\)-th state (recall, \(N\) is the number of locations).
+The \texttt{MCMC} class uses the Boltzmann distribution as its target distribution, and a uniform distribution to compute a candidate next state \(\vec{s}'\). 
 The candidate next state differs from the current state \(\vec{s}\) by a single spin-flip at some location drawn from the uniform distribution.
+A sketch of the innermost loop of our Metropolis-Hastings implementation is summarized in Algorithm \ref{algo:MCMC} below. 
+\begin{algorithm}[H]
+    \caption{Metropolis-Hastings (2D Ising)}\label{algo:MCMC}
+    \begin{algorithmic}
+        \For{$n = 1, ..., N_\mathrm{steps}$} 
+        \State $r_\text{idx} = \text{rand}(1, N)$
+        \State $i = r_\text{idx} \ // \ L$
+        \State $j = r_\text{idx} \ \% \ L$
+        \newline
+        \State $\Delta E = 2 s_{i,j} (s_{i+1,j} + s_{i-1,j} + s_{i,j+1} + s_{i,j-1})$
+        \newline
+        \If {$\Delta E \leq 0$}
+            \State $s_{i,j} = -s_{i,j}$
+            \State \textbf{continue}
+        \EndIf
+        \newline
+        \State $r_\text{flip} = \text{rand}(0, 1)$
+        \If{$r_\text{flip} \leq e^{-\beta \Delta E}$}
+            \State $s_{i,j} = -s_{i,j}$
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
 
-
-In computing the fraction \(p(\vec{s}; T)/p(\vec{s'}; T)\) (appearing in \eqref{eq:acceptance_probability}) we utilize the fact that for a single spin-flip there are only five possible values the difference in energy \(\Delta E = E_{\text{after}} - E_{\text{before}}\) can take, and that \(p(\vec{s}; T)/p(\vec{s'}; T) = e^{-\beta \Delta E}\). 
-This can be seen by noticing that
+There are especially two optimizations in Algorithm \ref{algo:MCMC} worth commenting on.
+First, in computing the fraction 
 \begin{align}
-    \Delta E = -2Js_i\left(s_{i}^{\text{up}} + s_{i}^{\text{down}} + s_{i}^{\text{left}} + s_{i}^{\text{right}}\right), 
+    \frac{p(\vec{s'}; T)}{p(\vec{s}; T)} = e^{-\beta \Delta E}, \quad \text{w/} \quad \Delta E = E(\vec{s'}) - E(\vec{s}),
 \end{align}
-where \(s_i\) is the spin at location \(i\) after the spin-flip, and \(s_{i}^{\text{up}}\), \(s_{i}^{\text{down}}\), \(s_{i}^{\text{left}}\) and \(s_{i}^{\text{right}}\) are the spins at the locations above, below, to the left and to the right of location \(i\), respectively.
-Considering all possible values \(s_{i}^{\text{up}}\), \(s_{i}^{\text{down}}\), \(s_{i}^{\text{left}}\) and \(s_{i}^{\text{right}}\) can take, we find \(\Delta E/(Js_i)\in\{-8,-4,0,4,8\}\).
-Hence, to avoid computational cost, \texttt{MCMC} precomputes the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take.
+from the acceptance rule, we may note that a single spin-flip allows only five different values for the difference in energy \(\Delta E\).
+In particular, considering the possible values of the four neighboring spins, one finds that 
+\begin{align}
+    \Delta E\in\{-8J,\ -4J,\ 0,\ 4J,\ 8J\}.
+\end{align}
+Hence, to avoid computational cost, \texttt{MCMC} precomputes the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take, and stores these in a lookup table.
+
+Additionally, we may note that negative values of \(\Delta E\) will always pass the acceptance rule.
+We therefore check for this before attempting to calling the random number generator, as this is a relatively expensive operation.
+Another trick here is to think of the lattice as flattened into a one-dimensional vector of length \(N\), in which case both the indices $(i,j)$ may be generated from a single random integer \(r\in[0, N-1]\).
+
+
+
+
+
+
 
 \subsubsection{Parameters and simulations}
 The two classes \texttt{Lattice} and \texttt{MCMC} are the core features of our numerical implementation. 
@@ -438,7 +493,7 @@ Lastly, we perform temperature scans, simulating the Ising model for various tem
 This is done for lattice sizes \(L\in\{40, 60, 80, 100\}\), in order to estimate the critical temperature \(T_c(L)\) for each size, and then extrapolate towards \(L\rightarrow\infty\) using the scaling relations \eqref{eq:scaling_relations}.
 %Additionally, we perform temperature scans, by simulating the Ising model for various \(T\in[1,2.4]\).
 %This part of the code, see \texttt{utils::temperature\_scan}, is parallelized using \textsc{OpenMP}~\cite{openmp}.
-In this part of the code, see \texttt{utils::temperature\_scan}, textsc{OpenMP}~\cite{openmp} is ussed to parallelize the temperature scans.
+In this part of the code, see \texttt{utils::temperature\_scan}, \textsc{OpenMP}~\cite{openmp} is used to parallelize the temperature scans.
 This was done using the \texttt{parallel for} directive to automatically distribute iterations of the temperature loop over the available cores.
 The program was then run using 24 cores, on the \textsc{freebio3}/\textsc{freebio4} resources provided by the University of Oslo (see \href{https://www.mn.uio.no/ifi/tjenester/it/tjenester/compute/hpc/bioinfo-cluster/}{Lightweight HPC}). 
 ({\color{red}kunne du spesifisert litt mer her?})
