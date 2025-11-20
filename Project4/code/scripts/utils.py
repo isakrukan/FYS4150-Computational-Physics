@@ -64,7 +64,9 @@ def latex_fonts(double_coulmn=True):
     plt.style.use('ggplot')
 
 def combine_runs(DATA_DIR, L):
-    N = L * L
+    """
+    Combining observables from various simulations.
+    """
     
     # Loading first data_set to get shape
     data = np.loadtxt(DATA_DIR + f'results-L{L}/scan_{1}.csv', delimiter=',')
@@ -90,6 +92,9 @@ def combine_runs(DATA_DIR, L):
     return data_combined
 
 def estimate_T_infinite(L_vals, T_vals):
+    """
+    Estimates the critical temperature at infinite lattice size using linear regression
+    """
     x = 1 / L_vals
     y = T_vals
 

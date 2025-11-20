@@ -192,15 +192,15 @@ However, Markov applied his sequence of random variables to the distribution of 
 
 Markov's sequence of random variables is now referred to as Markov chains and has proven to be remarkably applicable to a wide range of applications, from ranking webpages~\footnote{PageRank is an algorithm owned by Google, which makes use of Markov chains to efficiently rank webpages, see for instance~\cite{borkar2025smallnoiselimitsmarkov}.} to nuclear physics (see for instance~\cite{HALASZ2018429}). 
 
-In particular, we are now interested in using Markov chains to sample microstates of the Ising model, in which case we require the stationary distribution to be the Boltzmann distribution.
-Such a chain is constructed using the \gls{mcmc} method, with a Metropolis-Hastings acceptance rule.
-This is first used to numerically estimate the energy distribution for temperatures $T = 1.0 J/k_B$ and $T = 2.4 J/k_B$, where $J$ is a coupling constant and $k_B$ the Boltzmann constant.
-From this we see evidence of a phase transition, somewhere between these two temperatures.
-By sampling relevant statistics over a range of temperatures, we are then able to estimate the critical temperature of the Ising model for different lattice sizes.
-Using finite size scaling relations, we can furthermore extrapolate toward the infinite-size limit to compare our results with Onsager's analytic expression.
+In this report, we are interested in using Markov chains to sample microstates of the Ising model in order to investigate its statistical properties numerically.
+To construct such Markov chains and estimate the corresponding statistical properties, we employ the \gls{mcmc} method.
+We are particularly interested in estimating the model's energy distribution and critical temperature, and, for the latter, compare to Onsager's exact result for the infinite-sized lattice. 
+By simulating the Ising model for temperatures below and above Onsager's critical temperature, we look for evidence of a phase transition somewhere between these two temperatures.
+Sampling relevant statistics over a range of temperatures then allows us to estimate the critical temperature of the Ising model for different lattice sizes.
+Using finite-size scaling relations, we extrapolate toward the infinite-size limit to compare our results with Onsager's analytic expression.
 
 Numerical optimizations and implementation details are discussed along the way, with the full code available at~\cite{FYS4150Project4}.
-An essential part of the implementation is the use of \texttt{OpenMP}~\cite{openmp} for parallelization, leading to significant speed-ups.
+An essential part of the implementation is the use of \texttt{OpenMP}~\cite{openmp} for parallelization, which leads to significant speed-ups.
 
 \section{Theory and Method} \label{sec:theory_and_method}
 Here we present the theory behind the two-dimensional Ising model, the \gls{mcmc} method and our numerical implementation and strategy.
@@ -290,10 +290,10 @@ where, generally, the variance $\text{Var(X)}$ is defined as
 \begin{align}
     \text{Var}(X) = \langle X^2\rangle - \langle X\rangle^2.
 \end{align}
-Note here that the absolute value \(|m|\) is used to study the magnetization, rather than \(m\) itself.
-This is because the lack of an external magnetic field means that there is no preferred direction for the orientation of spins in the paramagnetic phase.
-The sign of the magnetization essentially becomes redundant in this case, and states of $+m$ and $-m$ are physically equivalent.
-Perhaps more importantly, this means the \textit{signed} average magnetization $\langle m \rangle$ will be zero for all temperatures, due to identical counter-terms from states with opposite magnetization. 
+Note here the appearance of the absolute value \(|m|\) in~\eqref{eq:chi_definition}. 
+Since we consider no external magnetic field, there is no preferred direction for the orientation of spins in the paramagnetic phase, so states of $+m$ and $-m$ are physically equivalent.
+As a consequence, the \textit{signed} average magnetization $\langle m \rangle$ is zero for all temperatures, since identical counter-terms from states with opposite magnetization will cancel each other. 
+To distinguish between the ordered (ferromagnetic) versus unordered (paramagnetic) phases, we thus use \(|m|\) instead of \(m\), so that configurations with opposite magnetization contribute equally rather than canceling.
 
 \subsubsection{The critical temperature}    \label{sec:critical_temperature}
 Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average magnetization per cite, \(\langle |m|\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (`energy'), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle |m|\rangle\) \footnote{This `spike' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. The temperature at which this happens is called the critical temperature \(T_c\).  
@@ -383,12 +383,15 @@ Thus, successive samples will differ very little from one another, and will it m
 One possible solution to this issue, which we will use, is the method of \emph{thinning}. 
 This is the process of simply skipping some amount of the elements of the Markov chain, only keeping the \(k\)-th element (for some \(k\)).
 
-Even \textit{with} thinning, however, we may not be able to fully rid ourselves of correlations between samples in the Markov chain.
-This is especially relevant as one approaches the critical temperature, as is discussed in Section \ref{sec:discussion}.
-When estimating errors, we must therefore account for this by computing an effective sample size, quantifying the number of independent samples required to yield the same variance as the correlated samples from the MCMC simulation.
-This effective sample size is computed following the approach in Chapter 16.4 of the Stan reference manual~\cite{Stan}, and then used to adjust our error estimates accordingly.
-In the text, we will often use the abbreviation \textit{ESS} to refer to the effective sample size.
-Likewise, we will use \textit{MCSE} to refer to the Monte Carlo standard error, this being the standard error adjusted for correlated samples.
+Even \textit{with} thinning, we may not be able to fully rid ourselves of correlations between samples in the Markov chain.
+(This is especially relevant as one approaches the critical temperature, which we will discuss further in Section \ref{sec:discussion}.)
+When estimating errors, we should therefore account for correlation by computing an \gls{ess}, quantifying the number of independent samples required to yield the same variance as the correlated samples from the MCMC simulation.
+In our numerical implementation we have computed the \gls{ess} following the approach in Chapter 15.4 of the Stan reference manual~\cite{Stan}, and then adjusted our error estimates accordingly.
+In particular, we will consider the so-called \gls{mcse}, given by  
+\begin{align}
+    \text{MCSE} = \frac{\sigma}{\sqrt{N_{\text{eff}}}},
+\end{align}
+where \(N_{\text{eff}}\) represents the \gls{ess} and \(\sigma\) denotes the standard deviation of the variable under consideration (e.g.~\(\epsilon\)), estimated from the stored values following the \gls{mcmc} method. 
 
 \subsubsection{The Metropolis-Hastings algorithm}    \label{sec:Metropolis-Hastings}
 Here, we give an overview of the Metropolis-Hastings algorithm which, originally introduced in \cite{Metropolis1953}.
@@ -705,7 +708,7 @@ This may of course be highly dependent on the specific hardware used.
     \label{fig:parallelization}
 \end{figure}
 
-\section{Discussion}
+\section{Discussion}    \label{sec:discussion}
 We have divied this discussion into two parts, Section \ref{sec:statistical_properties_discussion} and Section \ref{sec:numerics_discussion}, as to separate the statisical and ourely numerical side of this report.
 
 \subsection{Statistical properties of the simulation}   \label{sec:statistical_properties_discussion}
