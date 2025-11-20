@@ -382,12 +382,15 @@ Thus, successive samples will differ very little from one another, and will it m
 One possible solution to this issue, which we will use, is the method of \emph{thinning}. 
 This is the process of simply skipping some amount of the elements of the Markov chain, only keeping the \(k\)-th element (for some \(k\)).
 
-Even \textit{with} thinning, however, we may not be able to fully rid ourselves of correlations between samples in the Markov chain.
-This is especially relevant as one approaches the critical temperature, as is discussed in Section \ref{sec:discussion}.
-When estimating errors, we must therefore account for this by computing an effective sample size, quantifying the number of independent samples required to yield the same variance as the correlated samples from the MCMC simulation.
-This effective sample size is computed following the approach in Chapter 16.4 of the Stan reference manual~\cite{Stan}, and then used to adjust our error estimates accordingly.
-In the text, we will often use the abbreviation \textit{ESS} to refer to the effective sample size.
-Likewise, we will use \textit{MCSE} to refer to the Monte Carlo standard error, this being the standard error adjusted for correlated samples.
+Even \textit{with} thinning, we may not be able to fully rid ourselves of correlations between samples in the Markov chain.
+(This is especially relevant as one approaches the critical temperature, which we will discuss further in Section \ref{sec:discussion}.)
+When estimating errors, we should therefore account for correlation by computing an \gls{ess}, quantifying the number of independent samples required to yield the same variance as the correlated samples from the MCMC simulation.
+In our numerical implementation we have computed the \gls{ess} following the approach in Chapter 15.4 of the Stan reference manual~\cite{Stan}, and then adjusted our error estimates accordingly.
+In particular, we will consider the so-called \gls{mcse}, given by  
+\begin{align}
+    \text{MCSE} = \frac{\sigma}{\sqrt{N_{\text{eff}}}},
+\end{align}
+where \(N_{\text{eff}}\) represents the \gls{ess} and \(\sigma\) denotes the standard deviation of the variable under consideration (e.g.~\(\epsilon\)), estimated from the stored values following the \gls{mcmc} method. 
 
 \subsubsection{The Metropolis-Hastings algorithm}    \label{sec:Metropolis-Hastings}
 Here, we give an overview of the Metropolis-Hastings algorithm which, originally introduced in \cite{Metropolis1953}.
@@ -700,7 +703,7 @@ In particular, we may expect this number to be lower on a typical personal compu
     \label{fig:parallelization}
 \end{figure}
 
-\section{Discussion}
+\section{Discussion}    \label{sec:discussion}
 We have divied this discussion into two parts, Section \ref{sec:statistical_properties_discussion} and Section \ref{sec:numerics_discussion}, as to separate the statisical and ourely numerical side of this report.
 
 \subsection{Statistical properties of the simulation}   \label{sec:statistical_properties_discussion}
