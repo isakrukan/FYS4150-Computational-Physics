@@ -244,11 +244,11 @@ On the other hand, if the spin-locations are mostly parallel (i.e., organized), 
 This behavior aligns with the physical interpretation of \(M\) as the total magnetization of the system.
 
 % To distinguish between different macrostates, we consider the triplet $(N_\uparrow, M(s), E(s))$, where \(N_{\uparrow}\) is the number of up-spins. 
-Lastly, as a measure of the average energy and magnetization at a single location in the Ising model, we introduce 
+Lastly, as intensive measures for the energy and magnetization, we introduce the energy per spin 
 \begin{align}
     \epsilon(\vec{s}) = \frac{E(\vec{s})}{N},
 \end{align}
-and 
+and the magnetization per spin
 \begin{align}
     m(\vec{s}) = \frac{M({\vec{s}})}{N}.    \label{eq:average_magnetization}
 \end{align} 
@@ -265,7 +265,7 @@ For the Ising model, the \gls{pdf} \(p(\vec{s}; T)\) for a microstate \(\vec{s}\
 \begin{align}
     p(\vec{s}; T) = \frac{1}{Z}e^{-\beta E(\vec{s})},   \label{eq:Boltzmann_distribution}
 \end{align}
-where \(\beta = 1/(k_BT)\), with \(k_B\) being the Boltzmann constant, and \(Z\) the so-called \emph{partition function}. The latter quantity ensures that total probability over all microstates sums to one, and can be taken canonically to be
+where \(\beta = 1/(k_BT)\), with \(k_B\) being the Boltzmann constant, and \(Z\) the so-called \emph{partition function}. The latter quantity ensures that the total probability over all microstates sums to one, and can be taken canonically to be
 \begin{align}
     Z(\beta) = \sum_{\{\vec{s}\}} e^{-\beta E(\vec{s})},   \label{eq:partition_function}
 \end{align}
@@ -277,7 +277,7 @@ With the Boltzmann distribution in hand, the expectation value of a random varia
     \langle X\rangle = \sum_{\{\vec{s}\}} X(\vec{s}) p(\vec{s}; T). \label{eq:general_expectation_vaue}
 \end{align}
 (Formally, a random variable is a function whose domain and range is the set of possible outcomes and some sort of measurable space, respectively \footnote{A measurable space has a technical definition which we will not get into. For the interested reader, we recommend \cite{Schilling_2005}.}.) 
-In our case we are interested in the expectation value of the following random variables \(\epsilon(\vec{s})\), \(|m(\vec{s})|\), \(\epsilon(\vec{s})^2\) and \(m(\vec{s})^2\). 
+In our case we are interested in the expectation value of the random variables \(\epsilon(\vec{s})\), \(|m(\vec{s})|\), \(\epsilon(\vec{s})^2\) and \(m(\vec{s})^2\). 
 This allows us to also consider the heat capacity and magnetic susceptibility (per spin), which may be expressed as 
 %Moreover, we will also consider the heat capacity \(C_V\) and magnetic susceptibility \(\chi\), which can be expressed as 
 \begin{subequations}
@@ -299,7 +299,6 @@ To distinguish between the ordered (ferromagnetic) versus unordered (paramagneti
 \subsubsection{The critical temperature}    \label{sec:critical_temperature}
 Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average (absolute) magnetization per cite, \(\langle |m|\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (``energy''), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle |m|\rangle\) \footnote{This ``spike'' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. 
 The temperature at which this happens is called the critical temperature \(T_c\).  
-Formally, the critical temperature only exists in the thermodynamic limit.
 
 Formally, a true critical temperature only exists in the \emph{thermodynamic limit}, here: \(L \to \infty\). In this limit, Onsager showed in 1944 that the critical temperature of the two-dimensional Ising model is given by~\cite{LarsOnsager}
 \begin{align}
@@ -340,7 +339,7 @@ We then take the critical temperature to be that which maximizes this polynomial
 % In the introduction we motivated the Ising model by how it can be used to model ferromagnetism. This can be understood properly now that we have introduced the Ising model's setup and Hamiltonian.
 
 \subsection{The Markov chain Monte Carlo method}    \label{sec:MCMC}
-A Markov chain is a sequence of random variables \(\{X_n\}_{n\geq 0}\) which satisfy the so-called \emph{Markov property}, which requires that (see e.g. \cite{markov_property_sciencedirect})
+A Markov chain is a sequence of random variables \(\{X_n\}_{n\geq 0}\) satisfying the so-called \emph{Markov property}, which requires that (see e.g. \cite{markov_property_sciencedirect})
 \begin{align}
     &P(X_{n+1} = x \mid X_1 = x_1, \ldots, X_n = x_n) \notag \\
     = \ 
@@ -383,7 +382,7 @@ For instance, its stationary distribution may have two peaks instead of the ``us
 The second issue is that simply keeping all the elements of the Markov chain can be quite demanding computationally, and the neighboring elements of the Markov chain may be quite correlated.
 Such a correlation may be not necessarily be unfavorable. 
 However, in our case the difference between one element of the Markov chain and the next is only a single spin-flip. 
-Thus, successive samples will differ very little from one another, and it may take many steps to reduce autocorrelations significantly.
+Thus, successive samples will differ very little from one another, and it may take many more steps to reduce the autocorrelations~\footnote{That is, correlations between some configuration $\vec{s_n}$ and its preceeding configurations $\vec{s_{n-1}}, \vec{s_{n-2}}, \dots$ in the Markov chain.} to an acceptable level.
 One possible solution to this issue, which we will use, is the method of \emph{thinning}. 
 This is the process of simply skipping some amount of the elements of the Markov chain, only keeping the \(k\)-th element (for some \(k\)).
 
@@ -459,12 +458,12 @@ Exploiting this behavior, we aim at estimating \(T_C(L)\) by identifying the tem
 Then, we compare with Onsager's result for the limit \(L\rightarrow\infty\), given in \eqref{eq:T_c_infintie}, using the scaling relations in \eqref{eq:scaling_relations}.
 %and then compare this against Onsager's result for the limit \(L\rightarrow\infty\), using the scaling relations in \eqref{eq:scaling_relations}.
 
-We are also interested in investigating how many number of Monte Carlo cycles are needed before our numerical results converge to the expected values for the \(2\times 2\) Ising model, described in Appendix \ref{sec:example_2times2lattice}.
-This will give an estimate for an appropriate value for the number of burn-in cycles.
+We are also interested in investigating how many Monte Carlo cycles are needed before our numerical results converge to the expected values for the \(2\times 2\) Ising model, described in Appendix \ref{sec:example_2times2lattice}.
+This will give an estimate for the appropriate number of burn-in cycles.
 
 \subsubsection{Numerical implementation}
 Here, we describe how our numerical implementation works, as well as which parameters we have used in our simulations.
-The more computational-heavy parts are implemented in C++, while our figures and some minor data manipulation are handled in \textit{Python}.
+The computationally heavy parts are implemented in C++, while figures and some minor data manipulation are handled in \textit{Python}.
 The code used in this project can be found in \cite{FYS4150Project4} and relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib}, \textsc{Armadillo}~\cite{armadillo} and \textsc{OpenMP}~\cite{openmp}. 
 We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation of our code, see~\cite{FYS4150Project4_doc}. 
 
@@ -506,7 +505,7 @@ A sketch of the innermost loop of our Metropolis-Hastings implementation is summ
 
 There are several optimizations which we implement to Algorithm \ref{algo:MCMC}. 
 The first concerns how we select a random location on the lattice.
-Here, we use that the lattice can be thought of as a one-dimensional vector of length \(N\), and so we need only generate a random integer in the interval \([0,N-1]\) (instead of two integers from the interval \([0,L-1]\)).
+Here, we use that the lattice can be thought of as a one-dimensional vector of length \(N\), and so we need only generate a single random integer in the interval \([0,N-1]\) (instead of two integers from the interval \([0,L-1]\)).
 
 Secondly, when computing the fraction 
 \begin{align}
@@ -517,9 +516,9 @@ In particular, considering the possible values of the four neighboring spins, on
 \begin{align}
     \Delta E\in\{-8J,\ -4J,\ 0,\ 4J,\ 8J\}.
 \end{align}
-To reduce computational cost, we thus precompute the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take, and stores these in a lookup table.
+To reduce computational cost, we thus precompute the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take, and store these in a lookup table.
 
-Additionally, since the acceptance rule can only be passed if \(\Delta E\leq 0\), we check this before calling the random number generator, as the latter is a relatively expensive operation.
+Additionally, since the acceptance rule can only be passed if \(\Delta E\leq 0\), we check for this before calling the random number generator, as the latter is a relatively expensive operation.
 
 Lastly, as mentioned in the beginning of this section, we use pointers to track neighboring spin-locations, instead of manually checking whether the current loop iteration handles a boundary point or not. 
 
@@ -541,10 +540,10 @@ Lastly, we perform temperature scans, simulating the Ising model for various tem
 This is done for lattice sizes \(L\in\{40, 60, 80, 100\}\), in order to estimate the critical temperature \(T_c(L)\) for each size, and then extrapolate towards \(L\rightarrow\infty\) using the scaling relations \eqref{eq:scaling_relations}.
 %Additionally, we perform temperature scans, by simulating the Ising model for various \(T\in[1,2.4]\).
 %This part of the code, see \texttt{utils::temperature\_scan}, is parallelized using \textsc{OpenMP}~\cite{openmp}.
-In this part of the code, see \texttt{utils::temperature\_scan}, \textsc{OpenMP}~\cite{openmp} is used to parallelize the temperature scans.
+In this part of the code (see \texttt{utils::temperature\_scan}) \textsc{OpenMP}~\cite{openmp} is used to parallelize the temperature scans.
 This was done using the \texttt{parallel for} directive to automatically distribute iterations of the temperature loop over the available cores.
 The program was then run using 24 cores, on the \textsc{freebio3}/\textsc{freebio4} resources provided by the University of Oslo \cite{lightweight_hpc_uio}.
-Although clock speeds on \textsc{freebio3}/\textsc{freebio4} are smaller compared to many modern personal computers, some quick experiments showed that these are better optimized for parallel workloads, which is why they were chosen for this project.
+Although clock speeds on \textsc{freebio3}/\textsc{freebio4} are smaller compared to many modern personal computers, some quick experiments showed that these were better optimized for parallel workloads, which is why they were chosen for this project.
 
 
 To reproduce a minimal version of the results of this project, navigate to the code directory in \cite{FYS4150Project4}, and run the command \texttt{make project}. 
@@ -560,12 +559,12 @@ Lastly, Section~\ref{sec:timing_test_parallelization} presents how our simulatio
 
 
 \subsection{Relative errors of \(2\times 2\) lattice simulation}    \label{sec:realative_errors}
-In Appendix \ref{sec:example_2times2lattice} we considered an analytic solution to the \(2\times 2\) Ising model, and derived expressions for i.a. \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\), see \eqref{app:eq:langleErangle}, \eqref{app:eq:langleMrangle}, \eqref{app:eq:C_V} and \eqref{app:eq:chi}, respectively. 
-The relative error is given by, for e.g. \(\langle E\rangle\), \(\Delta \langle E\rangle = |1 - \langle E_{n}\rangle / \langle E_{a}\rangle|\), where \(E_n\) and \(E_a\) represents the numerically computed version and analytic version, respectively.
+In Appendix \ref{sec:example_2times2lattice} we considered an analytic solution to the \(2\times 2\) Ising model, and derived expressions for i.a. \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) (see \eqref{app:eq:langleErangle}, \eqref{app:eq:langleMrangle}, \eqref{app:eq:C_V} and \eqref{app:eq:chi}, respectively).
+The relative error of these are given by, for e.g. \(\langle E\rangle\), \(\Delta \langle E\rangle = |1 - \langle E_{n}\rangle / \langle E_{a}\rangle|\), where \(E_n\) and \(E_a\) represents the numerically computed version and analytic version, respectively.
 
 Figure~\ref{fig:app:2x2lattice} shows the evolution of the relative errors for these four quantities as functions of the number of Monte Carlo cycles, with the temperature of the simulation set to \(T=1.0 \ \si{J/k_B}\).
 The figure shows that the relative errors are decreasing for increasing number of cycles, though the relative error for the average energy and magnetization is overall smaller than those for the error for the heat capacity and magnetic susceptibility.
-Not before approaching \(\sim 10^6\) cycles do \emph{all} four observables fall below an relative error of \(\sim 10^{-2}\).
+Not before approaching \(\sim 10^6\) cycles do \emph{all} four observables fall below a relative error of \(\sim 10^{-2}\).
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{figs/errors_2x2.pdf}
@@ -575,8 +574,8 @@ Not before approaching \(\sim 10^6\) cycles do \emph{all} four observables fall 
 
 
 \subsection{Equilibration time}   \label{sec:equilibration_time}
-An evolution of the energy per spin $\epsilon$ and its cumulative average $\langle \epsilon \rangle$ for a \(L=20\) lattice is shown in Figure~\ref{fig:equilibration}.
-The figure display displays four simulations: the temperature is either \(T=1.0 \ \si{J/k_B}\) or \(T=2.4 \ \si{J/k_B}\), and the initial configuration of the Ising model's lattice is either set up randomly or all spin-locations are initially set to \(s_i=-1\).
+An evolution of the energy per spin $\epsilon$ and its cumulative average $\langle \epsilon \rangle$ for an \(L=20\) lattice is shown in Figure~\ref{fig:equilibration}.
+The figure displays results from four simulations: the temperature is either \(T=1.0 \ \si{J/k_B}\) or \(T=2.4 \ \si{J/k_B}\), and the initial configuration of the Ising model's lattice is either set up randomly or all spin-locations are initially set to \(s_i=-1\).
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{figs/equilibration.pdf}
@@ -589,7 +588,7 @@ For \(T=1.0 \ \si{J/k_B}\), we similarly see \(\langle\epsilon\rangle\) is stabi
 Hence, the simulation appears to have burned in after roughly $10^3$ Monte Carlo cycles.
 
 \subsection{Energy distribution}    \label{sec:Energy_distribution}
-The distribution of the energy per spin \(\epsilon\) for a \(L=20\) lattice at temperatures $T=1.0\ \si{J/k_B}$ and ${T=2.4\ \si{J/k_B}}$ is displayed in Figure~\ref{fig:epsilon_distribution}.
+The distribution of the energy per spin \(\epsilon\) for an \(L=20\) lattice at temperatures $T=1.0\ \si{J/k_B}$ and ${T=2.4\ \si{J/k_B}}$ is displayed in Figure~\ref{fig:epsilon_distribution}.
 The corresponding variances are shown in Table~\ref{table:epsilon_distribution}. 
 These results are produced from the same data as in the previous section, with the first \(10^3\) data points discarded in accordance with our estimated equilibration time.
 \begin{figure}[h!]
@@ -700,7 +699,7 @@ Here we emphasize that the uncertainties shown are those from the linear regress
 \subsection{Timing tests and parallelization}   \label{sec:timing_test_parallelization}
 To test the performance impact from parallelization, we have measured runtimes for simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$, with varying numbers of threads.
 The results are shown in Figure~\ref{fig:parallelization}, along with a fit to the model \eqref{eq:amdahl_T}.
-This suggests the serial fraction of the code is given by $f \approx 6.48 \pm 0.70 \%$.
+This suggests the serial fraction of the code is given by $f \approx 6.48 \pm 0.70\ \%$.
 Amdahl's law \eqref{eq:amdahl_S} further suggests the theoretically maximum speedup is of \(1/f \approx 15.4\) times.
 It should be noted that these results are likely dependent on the specific hardware used.
 \begin{figure}
@@ -752,7 +751,7 @@ The big exception will be near the critical point, as the correlation length the
 When we are close to the critical temperature, the size of correlated regions therefore grows with \(L\), and more Monte Carlo cycles are required to effectively sample our space.
 With this in mind, we chose a larger number of burn-in cycles for the simulations used to produce Figure~\ref{fig:temp_scan}.
 Concretely, we ended up using \(10^5\) burn-in cycles for each temperature point.
-Accounting for the fact that we average over $10$ repeat simulations per temperature point, this burn-in period corresponds to roughly \(1\%\) of the total $1.01\times10^7$ Monte Carlo cycles.
+Accounting for the fact that we average over $10$ repeat simulations per temperature point, this burn-in period corresponds to roughly \(1\%\) of the total $10.1\cdot10^6$ Monte Carlo cycles.
 %That is, beyond \(L=20\) we performed \(10^5\) burn-in cycles, \(10\%\) of the total number of (\(10^7\)) cycles we stored values from.
 
 From Figure~\ref{fig:temp_scan_error} we also see that that error estimates and effective sample sizes worsen around the critical temperature.
@@ -776,13 +775,15 @@ The typical personal computer might instead see shorter serial runtimes, but les
 
 
 \section{Conclusion}
-The finite-sized Ising model thermodynamic quantities are dependent on the size of the Ising model's lattice and no general solution exists, motivating numerical simulations.
-We have implemented the \gls{mcmc} algorithm to sample spin configurations \(\vec{s}\) from the Boltzmann distribution \(p(\vec{s}; T)\) at a given temperature \(T\).
+In general, thermodynamic quantities of interest for the finite-sized Ising model may depend on the lattice size, and no general analytic solution exists. 
+This motivates the use of numerical simulations to estimate these quantities.
+%The finite-sized Ising model thermodynamic quantities are dependent on the size of the Ising model's lattice and no general solution exists, motivating numerical simulations.
+We have therefore implemented the \gls{mcmc} algorithm to sample spin configurations \(\vec{s}\) from the Boltzmann distribution \(p(\vec{s}; T)\) at a given temperature \(T\).
 This allowed us to estimate thermodynamic quantities such as the energy \(E\), magnetization \(M\), heat capacity \(C_V\) and magnetic susceptibility \(\chi\).
 We tested our numerical implementation against the analytic solution of a \(2\times 2\) lattice in Appendix \ref{sec:example_2times2lattice}. 
 Considering the relative errors of \(E\), \(M\), \(C_V\) and \(\chi\), we found that it took approximately \(10^6\) Monte Carlo cycles before the relative errors of all four quantities dropped below \(\sim 10^{-2}\). 
 For a \(20\times 20\) lattice, we estimated that it took approximately \(10^3\) cycles before the simulation burned in. 
-In our simulations for greater lattice size, we used \(10^5\) burn in cycles, and \(10^6\) cycles for the stored data. 
+In our simulations for greater lattice size, we used \(10^5\) burn in cycles, and a total of \(10^7\) cycles for the stored data. 
 
 We saw a clear difference in the energy distribution for \(T=1.0 \ \si{J/k_B}\) and \(T=2.4\ \si{J/k_B}\), the former resembling an ordered state, while the latter a disordered state. 
 With this behavior in mind, together with Onsager's critical temperature \(T_c(L\rightarrow\infty)\approx 2.269\ \si{J/k_B}\)~\cite{LarsOnsager}, we expected to find a phase transition somewhere in between the former two temperatures. 
@@ -804,7 +805,6 @@ Here, we consider an analytic solution to the Ising model in the special case of
 % To verify our numerical implementation of a general \(L\times L\) lattice, we will compare with the analytic results 
 % for the case of a $2\times 2$ lattice.
 Computing \(E(\vec{s})\) and \(M(\vec{s})\) for a given \(N_{\uparrow}\) for the case of a \(2\times 2\) is straightforward using \eqref{eq:Hamiltonian} and \eqref{eq:magnetization}. 
-\color{red} Do we need to explain this better? Maybe add figure in appendix showing our thinking?\color{black}
 Table~\ref{table:2x2_possible_configs} shows all possible configurations of \(N_{\uparrow}\), \(M(\vec{s})\) and \(E(\vec{s})\) for a $2\times 2$ lattice, including their degeneracy.
 \begin{table}[h!]
     \centering
