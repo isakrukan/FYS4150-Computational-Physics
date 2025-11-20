@@ -39,7 +39,7 @@
 
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
-\documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
+\documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
 % \documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
 % If you want a single-column, remove "reprint"
 % \raggedbottom
@@ -410,8 +410,24 @@ Once a candidate sample \(x'\) is drawn in accordance with the proposal \gls{pdf
     \text{If } r &\leq A(x\rightarrow x') \rightarrow \text{ accept}, \\
     \text{If } r &> A(x\rightarrow x') \rightarrow \text{ reject}.
 \end{align*}
-
 This algorithm involves a particular choice of acceptance rule, and is the algorithm we have used in this project. 
+
+\subsection{Parallelization} \label{sec:parallelization}
+For our later numerical implementation, the use of parallelization will be vital to in shortening the runtime of our simulations.
+To further quantify the speedup achieved through parallelization, we would like to run some timing tests and attempt a fit of the results to a model
+\begin{align}\label{eq:amdahl_T}
+   T(N) =  \frac{1-f}{N} + f,
+\end{align}
+where \(T(N)\) is the runtime (taken in units of the serial runtime $T_\mathrm{serial} = T(1)$) when parallelizing with \(N\) cores, and \(f\) is a parameter to be fitted.
+In particular, we may then interpret \(f\) as the strictly serial contribution to the runtime, while \((1-f)/N\) is the parallelizable portion.
+The latter can clearly be reduced by deploying more cores, while the former can not.
+This further predicts that the speedup factor $S(N)$ when parallelizing with \(N\) cores is given by 
+\begin{align}\label{eq:amdahl_S}
+    S(N) = \frac{T(1)}{T(N)} = \frac{1}{\frac{1-f}{N} + f}.
+\end{align}
+This is known as \emph{Amdahl's law} \cite{cornell_parallel}.
+Taking \(N\rightarrow \infty\), this further suggests a theoretical maximum speedup of \(S = 1/f\)\footnote{This is of course a simplification, as the parallel portion of the code can only contain a finite number of $M$ independent tasks. Thus, we should expect the speedup saturates as \(N\rightarrow M\).}.
+
 
 \subsection{Strategy overview and numerical implementation} \label{sec:numerical_implementation}
 In this section we give an overview of the strategy and aims of this project, as well how we have numerically implemented the theory described in the two preceding sections above \footnote{When working with this report we have occasionally consulted with the language model ChatGPT and Copilot. 
@@ -678,18 +694,10 @@ Here we emphasize that the uncertainties shown are those from the linear regress
 
 \subsection{Timing tests and parallelization}   \label{sec:timing_test_parallelization}
 To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.
-The results of this is shown in Figure~\ref{fig:parallelization}.
-Here we have additionally fitted a model (\color{red}Flytte dette til teori?\color{black})
-\begin{align}
-   T(N) =  \frac{1-f}{N} + f,
-\end{align}
-to the data. 
-Here \(T(N)\) is the runtime (taken in units of the serial runtime $T_\mathrm{serial} = T(1)$) when parallelizing with \(N\) threads.
-In particular, we may then interpret \(f\) as the strictly serial contribution to the runtime, while \(1-f\) is the parallelizable portion.
-We then find that the serial fraction is $f \approx 6.48 \pm 0.70 \%$.
-According to Amdahl's law [REF], this further suggests we may theoretically achieve maximum speedup roughly \(1/f \approx 15.4\) times faster than the serial implementation. 
+The results of this is shown in Figure~\ref{fig:parallelization}, along with a fit to the model \eqref{eq:amdahl_T}.
+This suggests that the serial fraction of the code is given by $f \approx 6.48 \pm 0.70 \%$.
+Amdahl's law \eqref{eq:amdahl_S} further suggests the theoretically maximum speedup is of \(1/f \approx 15.4\) times.
 This may of course be highly dependent on the specific hardware used.
-In particular, we may expect this number to be lower on a typical personal computer, as these may be less optimized for parallel workloads compared to the resources used here.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{figs/timing_tests.pdf}
@@ -717,7 +725,10 @@ Nonetheless, the estimated critical temperatures lie above Onsager's exact value
 
 Using the scaling relations \eqref{eq:scaling_relations}, we obtained estimates for the critical temperature \(T_c(L\rightarrow\infty)\), see Table~\ref{table:crit_temp_infinite}.
 These did indeed compute to a value with uncertainties well within Onsager's exact value, though we only provided uncertainties from the linear regression we performed. 
-For the future, a better approach could be to estimate the variances of the critical temperatures $T_c(L)$ and use these as weights in a weighted linear regression. (\color{red}Kan du se på forrige setning?\color{black})
+There will indeed be other sources of uncertainty, such as statistical uncertainties from the \gls{mcmc} simulations themselves.
+%For the future, one could instead compute variances of the critical temperatures \(T_c(L)\) from the \gls{mcmc} simulations, and use these as weights in a weighted linear regression.
+%For the future, this could be incorporated by instead peforming a \textit{weighted} linear regression, using MCMC-derived variances of the critical temperatures \(T_c(L)\) as weights.
+For the future, these uncertainties could for instance be incorporated by using MCMC-derived variances of the critical temperatures \(T_c(L)\) as weights in a \textit{weighted} linear regression.
 \begin{itemize}
     \item The heat capacity is less noisy than the magnetic susceptibility, and should probably give a better estimate. \color{red}Hvorfor det?\color{black}
 \end{itemize}
