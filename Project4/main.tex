@@ -143,7 +143,12 @@
 \noaffiliation                            % ignore this, but keep it.
 
 \begin{abstract}
-    Abstract
+    We apply Markov chain Monte Carlo simulations with a Metropolis-Hastings acceptance to study the two-dimensional Ising model with zero external magnetic field.
+    By sampling spin configurations according to the Boltzmann distribution, the statistical properties of the energy and magnetization are analyzed for different temperatures.
+    This allows the estimation of the heat capacity and magnetic susceptibility as functions of temperature, from which the critical temperature of the system can be inferred. 
+    Additionally considering different lattice sizes $L = 40,60,80,100$, the finite size scaling relations can then be used to extrapolate an estimate of $T_c$ in the limit $L\rightarrow \infty$ and compare to Lars Onsager's analytic expression from 1944.
+    Using this procedure, we obtain the estimates $T_c^{C_v} = 2.268 \pm 0.029 J/k_B$ and $T_c^{\chi} = 2.270 \pm 0.071 J/k_B$ using the heat capacity and magnetic susceptibility respectively. 
+    These are both in good agreement with the analytic result $T_c \approx 2.269 J/k_B$ derived by Onsager.
 \end{abstract}
 \maketitle
 
@@ -484,7 +489,7 @@ In particular, considering the possible values of the four neighboring spins, on
 \begin{align}
     \Delta E\in\{-8J,\ -4J,\ 0,\ 4J,\ 8J\}.
 \end{align}
-To avoid computational cost, we thus precompute the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take, and stores these in a lookup table.
+To reduce computational cost, we thus precompute the five possible values the Boltzmann factor \(e^{-\beta \Delta E}\) can take, and stores these in a lookup table.
 
 Additionally, since the acceptance rule can only be passed if \(\Delta E\leq 0\), we check this before calling the random number generator, as the latter is a relatively expensive operation.
 
@@ -629,8 +634,9 @@ These measures are shown in Figure~\ref{fig:temp_scan_error}.
 The latter figure shows that the average energy per spin, generally, has a larger \gls{ess} and a smaller \gls{mcse} than the magnetization.
 Both quantities do however see a dip in \gls{ess} and increase in \gls{mcse} for \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\).
 \color{red} Kanskje flytte det følgende etter denne kommentaren til diskusjon eller konklusjon? Jeg skjønte det ikke helt heller...kanskje du kunne forklart meg?\color{black}
-This is as expected, as the correlation length grows and approaches the system size $L$.
-Consequently, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated, reducing the \gls{ess}.
+This is to be expected when the correlation length approaches the system size $L$, as this leads to fluctuations on all length scales within the system.
+Consequently, even upon flipping many spins, the system may appear to be only "one" fluctuation away from the previous configuration.
+This leads to stronger correlations between successive samples in the Markov chain, and a smaller effective sample size.
 
 \subsection{The critical temperature}   \label{sec:Critical_temp_results}
 To find the critical temperature at finite lattice sizes, we identified the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility as shown in Figure~\ref{fig:temp_scan}.
