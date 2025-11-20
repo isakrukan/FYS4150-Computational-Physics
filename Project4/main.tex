@@ -540,7 +540,6 @@ This is done for lattice sizes \(L\in\{40, 60, 80, 100\}\), in order to estimate
 In this part of the code, see \texttt{utils::temperature\_scan}, \textsc{OpenMP}~\cite{openmp} is used to parallelize the temperature scans.
 This was done using the \texttt{parallel for} directive to automatically distribute iterations of the temperature loop over the available cores.
 The program was then run using 24 cores, on the \textsc{freebio3}/\textsc{freebio4} resources provided by the University of Oslo \cite{lightweight_hpc_uio}.
-({\color{red}kunne du spesifisert litt mer her?})
 Although clock speeds on \textsc{freebio3}/\textsc{freebio4} are smaller compared to many modern personal computers, some quick experiments showed that these are better optimized for parallel workloads, which is why they were chosen for this project.
 
 
@@ -549,11 +548,11 @@ To reproduce a minimal version of the results of this project, navigate to the c
 \section{Results}
 Here we present our results, which we have divided into the following five sections. 
 Section \ref{sec:realative_errors} presents relative errors from simulating the \(2\times 2\) lattice, using the analytic solution given in Appendix \ref{sec:example_2times2lattice}.
-Section \ref{sec:equilibration_time} considers a \(L=20\) lattice and examines the behavior of the energy per spin as function of number of Monte Carlo cycles for various temperatures. 
+Section \ref{sec:equilibration_time} considers a \(L=20\) lattice and examines the behavior of the energy per spin as a function of the number of Monte Carlo cycles for various temperatures. 
 Section \ref{sec:Energy_distribution} also considers a \(L=20\) lattice and shows the energy distribution for two different temperatures, starting from either an ordered or a disordered initial state. 
 Section \ref{sec:Phase_trans_temp_ScAns} presents the results from running the simulation for various lattice sizes and varying temperature, as to identify where the phase transition may take place.
 Section \ref{sec:Critical_temp_results} uses the peaks in the heat capacity and magnetic susceptibility from the preceding section to estimate the critical temperature, and extrapolates to the case of an infinite lattice, which is to be compared to Onsager's expression \eqref{eq:T_c_infintie}.
-Lastly, Section \ref{sec:timing_test_parallelization} presents how our simulation's run time scales under parallelization, in particular, as a function of number of threads.
+Lastly, Section \ref{sec:timing_test_parallelization} presents how our simulation's run time scales under parallelization, and in particular, as a function of number of threads.
 
 
 \subsection{Relative errors of \(2\times 2\) lattice simulation}    \label{sec:realative_errors}
@@ -580,17 +579,15 @@ The figure display displays four simulations: the temperature is either \(T=1.0 
     \caption{Evolution of the energy per spin $\epsilon$ (thin lines) and its cumulative average $\langle \epsilon \rangle$ (thick lines) during a Monte Carlo simulation of the $L=20$ Ising model at temperatures ${T=1.0\ J/k_B}$ and ${T=2.4\ J/k_B}$. The initial configuration of the lattice is either ordered (green and purple; all spins \({s_i=-1}\)) or unordered (blue and red; spins assigned randomly).}
     \label{fig:equilibration}
 \end{figure}
-
-For the first \(\sim 10^3\) Monte Carlo cycles, the evolution of \(\epsilon\) either is either decreasing or increasing, with the exception of the green line, corresponding to \({T=1.0 \ \si{J/k_B}}\), starting from a ordered initial configuration.
-At approximately \(10^3\) cycles, the cumulated average \(\langle\epsilon\rangle\) for \({T=2.4\ \si{J/k_B}}\) (both unordered and ordered initial configurations) begins to fluctuate around \(\langle \epsilon\rangle \approx -1.25\).
-Similarly, for \(T=1.0 \ \si{J/k_B}\), \(\langle\epsilon\rangle\) stabilizes around \(\langle \epsilon\rangle \approx -2.00\) after approximately the same number of cycles.
+For the first \(\sim 10^3\) Monte Carlo cycles, the evolution of \(\epsilon\) either is either decreasing or increasing, the exception being the green line corresponding to \({T=1.0 \ \si{J/k_B}}\) with the ordered initial configuration.
+For \({T=2.4\ \si{J/k_B}}\), the average \(\langle\epsilon\rangle\) stabilizes around \(\langle \epsilon\rangle \approx -1.25\) after approximately \(10^3\) cycles, for both initial configurations.
+For \(T=1.0 \ \si{J/k_B}\), we similarly see \(\langle\epsilon\rangle\) is stabilized around \(\langle \epsilon\rangle \approx -2.00\) after roughly the same number of cycles.
 Hence, the simulation appears to have burned in after roughly $10^3$ Monte Carlo cycles.
-
 
 \subsection{Energy distribution}    \label{sec:Energy_distribution}
 The distribution of the energy per spin \(\epsilon\) for a \(L=20\) lattice at temperatures $T=1.0\ \si{J/k_B}$ and ${T=2.4\ \si{J/k_B}}$ is displayed in Figure~\ref{fig:epsilon_distribution}.
 The corresponding variances are shown in Table~\ref{table:epsilon_distribution}. 
-These results are produced from the same data as in the previous section, with the first \(10^3\) data points have been discarded in accordance with the estimated equilibration time.
+These results are produced from the same data as in the previous section, with the first \(10^3\) data points discarded in accordance with our estimated equilibration time.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{figs/epsilon_distribution.pdf}
@@ -615,16 +612,17 @@ Figure~\ref{fig:epsilon_distribution} shows for \(T=1.0 \ \si{J/k_B}\) a distrib
 Correspondingly, \({\text{Table}}\)~\ref{table:epsilon_distribution} displays a much smaller variance for the case of \(T=1.0 \ \si{J/k_B}\) (of order \(\sim 10^{-5} \ \si{J^2}\)), compared to that of \(T=2.4 \ \si{J/k_B}\) (of order \(\sim 10^{-2} \ \si{J^2}\)).
 In the next section we present the results from running our simulation for various temperatures between these two temperatures.
 % , as to look for the critical temperature.
-
-
 % On the other hand, the higher-temperature distribution is noticeably wider, which is consistent with a disordered phase.
 % Based on this, we should thus expect to find a phase transition somewhere between these two temperatures.
 % This is indeed what we will investigate next, by performing temperature scans and various lattice sizes.
 
 
 \subsection{Phase transitions \& temperature scans} \label{sec:Phase_trans_temp_ScAns}
-Figure~\ref{fig:temp_scan} shows the cumulating average of the energy, magnetization, heat capacity and magnetic susceptibility per spin \(\langle \epsilon\rangle, \ \langle |m|\rangle, \ C_V/N\) and \(\chi/N\), respectively, as functions of temperature \(T\in[2.10, 2.40] \ \si{J/k_b}\) for lattice sizes $L = 40, 60, 80, 100$.
-Here, we have run a total of \(11\cdot 10^5\) Monte Carlo cycles, were \(10^5\) of those cycles are discarded as burn-in cycles, and the remaining \(10^6\) cycles stored and presented here.
+As functions of temperature, Figure~\ref{fig:temp_scan} shows the average energy \(\langle \epsilon\rangle\) and  magnetization \(\langle |m|\rangle\), as well as heat capacity \(C_V/N\) and magnetic susceptibility \(\chi/N\) per spin.
+Results are shown for lattice sizes \(L = 40, 60, 80, 100\).
+%susceptibility per spin \(\langle \epsilon\rangle, \ \langle |m|\rangle, \ C_V/N\) and \(\chi/N\), respectively, as functions of temperature \(T\in[2.10, 2.40] \ \si{J/k_b}\) for lattice sizes $L = 40, 60, 80, 100$.
+Here, each temperature point corresponds to an average over $10$ seperate \gls{mcmc} simulations, each with a different random seed.
+The individual simulations are each run for a total of \(11\cdot 10^5\) Monte Carlo cycles, were \(10^5\) of those cycles are discarded as burn-in cycles, and the remaining \(10^6\) cycles stored and presented here.
 
 The average energy per spin is steadily increasing.
 However, for temperatures between approximately \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\), the curves for different lattice sizes begin to separate slightly. 
@@ -635,14 +633,14 @@ The magnetization \(\langle |m|\rangle\) shows an opposite behavior, decreasing 
     \caption{
         Results of Monte Carlo simulations at different temperatures and lattice sizes.
         From top to bottom, we have the average energy per spin $\langle \epsilon \rangle$, average magnetization per spin $\langle |m| \rangle$, heat capacity per spin $C_V/N$ and magnetic susceptibility per spin $\chi/N$.
-        The shaded regions represent the Monte Carlo standard errors scaled by a factor of $100$ for visibility.
+        The shaded regions represent the Monte Carlo standard errors scaled by a factor of $10$ for visibility.
     }
     \label{fig:temp_scan}
 \end{figure}
 
-In this temperature range, both \(C_V/N\) and \(\chi/N\) show a more noticeable behavior.
-Both increase towards a critical temperature, \(2.25 \ \si{J/k_B}\lesssim T_c\lesssim 2.30 \ \si{J/k_B}\), and decrease again after reaching a certain peak.
-This peak becomes more pronounced as \(L\) increases. 
+In the same temperature range, \(C_V/N\) and \(\chi/N\) show characteristics of a phase transition.
+%Both increase towards a critical temperature, \(2.25 \ \si{J/k_B}\lesssim T_c\lesssim 2.30 \ \si{J/k_B}\), and decrease again after reaching a certain peak.
+Concretely, both quantities have peaks in the interval \({T\approx 2.25\text{--}2.30\ \si{J/k_B}}\), with the peaks becoming more pronounced as \(L\) increases.
 
 \begin{figure}[h!]
     \centering
@@ -653,13 +651,13 @@ This peak becomes more pronounced as \(L\) increases.
     \label{fig:temp_scan_error}
 \end{figure}
 
-We have also estimated the errors and \gls{mcse} and \gls{ess} associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
-These measures are shown in Figure~\ref{fig:temp_scan_error}.
-The latter figure shows that the average energy per spin, generally, has a larger \gls{ess} and a smaller \gls{mcse} than the magnetization.
-Both quantities do however see a dip in \gls{ess} and increase in \gls{mcse} for \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\).
+We have also estimated errors (MCSE) and effective step sizes (ESS) associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
+These are shown in Figure~\ref{fig:temp_scan_error}.
+The figure shows that the \(\langle \epsilon \rangle\) has a larger \gls{ess} and a smaller \gls{mcse} than the magnetization.
+Both quantities do however see a dip in the \gls{ess} and an increase in \gls{mcse} for \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\).
 
 \subsection{The critical temperature}   \label{sec:Critical_temp_results}
-To find the critical temperature at finite lattice sizes, we identified the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility as shown in Figure~\ref{fig:temp_scan}.
+To find the critical temperature at finite lattice sizes, we identified the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility shown in Figure~\ref{fig:temp_scan}.
 These are tabulated in Table~\ref{table:crit_temps}.
 \begin{table}[h!]
     \centering
@@ -677,7 +675,7 @@ These are tabulated in Table~\ref{table:crit_temps}.
 \end{table}
 Using the scaling relations \eqref{eq:scaling_relations}, we then estimated the critical temperature of the infinite lattice.
 The estimates obtained using the heat capacity and magnetic susceptibility respectively are shown in Table~\ref{table:crit_temp_infinite}.
-Here we emphasize that the uncertainties shown are those from the linear regression \textit{only}, and may underestimate the true uncertainty.
+Here we emphasize that the uncertainties shown are those from the linear regression \textit{only}, and likely underestimate the true uncertainties.
 \begin{table}[h!]
     \centering
     \setlength{\tabcolsep}{12pt}
@@ -696,11 +694,11 @@ Here we emphasize that the uncertainties shown are those from the linear regress
 \end{table}
 
 \subsection{Timing tests and parallelization}   \label{sec:timing_test_parallelization}
-To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.
-The results of this is shown in Figure~\ref{fig:parallelization}, along with a fit to the model \eqref{eq:amdahl_T}.
-This suggests that the serial fraction of the code is given by $f \approx 6.48 \pm 0.70 \%$.
+To test the performance impact from parallelization, we have measured runtimes for simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$, with varying numbers of threads.
+The results are shown in Figure~\ref{fig:parallelization}, along with a fit to the model \eqref{eq:amdahl_T}.
+This suggests the serial fraction of the code is given by $f \approx 6.48 \pm 0.70 \%$.
 Amdahl's law \eqref{eq:amdahl_S} further suggests the theoretically maximum speedup is of \(1/f \approx 15.4\) times.
-This may of course be highly dependent on the specific hardware used.
+It should be noted that these results are likely dependent on the specific hardware used.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{figs/timing_tests.pdf}
@@ -709,12 +707,14 @@ This may of course be highly dependent on the specific hardware used.
 \end{figure}
 
 \section{Discussion}    \label{sec:discussion}
-We have divied this discussion into two parts, Section \ref{sec:statistical_properties_discussion} and Section \ref{sec:numerics_discussion}, as to separate the statisical and ourely numerical side of this report.
+We have divided this discussion into two parts, Section \ref{sec:statistical_properties_discussion} and Section \ref{sec:numerics_discussion}, as to separate the statistical and purely numerical sides of the report.
 
 \subsection{Statistical properties of the simulation}   \label{sec:statistical_properties_discussion}
 Figure~\ref{fig:epsilon_distribution} shows a clear difference in the energy distribution of the simulated Ising model for \(T=1.0 \ \si{J/k_B}\) compared to \(T=2.4 \ \si{J/k_B}\).
-For \(T=1.0 \ \si{J/k_B}\), the system appears organized: the energy per spin is approximately the same everywhere on the lattice. On the other hand, for \(T=2.4 \ \si{J/k_B}\), the system appears disorganized: the energy per spin varies noticeably between different spin-locations. 
-This behavior suggests that a phase transition occurs somewhere between \({T=1.0 \ \si{J/k_B}}\) and \(T=2.4 \ \si{J/k_B}\).
+For \(T=1.0 \ \si{J/k_B}\), the system seems to be in ordered state, as the energy per spin is tightly centered around \(\epsilon = -2 \ \si{J}\).
+On the other hand, the system appears more disordered as we increase the temperature to \(T=2.4 \ \si{J/k_B}\).
+The energy distribution is indeed centered around a larger value, and has a considerably larger variance.
+In combination, these results suggests a phase transition must occur somewhere between \({T=1.0 \ \si{J/k_B}}\) and \(T=2.4 \ \si{J/k_B}\).
 
 Indeed, we saw in Figure~\ref{fig:temp_scan} how the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) displayed peaks in the region \({T\approx2.20\text{--}2.35 \ \si{J/k_B}}\).
 The energy and magnetization showed a different behavior in the same region as well, though both displayed a much smoother behavior.
@@ -722,45 +722,48 @@ This behavior is expected.
 A true phase transition, in the strict thermodynamic sense, occurs only in the thermodynamic limit, which in our case corresponds to an infinite lattice.
 This seems consistent with Figure~\ref{fig:temp_scan}, which shows the maximum of the heat capacity and magnetic susceptibility increase as \(L\) increases.
 
-Moreover, from Figure~\ref{fig:temp_scan} it seems like the peak of \(\chi\) occurred for a slightly higher temperature than the peak for \(C_V\).
-We estimated the critical temperature using these peaks, presented in Table~\ref{table:crit_temps}, which does indeed give a slightly higher critical temperature when using \(\chi\) compared to \(C_V\). 
-Nonetheless, the estimated critical temperatures lie above Onsager's exact value \eqref{eq:T_c_infintie} in the limit \(L\rightarrow \infty\), and all decrease with increasing \(L\).
-
-Using the scaling relations \eqref{eq:scaling_relations}, we obtained estimates for the critical temperature \(T_c(L\rightarrow\infty)\), see Table~\ref{table:crit_temp_infinite}.
-These did indeed compute to a value with uncertainties well within Onsager's exact value, though we only provided uncertainties from the linear regression we performed. 
-There will indeed be other sources of uncertainty, such as statistical uncertainties from the \gls{mcmc} simulations themselves.
+It also seems like the peaks in \(\chi\) appear at slightly higher temperature than corresponding peaks in \(C_V\).
+This is indeed reflected in the estimated critical temperatures \(T_c(L)\) shown in Table~\ref{table:crit_temps}.
+Nonetheless, the estimated critical temperatures seem to approach Onsager's exact solution \eqref{eq:T_c_infintie} for $L\rightarrow \infty$ as \(L\) increases.
+%Nonetheless, the estimated critical temperatures lie above Onsager's exact value \eqref{eq:T_c_infintie} for the limit \(L\rightarrow \infty\), and seem to be decreasing with larger \(L\).
+%Using the scaling relations \eqref{eq:scaling_relations}, we indeed obtained estimates for the critical temperature \(T_c(L\rightarrow\infty)\), as seen in Table~\ref{table:crit_temp_infinite}.
+Indeed, our estimates for the critical temperature $T_c(L\rightarrow\infty)$ of the infinite lattice, shown in Table~\ref{table:crit_temp_infinite}, are in good agreement with Onsager's exact value \eqref{eq:T_c_infintie}.
+The provided uncertainties are however only those from the linear regression, and likely underestimate the true uncertainties.
+There will indeed be other important sources of uncertainty, such as statistical uncertainties from the \gls{mcmc} simulations themselves.
 %For the future, one could instead compute variances of the critical temperatures \(T_c(L)\) from the \gls{mcmc} simulations, and use these as weights in a weighted linear regression.
 %For the future, this could be incorporated by instead peforming a \textit{weighted} linear regression, using MCMC-derived variances of the critical temperatures \(T_c(L)\) as weights.
-For the future, these uncertainties could for instance be incorporated by using MCMC-derived variances of the critical temperatures \(T_c(L)\) as weights in a \textit{weighted} linear regression.
-\begin{itemize}
-    \item The heat capacity is less noisy than the magnetic susceptibility, and should probably give a better estimate. \color{red}Hvorfor det?\color{black}
-\end{itemize}
+For the future, these could for instance be incorporated by using MCMC-derived variances of the critical temperatures \(T_c(L)\) as weights in a \textit{weighted} linear regression.
 
 \subsection{Numerical optimizations and limitations}    \label{sec:numerics_discussion}
-The relative errors in Figure~\ref{fig:app:2x2lattice} for the \(L=2\) Ising model, showed that it took about \(\sim 10^6\) cycles before the relative errors of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) become sufficiently small (\(\sim 10^{-2}\)). 
-Hence, it seems like one needs \(\sim 10^6\) cycles before the results converge to something meaningful. 
-However, this is without taking burn-in into account.
+The relative errors in Figure~\ref{fig:app:2x2lattice} for the \(L=2\) Ising model showed that it took about \(\sim 10^6\) cycles before the relative errors of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) become sufficiently small (\(\sim 10^{-2}\)). 
+Hence, it seems like we need at least \(\sim 10^6\) cycles for the results to converge to something meaningful. 
+However, these results do not include a burn-in period.
 
-Figure~\ref{fig:equilibration} suggested that the simulation for \(L=20\) bruned in at approximately \(10^3\) cycles. 
-Thus, by discarding the first \(\sim 10^3\) cycles, the relative errors should become smaller for both the \(L=2\) case, but for greater lattice size as well.
-Recall, we have used thinning truoughout, only keeping the \(N\)-th element of the Markov chain for a single cycle (recall \(N=L^2\)). 
-Thus we not expect a drastically larger equilibration time for lattice sizes \(20<L\leq 100\). 
-Although, in general, we do expect the equilibration time to increase with lattice size. 
-Each cycle consists of \(N\) attempted spin-flips and therefore clearly scales with \(L\)
-However, the correlation length of the Ising model typically increases with \(L\), in particular near the critical temperature.
-As \(L\) grows, correlated regions become larger, and the number of spin flips required for the Markov chain to effectively sample and decorrelate these regions also increases.
-
-In our simulations for \(L>20\), we have thus deliberatly chosen a higher number of burn-in cycles, than the amount needed for the \(L=20\) case.
-That is, beyond \(L=20\) we performed \(10^5\) burn-in cylces, \(10\%\) of the number of cycels (\(10^6\)) we stored values from. 
-
+Figure~\ref{fig:equilibration} suggested that the simulation for \(L=20\) burned in at approximately \(10^3\) cycles. 
+Thus, by discarding the first \(\sim 10^3\) cycles, the relative errors should become smaller for both the \(L=2\) case, and for greater lattice sizes.
+As we have used thinning throughout, keeping only the \(N\)-th element of the Markov chain, we do not expect a drastically larger burn-in time for the remaining lattice sizes \(20<L\leq 100\). 
+The big exception will be near the critical point, as the correlation length then approaches the system size \(L\).
+%Although, in general, we do expect the burn-in time to increase with lattice size. 
+%Each cycle consists of \(N\) attempted spin-flips and therefore clearly scales with \(L\).
+%However, the correlation length of the Ising model typically increases with \(L\), in particular near the critical temperature.
+%As \(L\) grows, correlated regions become larger, and the number of spin flips required for the Markov chain to effectively sample and decorrelate these regions also increases.
+When we are close to the critical temperature, the size of correlated regions therefore grows with \(L\), and more Monte Carlo cycles are required to effectively sample our space.
+With this in mind, we have chosen a larger number of burn-in cycles for the simulations used to produce Figure~\ref{fig:temp_scan}.
+Concretely, we ended up using \(10^5\) burn-in cycles for each temperature point.
+Accounting for the fact that we average over $10$ repeat simulations per temperature point, this burn-in period corresponds to roughly \(1\%\) of the total $10.01^7$ Monte Carlo cycles.
+%That is, beyond \(L=20\) we performed \(10^5\) burn-in cycles, \(10\%\) of the total number of (\(10^7\)) cycles we stored values from.
 
 From Figure~\ref{fig:temp_scan_error} we also see that that error estimates and effective sample sizes worsen around the critical temperature.
 This is to be expected, as the correlation length then approaches the system size $L$.
 Indeed, as large-scale correlations become more prominent, the act of flipping a single spin will not be as effective at decorrelating samples. 
 This naturally leads to stronger autocorrelations in the Markov chain, and thus a smaller effective sample size.
 
+An important ingredient in speeding up our simulations has been the use of parallelization.
+As mentioned earlier, the observed speedup may however be highly hardware dependent.
+In particular, our CPUs have lower clock speeds than many modern personal computers, but are better optimized for parallel workloads.
+The typical personal computer might instead see shorter serial runtimes, but less speedup from parallelization, resulting in a less significant speedup.
+
 \begin{itemize}
-    \item \color{red}Kommentere parallelisering. \color{black}
     \item \color{red}Andre utfordringer? \color{black}
     \item \color{red}Future works? \color{black}
 \end{itemize}
