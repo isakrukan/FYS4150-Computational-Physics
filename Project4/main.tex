@@ -290,10 +290,10 @@ where, generally, the variance $\text{Var(X)}$ is defined as
 \begin{align}
     \text{Var}(X) = \langle X^2\rangle - \langle X\rangle^2.
 \end{align}
-Note here that the absolute value \(|m|\) is used to study the magnetization, rather than \(m\) itself.
-This is because the lack of an external magnetic field means that there is no preferred direction for the orientation of spins in the paramagnetic phase.
-The sign of the magnetization essentially becomes redundant in this case, and states of $+m$ and $-m$ are physically equivalent.
-Perhaps more importantly, this means the \textit{signed} average magnetization $\langle m \rangle$ will be zero for all temperatures, due to identical counter-terms from states with opposite magnetization. 
+Note here the appearance of the absolute value \(|m|\) in~\eqref{eq:chi_definition}. 
+Since we consider no external magnetic field, there is no preferred direction for the orientation of spins in the paramagnetic phase, so states of $+m$ and $-m$ are physically equivalent.
+As a consequence, the \textit{signed} average magnetization $\langle m \rangle$ is zero for all temperatures, since identical counter-terms from states with opposite magnetization will cancel each other. 
+To distinguish between the ordered (ferromagnetic) versus unordered (paramagnetic) phases, we thus use \(|m|\) instead of \(m\), so that configurations with opposite magnetization contribute equally rather than canceling.
 
 \subsubsection{The critical temperature}    \label{sec:critical_temperature}
 Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average magnetization per cite, \(\langle |m|\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (`energy'), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle |m|\rangle\) \footnote{This `spike' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. The temperature at which this happens is called the critical temperature \(T_c\).  
