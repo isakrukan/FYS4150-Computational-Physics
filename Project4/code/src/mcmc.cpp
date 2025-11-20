@@ -42,14 +42,14 @@ void MCMC::cycle_MCMC(int steps)
                                  (*location.left).s +
                                  (*location.right).s);
 
-        // Always accept if ΔE is negative (avoids unnecessary RNG calls)
+        // Always accept if Delta E is negative (avoids unnecessary RNG calls)
         if (diff <= 0)
         {
             lattice.flip_spin(i_cycle_location, j_cycle_location);
             continue;
         }
         // Otherwise, do RNG call for acceptance rule
-        if (spin_distr(generator) < boltzmann[(diff + 8) / 4])
+        if (spin_distr(generator) <= boltzmann[(diff + 8) / 4])
         {
             lattice.flip_spin(i_cycle_location, j_cycle_location); // Energy and magnetization is updated within lattice.
         }

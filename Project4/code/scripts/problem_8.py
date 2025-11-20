@@ -2,8 +2,9 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-plt.style.use('ggplot')
 import utils
+
+utils.latex_fonts()
 
 # Set directories
 DIR = "out/"
@@ -76,7 +77,7 @@ ax[0].set_ylabel(r'$\langle \epsilon \rangle$')
 ax[1].set_ylabel(r'$\langle |m| \rangle$')
 ax[2].set_ylabel(r'$C_V/N$')
 ax[3].set_ylabel(r'$\chi/N$')
-ax[3].set_xlabel('Temperature $[k_B T / J]$')
+ax[3].set_xlabel(r'Temperature $[\si{k_B T / J}]$')
 ax[3].set_xlim([2.1, 2.4])
 ax[0].legend()
 fig.savefig(OUT_DIR + f'temp_scan.pdf')
@@ -85,13 +86,14 @@ fig.savefig(OUT_DIR + f'temp_scan.pdf')
 # --- Error plots ---:
 ax_err[0].set_ylabel('MCSE')
 ax_err[1].set_ylabel('ESS')
-ax_err[1].set_xlabel('Temperature $[k_B T / J]$')
+ax_err[1].set_xlabel(r'Temperature $[\si{k_B T / J}]$')
 ax_err[1].set_xlim([2.1, 2.4])
+ax_err[0].set_ylim([1e-4, 1])
 
-# Creating legends manually:
+### Creating legends manually:
 
 # -----------------------------------
-# LEGEND #2: colors (lattice size L)
+# LEGEND #1: colors (Lattice sizes)
 # -----------------------------------
 handles_color = [plt.Line2D([0], [0], color=f"C{i}") for i in range(len(lattice_sizes))]
 labels_color = [f"$L = {L}$" for L in lattice_sizes]
@@ -99,27 +101,38 @@ labels_color = [f"$L = {L}$" for L in lattice_sizes]
 legend_color = ax_err[0].legend(handles_color, 
                                 labels_color,
                                 framealpha=0,
-                                title="Lattice size",
+                                title=r"Lattice sizes",
                                 loc="upper left",
-                                bbox_to_anchor=(1.0, 1.07))
+                                bbox_to_anchor=(0.0, 1)
+                                )
 
 legend_color._legend_box.align = "left"
+
  
 # ---------------------------------
-# LEGEND #1: linestyles (epsilon vs |m|)
+# LEGEND #2: linestyles (Quantities)
 # ---------------------------------
 handles_style = [plt.Line2D([0], [0], linestyle='-',  color='black', alpha=1.0),
                  plt.Line2D([0], [0], linestyle='--', color='black', alpha=0.5)]
-labels_style = [r'$\epsilon$', r'$|m|$']
+labels_style = [r'$\langle\epsilon\rangle$', r'$\langle|m|\rangle$']
 
-legend_style = ax_err[1].legend(handles_style, 
+legend_style = ax_err[0].legend(handles_style, 
                                 labels_style, 
                                 framealpha=0,
-                                title="Observable",
+                                title="Quantities",
                                 loc="upper left",
-                                bbox_to_anchor=(1.0, 1.5),
+                                bbox_to_anchor=(0.2, 1),
                                 )
 
-ax_err[1].add_artist(legend_style)
+ax_err[0].add_artist(legend_color)
+
+# Adding vertical bar between the two legend boxes
+ax_err[0].plot(
+    [0.205, 0.205],    
+    [0.39, 0.92],   
+    transform=ax_err[0].transAxes,
+    color="black",
+    linewidth=0.8
+)
 
 fig_err.savefig(OUT_DIR + f'temp_scan_error_{NAME_MODIFIER}.pdf')

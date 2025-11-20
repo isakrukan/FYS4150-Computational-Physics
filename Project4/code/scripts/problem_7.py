@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-plt.style.use('ggplot')
+import utils
 
+utils.latex_fonts()
 
 OUT_DIR = "../figs/"
 
