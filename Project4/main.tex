@@ -172,9 +172,9 @@ Conversely, if the temperature is lowered from a value above the Curie temperatu
 
 Ernst Ising investigated in his Ph.D. thesis whether a ferromagnet could be modelled and explained by statistical mechanics~\cite{kulske_ising_2025}. 
 % He solved a one-dimensional version of what later became known as the `Ising chain' version of the Ising model, and found that this model does not exhibit a phase transition at any non-zero temperature~\cite[p. 431]{IntroStatMekSwendsen}.
-He solved a one-dimensional version of what later became known as the `Ising chain' version of the Ising model \footnote{See e.g.~Chapter 31 in~\cite{IntroStatMekSwendsen} for a thorough review of the model}.
-Generally, the Ising model imagines a lattice of spin-locations, each with either spin `up' or spin `down'. 
-As a model of a ferromagnet, the phenomenon of spontaneous magnetization can be understood by how neighboring spin-locations tend to align at lower temperature, as this minimizes the total energy of the system~\footnote{This will become clearer once we introduce the energy of the Ising model in Section \ref{sec:theory_and_method}.}.
+He solved a one-dimensional version of what later became known as the ``Ising chain'' version of the Ising model \footnote{See e.g.~Chapter 31 in~\cite{IntroStatMekSwendsen} for a thorough review of the model}.
+Generally, the Ising model imagines a lattice of spin-locations, each with either spin ``up'' or spin ``down''. 
+As a model of a ferromagnet, the phenomenon of spontaneous magnetization can be understood by how neighboring spin-locations tend to align at lower temperature, as this minimizes the total energy of the system~\footnote{This will become clearer once we introduce the energy of the Ising model in Section~\ref{sec:theory_and_method}.}.
 
 When Ising first solved the Ising chain, he found that this model did not exhibit a phase transition at any nonzero temperature~\cite[p. 431]{IntroStatMekSwendsen}. 
 % However, in 1944, Lars Onsager solved the two-dimensional Ising model with a zero external magnetic field and derived an analytic expression for the critical temperature~\cite{LarsOnsager}. 
@@ -188,7 +188,7 @@ This intuition is justified under the assumption that the \gls{lln} holds~\footn
 
 Some 18 years prior to Ising's Ph.D. thesis and its introduction of the Ising model, Andrey Markov imagined a way of constructing a sequence of random variables, each variable dependent on the immediately preceding one. 
 At the time, Markov were debating a colleague named Pavel Alekseevich Nekrasov, a member of the Russian Orthodox Church, on the topic of free will~\cite{lifeOfMarkov}. 
-Nekrasov believed that pairwise independence of two events is necessary for the observation of the (weak) \gls{lln} in everyday life observations~\footnote{See~\cite{Markov_and_birth_of_chain}. Informally, the \gls{wlln} only demands `likeliness' in that the average approximates the expectation value.}. 
+Nekrasov believed that pairwise independence of two events is necessary for the observation of the (weak) \gls{lln} in everyday life observations~\footnote{See~\cite{Markov_and_birth_of_chain}. Informally, the \gls{wlln} only demands ``likeliness'' in that the average approximates the expectation value.}. 
 However, Markov applied his sequence of random variables to the distribution of vowels and consonants in A.S. Pushkin's poem ``Eugeny Onegin'', and showed that the (weak) \gls{lln} could be derived even in situations where successive events are, in fact, not independent~\cite{lifeOfMarkov}.
 
 Markov's sequence of random variables is now referred to as Markov chains and has proven to be remarkably applicable to a wide range of applications, from ranking webpages~\footnote{PageRank is an algorithm owned by Google, which makes use of Markov chains to efficiently rank webpages, see for instance~\cite{borkar2025smallnoiselimitsmarkov}.} to nuclear physics (see for instance~\cite{HALASZ2018429}). 
@@ -205,11 +205,11 @@ An essential part of the implementation is the use of \texttt{OpenMP}~\cite{open
 
 \section{Theory and Method} \label{sec:theory_and_method}
 Here we present the theory behind the two-dimensional Ising model, the \gls{mcmc} method and our numerical implementation and strategy.
-The first two sections, Section \ref{sec:two_dim_ising} and Section \ref{sec:MCMC}, present the Ising model and \gls{mcmc} method with some generality, whilst the last section, Section \ref{sec:numerical_implementation}, is meant to explain how we have used the theory from the two preceding sections to numerically simulate the Ising model using the \gls{mcmc} method.
-The last part of Section \ref{sec:numerical_implementation} also provides an overview of the various tools we have used, how our code works and the specific parameters we have considered. 
+The first two sections, Section~\ref{sec:two_dim_ising} and Section~\ref{sec:MCMC}, present the Ising model and \gls{mcmc} method with some generality, whilst the last section, Section~\ref{sec:numerical_implementation}, is meant to explain how we have used the theory from the two preceding sections to numerically simulate the Ising model using the \gls{mcmc} method.
+The last part of Section~\ref{sec:numerical_implementation} also provides an overview of the various tools we have used, how our code works and the specific parameters we have considered. 
 
 \subsection{The two-dimensional Ising model}    \label{sec:two_dim_ising}
-Here, we present the theory behind the two-dimensional Ising model, defining its setup and key quantities (Section \ref{sec:ising_model_setup}), some of its statistical properties (Section \ref{sec:statistics}) and its critical temperature (Section \ref{sec:critical_temperature}). We have also provided an analytic solution for the \(2\times 2\) Ising model, which can be found in Appendix \ref{sec:example_2times2lattice}.
+Here, we present the theory behind the two-dimensional Ising model, defining its setup and key quantities (Section~\ref{sec:ising_model_setup}), presenting some of its statistical properties (Section~\ref{sec:statistics}) and its critical temperature (Section~\ref{sec:critical_temperature}). We have also provided an analytic solution for the \(2\times 2\) Ising model, which can be found in Appendix \ref{sec:example_2times2lattice}.
 
 \subsubsection{Model formulation}    \label{sec:ising_model_setup}
 The Ising model consists of a collection of equispaced and interacting spin-locations. 
@@ -227,13 +227,13 @@ This is illustrated in Figure~\ref{fig:counting_neighbors}.
 \begin{figure}[h!]
     \centering
     \includestandalone[width=0.45\textwidth]{figs/lattice}
-    \caption{Two-dimensional Ising model with a single location \(\sigma_{i,j}\) at row \(j\) and column \(i\) displayed. In the numerical implementation, each location is assigned a pointer to the four neighboring sites (up, down, left and right). Two red arrows points to the neighboring locations to the left and down, which is enough to compute the sum in \eqref{eq:Hamiltonian}}
+    \caption{Two-dimensional Ising model with the spin \(s_{i,j}\) at row \(j\) and column \(i\) displayed. In the numerical implementation, each location is assigned a pointer to the four neighboring sites (up, down, left and right). Two red arrows points to the neighboring locations to the left and down, which is enough to compute the sum in \eqref{eq:Hamiltonian}.}
     \label{fig:counting_neighbors}
 \end{figure}
 
 A single term in \eqref{eq:Hamiltonian} can be though of as approximating the exchange interaction between the local magnetic moments of two neighboring cites \footnote{See~\cite[p. 325]{kittel2004introduction} which considers a single term in \eqref{eq:Hamiltonian} and relates the situation to two atoms \(i,j\) containing electrons with spin \(s_i, s_j\).}. 
 Generally, the value of \(E(\vec{s})\) decreases if neighboring pairs of spins are aligned, and increases if neighboring pairs are not. 
-This behavior can be understood in the context of the Pauli exclusion principle and Coulomb interactions~\cite[p. 325]{kittel2004introduction}: as two neighboring fermionic particles align their spins, they are "repelled" from occupying the same positional state, reducing their electrostatic energy compared to the anti-parallel case. 
+This behavior can be understood in the context of the Pauli exclusion principle and Coulomb interactions~\cite[p. 325]{kittel2004introduction}: as two neighboring fermionic particles align their spins, they are ``repelled'' from occupying the same positional state, reducing their electrostatic energy compared to the anti-parallel case. 
 
 As a model of a ferromagnet, another key quantity of the Ising model is the total magnetization \(M\), given by
 \begin{align}
@@ -251,8 +251,7 @@ Lastly, as a measure of the average energy and magnetization at a single locatio
 and 
 \begin{align}
     m(\vec{s}) = \frac{M({\vec{s}})}{N}.    \label{eq:average_magnetization}
-\end{align}
-
+\end{align} 
 
 \subsubsection{Statistics}  \label{sec:statistics}
 % Here, we present some key concepts and quantities in statistical mechanics in relation to the Ising model.
@@ -266,7 +265,7 @@ For the Ising model, the \gls{pdf} \(p(\vec{s}; T)\) for a microstate \(\vec{s}\
 \begin{align}
     p(\vec{s}; T) = \frac{1}{Z}e^{-\beta E(\vec{s})},   \label{eq:Boltzmann_distribution}
 \end{align}
-where \(\beta = 1/(k_BT)\), with \(k_B\) being the Boltzmann constant, and \(Z\) is the so-called \emph{partition function}. The latter quantity ensures that total probability over all microstates sums to one, and can be taken canonically to be
+where \(\beta = 1/(k_BT)\), with \(k_B\) being the Boltzmann constant, and \(Z\) the so-called \emph{partition function}. The latter quantity ensures that total probability over all microstates sums to one, and can be taken canonically to be
 \begin{align}
     Z(\beta) = \sum_{\{\vec{s}\}} e^{-\beta E(\vec{s})},   \label{eq:partition_function}
 \end{align}
@@ -291,15 +290,18 @@ where, generally, the variance $\text{Var(X)}$ is defined as
 \begin{align}
     \text{Var}(X) = \langle X^2\rangle - \langle X\rangle^2.
 \end{align}
-Note here the appearance of the absolute value \(|m|\) in~\eqref{eq:chi_definition}. 
+
+Note the appearance of the absolute value \(|m|\) in~\eqref{eq:chi_definition}. 
 Since we consider no external magnetic field, there is no preferred direction for the orientation of spins in the paramagnetic phase, so states of $+m$ and $-m$ are physically equivalent.
-As a consequence, the \textit{signed} average magnetization $\langle m \rangle$ is zero for all temperatures, since identical counter-terms from states with opposite magnetization will cancel each other. 
+As a consequence, the average magnetization per spin $\langle m \rangle$ is zero for all temperatures; for any term there will always exist a counter-term consisting of states with opposite magnetization, thus cancelling each other. 
 To distinguish between the ordered (ferromagnetic) versus unordered (paramagnetic) phases, we thus use \(|m|\) instead of \(m\), so that configurations with opposite magnetization contribute equally rather than canceling.
 
 \subsubsection{The critical temperature}    \label{sec:critical_temperature}
-Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average magnetization per cite, \(\langle |m|\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (`energy'), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle |m|\rangle\) \footnote{This `spike' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. The temperature at which this happens is called the critical temperature \(T_c\).  
+Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average (absolute) magnetization per cite, \(\langle |m|\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (``energy''), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle |m|\rangle\) \footnote{This ``spike'' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. 
+The temperature at which this happens is called the critical temperature \(T_c\).  
+Formally, the critical temperature only exists in the thermodynamic limit.
 
-Onsager showed in 1944 that the critical temperature of the Ising model in the limit \(L\rightarrow \infty\) takes the form~\cite{LarsOnsager}
+Formally, a true critical temperature only exists in the \emph{thermodynamic limit}, here: \(L \to \infty\). In this limit, Onsager showed in 1944 that the critical temperature of the two-dimensional Ising model is given by~\cite{LarsOnsager}
 \begin{align}
     T_c (L\rightarrow \infty) = \frac{2}{\ln(1 + \sqrt{2})} \ \si{J/k_B} \approx 2.269 \ \si{J/k_B}.    \label{eq:T_c_infintie}
 \end{align}
@@ -344,14 +346,14 @@ A Markov chain is a sequence of random variables \(\{X_n\}_{n\geq 0}\) which sat
     = \ 
     &P(X_{n+1} = x \mid X_n = x_n).    \label{eq:markov_property}
 \end{align}
-This property implements `memorylessness' in the Markov chain; the next state in the Markov chain is only dependent on the immediate state prior.
+This property implements ``memorylessness'' in the Markov chain; the next state in the Markov chain is only dependent on the immediate state prior.
 
 The Markov chain provides insight into the distribution of the random variables \(X\). 
 The distribution appearing in the limit of an infinite Markov chain is called the \emph{stationary distribution}. 
 
 \subsubsection{Markov chain Monte Carlo}
 The \gls{mcmc} method gives an algorithm, which, for a given target distribution \(p(x)\), produces a Markov chain whose stationary distribution equals \(p(x)\).
-In our case the target distribution is the Boltzmann distribution, introduced in Section \ref{sec:statistics}. 
+In our case the target distribution is the Boltzmann distribution, introduced in Section~\ref{sec:statistics}. 
 
 % By keeping track of the energy \(E\) and magnetization \(M\) of our Markov chain produced by the \gls{mcmc} method, we can then estimate their corresponding distributions. 
 % We will be more interested in the average energy and average magnetization, whose distributions are just rescaled versions of the distributions of \(E\) and \(M\).
@@ -359,12 +361,13 @@ In our case the target distribution is the Boltzmann distribution, introduced in
 The \gls{mcmc} method relies on two ingredients: a proposal distribution and an acceptance rule. 
 The general idea of the \gls{mcmc} method is to draw a sample from the proposal distribution, use the acceptance rule to determine whether to keep or discard the proposed sample, and repeat this procedure many times. 
 The collection of samples which are kept in accordance with the acceptance rule forms a Markov chain. 
-Formally, this acceptance rule is what ensures detailed balance, which we require for the stationary distribution of the Markov chain to indeed equal the target distribution \(p(x)\).
+The acceptance rule is chosen so that the resulting Markov chain has \(p(x)\) as its stationary distribution.
+% Formally, this acceptance rule is what ensures detailed balance, which we require for the stationary distribution of the Markov chain to equal the target distribution \(p(x)\).
 % , namely the Metropolis-Hastings acceptance rule. 
 
 In our case, we will form a Markov chain using the \gls{mcmc} method with target distribution set to the Boltzmann distribution (recall \eqref{eq:Boltzmann_distribution}), where each element of the Markov chain is a microstate \(\vec{s}\). 
 Starting with some initial microstate \(\vec{s}_0\), the next proposed microstate will be formed by drawing a random location on the lattice using the proposal distribution and flipping the spin at this location. 
-The proposed microstate is accepted or discarded based on the acceptance rule associated to the Metropolis-Hastings algorithm, which we describe in Section \ref{sec:Metropolis-Hastings}.
+The proposed microstate is accepted or discarded based on the acceptance rule associated to the Metropolis-Hastings algorithm, which we describe in Section~\ref{sec:Metropolis-Hastings}.
 
 
 Before we describe the Metropolis-Hastings algorithm, we would like to point out that there are two notable issues that may arise if one creates a Markov chain using the \gls{mcmc} method, as described above. 
@@ -376,16 +379,16 @@ In practice, if the beginning of a Markov chain shows a clear trend (e.g. its me
 However, it is also possible that the beginning of the Markov chain appears to fluctuate around an apparently stationary state, while still being far away from the most probable state. 
 For instance, its stationary distribution may have two peaks instead of the ``usual'' single one, and the chain may initially explore only one of these peaks.
 
-% In Section \ref{} we explain how we have estimated the number of needed burn-in cycles 
+% In Section~\ref{} we explain how we have estimated the number of needed burn-in cycles 
 The second issue is that simply keeping all the elements of the Markov chain can be quite demanding computationally, and the neighboring elements of the Markov chain may be quite correlated.
-Such a correlation may be unfavorable, however. 
-In our case the difference between one element of the Markov chain and the next is only a single spin-flip. 
-Thus, successive samples will differ very little from one another, and will it may take many steps to reduce auto-correlations significantly.
+Such a correlation may be not necessarily be unfavorable. 
+However, in our case the difference between one element of the Markov chain and the next is only a single spin-flip. 
+Thus, successive samples will differ very little from one another, and it may take many steps to reduce autocorrelations significantly.
 One possible solution to this issue, which we will use, is the method of \emph{thinning}. 
 This is the process of simply skipping some amount of the elements of the Markov chain, only keeping the \(k\)-th element (for some \(k\)).
 
 Even \textit{with} thinning, we may not be able to fully rid ourselves of correlations between samples in the Markov chain.
-(This is especially relevant as one approaches the critical temperature, which we will discuss further in Section \ref{sec:discussion}.)
+(This is especially relevant as one approaches the critical temperature, which we will discuss further in Section~\ref{sec:discussion}.)
 When estimating errors, we should therefore account for correlation by computing an \gls{ess}, quantifying the number of independent samples required to yield the same variance as the correlated samples from the MCMC simulation.
 In our numerical implementation we have computed the \gls{ess} following the approach in Chapter 15.4 of the Stan reference manual~\cite{Stan}, and then adjusted our error estimates accordingly.
 In particular, we will consider the so-called \gls{mcse}, given by  
@@ -439,7 +442,7 @@ However, all of our analysis, code implementation, results and language are prod
 
 \subsubsection{Strategy and goals}
 We consider a numerical implementation of the two-dimensional Ising model with periodic boundary conditions (see Section~\ref{sec:two_dim_ising}), whose statistical properties we study using the \gls{mcmc} method (see Section~\ref{sec:MCMC}) with target distribution given by the Boltzmann distribution. 
-When proposing a new microstate in the Metropolis-Hastings algorithm (see Section \ref{sec:Metropolis-Hastings}), we use a single spin flip as the proposal move.
+When proposing a new microstate in the Metropolis-Hastings algorithm (see Section~\ref{sec:Metropolis-Hastings}), we use a single spin flip as the proposal move.
 
 First, we will be interested in estimating the distribution of $\epsilon$.
 This is done by running the \gls{mcmc} method for a large number of cycles, keeping track of the energy \(\epsilon\) along the Markov chain.
@@ -448,7 +451,7 @@ This is again done using the \gls{mcmc} method, but now averaging over the sampl
 %, by setting the target distribution of the \gls{mcmc} method as the Boltzmann distribution given in  \eqref{eq:Boltzmann_distribution}.
 %By keeping track of the energy \(E\) and magnetization \(M\) along the Markov chain produced by the \gls{mcmc} method, we can estimate their distributions, and the distributions of \(\epsilon(\vec{s})\) and \(m(\vec{s})\) then follow directly, as they are just rescaled versions of the distributions of \(E\) and \(M\).
 From these, we may in turn estimate the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) at the given temperature, using \eqref{eq:C_V_definition} and \eqref{eq:chi_definition}, respectively.
-In Section \ref{sec:critical_temperature} we pointed out that \(C_V\) and \(\chi\) should blow up around the critical temperature \(T_c(L)\) (recall \eqref{eq:C_V_behavior_close} and \eqref{eq:chi_behavior_close}).
+In Section~\ref{sec:critical_temperature} we pointed out that \(C_V\) and \(\chi\) should blow up around the critical temperature \(T_c(L)\) (recall \eqref{eq:C_V_behavior_close} and \eqref{eq:chi_behavior_close}).
 %By running our simulation for various temperatures we also obtain estimates for the expectation values of \(\epsilon\) and \(|m|\) as functions of temperature. 
 %By running our simulation for various temperatures we also obtain estimates for the expectation values of \(\epsilon\) and \(|m|\) as functions of temperature. 
 %Using these expectation values, we compute the heat capacity \(C_V\) and the magnetic susceptibility \(\chi\) using \eqref{eq:C_V_definition} and \eqref{eq:chi_definition}, respectively. 
@@ -468,11 +471,11 @@ We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation 
 We have implemented the lattice of the Ising model as a class called \texttt{Lattice}, which, most notably, contains a collection of instances of a struct called \texttt{Location}. 
 Each \texttt{Location} object contains a spin value and four pointers to be assigned.
 A pointer is an object which ``points'' to a given memory address in the computer's memory.
-By assigning every instance of \texttt{Location} a pointer to the ``neighboring'' instances, we avoid constantly checking whether the current location is a boundary or not (recall that we consider periodic boundary conditions).
+By assigning every instance of \texttt{Location} a pointer to the ``neighboring'' instances (cf. Figure~\ref{fig:counting_neighbors}), we avoid constantly checking whether the current location is a boundary or not (recall that we consider periodic boundary conditions).
 Once \texttt{Lattice} is initialized, its collection of \texttt{Location} objects is assigned the correct pointers and the initial energy and magnetization are computed.
 
 The Metropolis-Hastings algorithm has been implemented in a class called \texttt{MCMC}, which is initialized by an instance of \texttt{Lattice} and a seed.
-%For the MCMC simulations, we have implemented a class called \texttt{MCMC} which is initialized by an instance of \texttt{Lattice} and a seed. The \texttt{MCMC} class implements the Metropolis-Hastings algorithm described in Section \ref{sec:Metropolis-Hastings}. 
+%For the MCMC simulations, we have implemented a class called \texttt{MCMC} which is initialized by an instance of \texttt{Lattice} and a seed. The \texttt{MCMC} class implements the Metropolis-Hastings algorithm described in Section~\ref{sec:Metropolis-Hastings}. 
 Here we have implemented the possibility of adding a burn-in effect and we generally apply thinning, only keeping every \(N\)-th state (recall, \(N\) is the number of locations).
 The \texttt{MCMC} class uses the Boltzmann distribution as its target distribution, and a uniform distribution to compute a candidate next state \(\vec{s}'\). 
 The candidate next state differs from the current state \(\vec{s}\) by a single spin-flip at some location drawn from the uniform distribution.
@@ -548,12 +551,12 @@ To reproduce a minimal version of the results of this project, navigate to the c
 
 \section{Results}
 Here we present our results, which we have divided into the following five sections. 
-Section \ref{sec:realative_errors} presents relative errors from simulating the \(2\times 2\) lattice, using the analytic solution given in Appendix \ref{sec:example_2times2lattice}.
-Section \ref{sec:equilibration_time} considers a \(L=20\) lattice and examines the behavior of the energy per spin as a function of the number of Monte Carlo cycles for various temperatures. 
-Section \ref{sec:Energy_distribution} also considers a \(L=20\) lattice and shows the energy distribution for two different temperatures, starting from either an ordered or a disordered initial state. 
-Section \ref{sec:Phase_trans_temp_ScAns} presents the results from running the simulation for various lattice sizes and varying temperature, as to identify where the phase transition may take place.
-Section \ref{sec:Critical_temp_results} uses the peaks in the heat capacity and magnetic susceptibility from the preceding section to estimate the critical temperature, and extrapolates to the case of an infinite lattice, which is to be compared to Onsager's expression \eqref{eq:T_c_infintie}.
-Lastly, Section \ref{sec:timing_test_parallelization} presents how our simulation's run time scales under parallelization, and in particular, as a function of number of threads.
+Section~\ref{sec:realative_errors} presents relative errors from simulating the \(2\times 2\) lattice, using the analytic solution given in Appendix \ref{sec:example_2times2lattice}.
+Section~\ref{sec:equilibration_time} considers a \(L=20\) lattice and examines the behavior of the energy per spin as a function of the number of Monte Carlo cycles for various temperatures. 
+Section~\ref{sec:Energy_distribution} also considers a \(L=20\) lattice and shows the energy distribution for two different temperatures, starting from either an ordered or a disordered initial state. 
+Section~\ref{sec:Phase_trans_temp_ScAns} presents the results from running the simulation for various lattice sizes and varying temperature, as to identify where the phase transition may take place.
+Section~\ref{sec:Critical_temp_results} uses the peaks in the heat capacity and magnetic susceptibility from the preceding section to estimate the critical temperature, and extrapolates to the case of an infinite lattice, which is to be compared to Onsager's expression \eqref{eq:T_c_infintie}.
+Lastly, Section~\ref{sec:timing_test_parallelization} presents how our simulation's run time scales under parallelization, and in particular, as a function of number of threads.
 
 
 \subsection{Relative errors of \(2\times 2\) lattice simulation}    \label{sec:realative_errors}
@@ -708,40 +711,38 @@ It should be noted that these results are likely dependent on the specific hardw
 \end{figure}
 
 \section{Discussion}    \label{sec:discussion}
-We have divided this discussion into two parts, Section \ref{sec:statistical_properties_discussion} and Section \ref{sec:numerics_discussion}, as to separate the statistical and purely numerical sides of the report.
+We have divided this discussion into two parts, Section~\ref{sec:statistical_properties_discussion} and Section~\ref{sec:numerics_discussion}, as to separate the statistical and purely numerical sides of the report.
 
 \subsection{Statistical properties of the simulation}   \label{sec:statistical_properties_discussion}
 Figure~\ref{fig:epsilon_distribution} shows a clear difference in the energy distribution of the simulated Ising model for \(T=1.0 \ \si{J/k_B}\) compared to \(T=2.4 \ \si{J/k_B}\).
 For \(T=1.0 \ \si{J/k_B}\), the system seems to be in ordered state, as the energy per spin is tightly centered around \(\epsilon = -2 \ \si{J}\).
-On the other hand, the system appears more disordered as we increase the temperature to \(T=2.4 \ \si{J/k_B}\).
-The energy distribution is indeed centered around a larger value, and has a considerably larger variance.
+On the other hand, the system appears more disordered as we increase the temperature to \(T=2.4 \ \si{J/k_B}\): the energy distribution is centered around a larger value, and has a considerably larger variance.
 In combination, these results suggests a phase transition must occur somewhere between \({T=1.0 \ \si{J/k_B}}\) and \(T=2.4 \ \si{J/k_B}\).
 
-Indeed, we saw in Figure~\ref{fig:temp_scan} how the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) displayed peaks in the region \({T\approx2.20\text{--}2.35 \ \si{J/k_B}}\).
+This is confirmed in Figure~\ref{fig:temp_scan}, where the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) displays peaks in the critical region \({T\approx2.20\text{--}2.35 \ \si{J/k_B}}\).
 The energy and magnetization showed a different behavior in the same region as well, though both displayed a much smoother behavior.
-This behavior is expected.
-A true phase transition, in the strict thermodynamic sense, occurs only in the thermodynamic limit, which in our case corresponds to an infinite lattice.
-This seems consistent with Figure~\ref{fig:temp_scan}, which shows the maximum of the heat capacity and magnetic susceptibility increase as \(L\) increases.
+This should be expected as a true phase transition, in the strict thermodynamic sense, occurs only in the thermodynamic limit, which in our case corresponds to an infinite lattice.
+This seems consistent with Figure~\ref{fig:temp_scan}, which shows the maximum of the heat capacity and magnetic susceptibility in the critical region increase as \(L\) increases.
 
-It also seems like the peaks in \(\chi\) appear at slightly higher temperature than corresponding peaks in \(C_V\).
-This is indeed reflected in the estimated critical temperatures \(T_c(L)\) shown in Table~\ref{table:crit_temps}.
-Nonetheless, the estimated critical temperatures seem to approach Onsager's exact solution \eqref{eq:T_c_infintie} for $L\rightarrow \infty$ as \(L\) increases.
+It also seems like the peaks in \(\chi\) appear at slightly higher temperature than the corresponding peaks in \(C_V\).
+This is reflected in the estimated critical temperatures \(T_c(L)\) shown in Table~\ref{table:crit_temps}.
+Nonetheless, the estimated critical temperatures seem to approach Onsager's exact solution \eqref{eq:T_c_infintie} for $L\rightarrow \infty$.
 %Nonetheless, the estimated critical temperatures lie above Onsager's exact value \eqref{eq:T_c_infintie} for the limit \(L\rightarrow \infty\), and seem to be decreasing with larger \(L\).
 %Using the scaling relations \eqref{eq:scaling_relations}, we indeed obtained estimates for the critical temperature \(T_c(L\rightarrow\infty)\), as seen in Table~\ref{table:crit_temp_infinite}.
 Indeed, our estimates for the critical temperature $T_c(L\rightarrow\infty)$ of the infinite lattice, shown in Table~\ref{table:crit_temp_infinite}, are in good agreement with Onsager's exact value \eqref{eq:T_c_infintie}.
-The provided uncertainties are however only those from the linear regression, and likely underestimate the true uncertainties.
-There will indeed be other important sources of uncertainty, such as statistical uncertainties from the \gls{mcmc} simulations themselves.
+The provided uncertainties are however only those from the linear regression and are likely underestimating the true uncertainties.
+There are other important sources of uncertainty, such as statistical uncertainties from the \gls{mcmc} simulations themselves.
 %For the future, one could instead compute variances of the critical temperatures \(T_c(L)\) from the \gls{mcmc} simulations, and use these as weights in a weighted linear regression.
 %For the future, this could be incorporated by instead peforming a \textit{weighted} linear regression, using MCMC-derived variances of the critical temperatures \(T_c(L)\) as weights.
 For the future, these could for instance be incorporated by using MCMC-derived variances of the critical temperatures \(T_c(L)\) as weights in a \textit{weighted} linear regression.
 
 \subsection{Numerical optimizations and limitations}    \label{sec:numerics_discussion}
-The relative errors in Figure~\ref{fig:app:2x2lattice} for the \(L=2\) Ising model showed that it took about \(\sim 10^6\) cycles before the relative errors of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) become sufficiently small (\(\sim 10^{-2}\)). 
+The relative errors in Figure~\ref{fig:app:2x2lattice} for the \(L=2\) Ising model showed that it took about \(\sim 10^6\) cycles before the relative errors of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) became sufficiently small (\(\sim 10^{-2}\)). 
 Hence, it seems like we need at least \(\sim 10^6\) cycles for the results to converge to something meaningful. 
 However, these results do not include a burn-in period.
 
 Figure~\ref{fig:equilibration} suggested that the simulation for \(L=20\) burned in at approximately \(10^3\) cycles. 
-Thus, by discarding the first \(\sim 10^3\) cycles, the relative errors should become smaller for both the \(L=2\) case, and for greater lattice sizes.
+Thus, by discarding the first \(\sim 10^3\) cycles, the relative errors should become smaller for both the \(L=2\) case, and for greater lattice sizes as well.
 As we have used thinning throughout, keeping only the \(N\)-th element of the Markov chain, we do not expect a drastically larger burn-in time for the remaining lattice sizes \(20<L\leq 100\). 
 The big exception will be near the critical point, as the correlation length then approaches the system size \(L\).
 %Although, in general, we do expect the burn-in time to increase with lattice size. 
@@ -749,7 +750,7 @@ The big exception will be near the critical point, as the correlation length the
 %However, the correlation length of the Ising model typically increases with \(L\), in particular near the critical temperature.
 %As \(L\) grows, correlated regions become larger, and the number of spin flips required for the Markov chain to effectively sample and decorrelate these regions also increases.
 When we are close to the critical temperature, the size of correlated regions therefore grows with \(L\), and more Monte Carlo cycles are required to effectively sample our space.
-With this in mind, we have chosen a larger number of burn-in cycles for the simulations used to produce Figure~\ref{fig:temp_scan}.
+With this in mind, we chose a larger number of burn-in cycles for the simulations used to produce Figure~\ref{fig:temp_scan}.
 Concretely, we ended up using \(10^5\) burn-in cycles for each temperature point.
 Accounting for the fact that we average over $10$ repeat simulations per temperature point, this burn-in period corresponds to roughly \(1\%\) of the total $1.01\times10^7$ Monte Carlo cycles.
 %That is, beyond \(L=20\) we performed \(10^5\) burn-in cycles, \(10\%\) of the total number of (\(10^7\)) cycles we stored values from.
@@ -761,13 +762,17 @@ This naturally leads to stronger autocorrelations in the Markov chain, and thus 
 
 An important ingredient in speeding up our simulations has been the use of parallelization.
 As mentioned earlier, the observed speedup may however be highly hardware dependent.
-In particular, our CPUs have lower clock speeds than many modern personal computers, but are better optimized for parallel workloads.
-The typical personal computer might instead see shorter serial runtimes, but less speedup from parallelization, resulting in a less significant speedup.
+In particular, the CPUs we ran our simulations on have lower clock speeds than many modern personal computers, but are better optimized for parallel workloads.
+The typical personal computer might instead see shorter serial runtimes, but less speedup from parallelization.
+% , resulting in a less significant speedup.
 
-\begin{itemize}
-    \item \color{red}Andre utfordringer? \color{black}
-    \item \color{red}Future works? \color{black}
-\end{itemize}
+% \begin{itemize}
+%     \item \color{red}Andre utfordringer? \color{black}
+%     \item \color{red}Future works? \color{black}
+% \end{itemize}
+
+% \subsection{Future works}
+
 
 
 \section{Conclusion}
