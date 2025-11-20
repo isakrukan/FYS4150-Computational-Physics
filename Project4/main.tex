@@ -192,15 +192,15 @@ However, Markov applied his sequence of random variables to the distribution of 
 
 Markov's sequence of random variables is now referred to as Markov chains and has proven to be remarkably applicable to a wide range of applications, from ranking webpages~\footnote{PageRank is an algorithm owned by Google, which makes use of Markov chains to efficiently rank webpages, see for instance~\cite{borkar2025smallnoiselimitsmarkov}.} to nuclear physics (see for instance~\cite{HALASZ2018429}). 
 
-In particular, we are now interested in using Markov chains to sample microstates of the Ising model, in which case we require the stationary distribution to be the Boltzmann distribution.
-Such a chain is constructed using the \gls{mcmc} method, with a Metropolis-Hastings acceptance rule.
-This is first used to numerically estimate the energy distribution for temperatures $T = 1.0 J/k_B$ and $T = 2.4 J/k_B$, where $J$ is a coupling constant and $k_B$ the Boltzmann constant.
-From this we see evidence of a phase transition, somewhere between these two temperatures.
-By sampling relevant statistics over a range of temperatures, we are then able to estimate the critical temperature of the Ising model for different lattice sizes.
-Using finite size scaling relations, we can furthermore extrapolate toward the infinite-size limit to compare our results with Onsager's analytic expression.
+In this report, we are interested in using Markov chains to sample microstates of the Ising model in order to investigate its statistical properties numerically.
+To construct such Markov chains and estimate the corresponding statistical properties, we employ the \gls{mcmc} method.
+We are particularly interested in estimating the model's energy distribution and critical temperature, and, for the latter, compare to Onsager's exact result for the infinite-sized lattice. 
+By simulating the Ising model for temperatures below and above Onsager's critical temperature, we look for evidence of a phase transition somewhere between these two temperatures.
+Sampling relevant statistics over a range of temperatures then allows us to estimate the critical temperature of the Ising model for different lattice sizes.
+Using finite-size scaling relations, we extrapolate toward the infinite-size limit to compare our results with Onsager's analytic expression.
 
 Numerical optimizations and implementation details are discussed along the way, with the full code available at~\cite{FYS4150Project4}.
-An essential part of the implementation is the use of \texttt{OpenMP}~\cite{openmp} for parallelization, leading to significant speed-ups.
+An essential part of the implementation is the use of \texttt{OpenMP}~\cite{openmp} for parallelization, which leads to significant speed-ups.
 
 \section{Theory and Method} \label{sec:theory_and_method}
 Here we present the theory behind the two-dimensional Ising model, the \gls{mcmc} method and our numerical implementation and strategy.
