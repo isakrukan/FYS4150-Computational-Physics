@@ -135,7 +135,7 @@
 
 \begin{document}
 
-\title{Obtaining the critical temperature of the Ising model using the Markov chain Monte Carlo\\[0.5em]
+\title{Estimating Critical Behavior of the Two-Dimensional Ising Model Using the Markov Chain Monte Carlo Method\\[0.5em]
   \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project4}{\texttt{github.uio.no/icrukan/FYS4150/Project4}}
 }
 \author{Magnus Axelsen and Isak Cecil Onsager Rukan} % self-explanatory
@@ -143,12 +143,12 @@
 \noaffiliation                            % ignore this, but keep it.
 
 \begin{abstract}
-    We apply Markov chain Monte Carlo simulations with a Metropolis-Hastings acceptance to study the two-dimensional Ising model with zero external magnetic field.
-    By sampling spin configurations according to the Boltzmann distribution, the statistical properties of the energy and magnetization are analyzed for different temperatures.
-    This allows the estimation of the heat capacity and magnetic susceptibility as functions of temperature, from which the critical temperature of the system can be inferred. 
-    Additionally considering different lattice sizes $L = 40,60,80,100$, the finite size scaling relations can then be used to extrapolate an estimate of $T_c$ in the limit $L\rightarrow \infty$ and compare to Lars Onsager's analytic expression from 1944.
-    Using this procedure, we obtain the estimates $T_c^{C_v} = 2.268 \pm 0.029 J/k_B$ and $T_c^{\chi} = 2.270 \pm 0.071 J/k_B$ using the heat capacity and magnetic susceptibility respectively. 
-    These are both in good agreement with the analytic result $T_c \approx 2.269 J/k_B$ derived by Onsager.
+    We apply Markov chain Monte Carlo simulations to study the two-dimensional Ising model with zero external magnetic field.
+    By sampling spin configurations according to the Boltzmann distribution, we analyze the statistical properties of the model for different temperatures.
+    We find energy distributions for \(T=1.0\ \si{J/k_B}\) and \(T=2.4\ \si{J/k_B}\) resembling an ordered and disordered state, respectively.
+    Considering the heat capacity and magnetic susceptibility for different lattice sizes \(L=40,60,80,100\) we then estimate the critical temperature to be in the range \(T_c(L)\approx 2.277\text{--}2.321 \ \si{J/k_B}\) by varying the temperature in the interval \(T\in[1.0, 2.4] \ \si{J/k_B}\).
+    Using the finite size scaling relations we extrapolate \(T_c(L)\) to estimate its value in the limit $L\rightarrow \infty$, comparing to Lars Onsager's analytic expression \(T_c\approx 2.269 \ \si{J/k_B}\) from 1944.
+    In this limit, we find the estimates $T_c^{(C_v)} = 2.268 \pm 0.029 J/k_B$ and $T_c^{(\chi)} = 2.270 \pm 0.071 J/k_B$ using the peaks of the heat capacity and magnetic susceptibility, respectively. 
 \end{abstract}
 \maketitle
 
@@ -179,7 +179,8 @@ As a model of a ferromagnet, the phenomenon of spontaneous magnetization can be 
 When Ising first solved the Ising chain, he found that this model did not exhibit a phase transition at any nonzero temperature~\cite[p. 431]{IntroStatMekSwendsen}. 
 % However, in 1944, Lars Onsager solved the two-dimensional Ising model with a zero external magnetic field and derived an analytic expression for the critical temperature~\cite{LarsOnsager}. 
 However, in 1944, Lars Onsager solved the two-dimensional Ising model with a zero external magnetic field and did indeed find a nonzero critical temperature, and even derived an analytic expression for it in the limit of an infinite lattice~\cite{LarsOnsager}. 
-For finite-sized lattices however, the situation is complicated by finite size effects, motivating instead the use of numerical methods.
+For finite-sized lattices however, the situation is complicated by the fact that the critical temperature, and other statistical properties, are dependent on the size of the lattice.
+Naturally, this motivates the use of numerical methods.
 
 In any case, the Ising model is an elegant and simple (in design) model which exceeds remarkably at illustrating statistical phenomenon, not necessarily directly tied to ferromagnets. 
 For instance, if one imagines sampling microstates of the Ising model at random, according to a given probability distribution, it is intuitive that the average of these microstates should converge toward the typical or most probable configuration.
@@ -416,20 +417,20 @@ Once a candidate sample \(x'\) is drawn in accordance with the proposal \gls{pdf
 This algorithm involves a particular choice of acceptance rule, and is the algorithm we have used in this project. 
 
 \subsection{Parallelization} \label{sec:parallelization}
-For our later numerical implementation, the use of parallelization will be vital to in shortening the runtime of our simulations.
-To further quantify the speedup achieved through parallelization, we would like to run some timing tests and attempt a fit of the results to a model
+For our later numerical implementation, the use of parallelization will be vital to shorten the runtime of our simulations.
+To further quantify the speedup achieved through parallelization, we would like to run some timing tests and attempt a fit of the results to the following model
 \begin{align}\label{eq:amdahl_T}
    T(N) =  \frac{1-f}{N} + f,
 \end{align}
 where \(T(N)\) is the runtime (taken in units of the serial runtime $T_\mathrm{serial} = T(1)$) when parallelizing with \(N\) cores, and \(f\) is a parameter to be fitted.
-In particular, we may then interpret \(f\) as the strictly serial contribution to the runtime, while \((1-f)/N\) is the parallelizable portion.
+We may interpret \(f\) as the strictly serial contribution to the runtime, while \((1-f)/N\) as the parallelizable portion.
 The latter can clearly be reduced by deploying more cores, while the former can not.
 This further predicts that the speedup factor $S(N)$ when parallelizing with \(N\) cores is given by 
 \begin{align}\label{eq:amdahl_S}
     S(N) = \frac{T(1)}{T(N)} = \frac{1}{\frac{1-f}{N} + f}.
 \end{align}
-This is known as \emph{Amdahl's law} \cite{cornell_parallel}.
-Taking \(N\rightarrow \infty\), this further suggests a theoretical maximum speedup of \(S = 1/f\)\footnote{This is of course a simplification, as the parallel portion of the code can only contain a finite number of $M$ independent tasks. Thus, we should expect the speedup saturates as \(N\rightarrow M\).}.
+This is known as \emph{Amdahl's law} \cite{amdahl1967validity}.
+Taking \(N\rightarrow \infty\) gives a theoretical maximum speedup of \(S = 1/f\)~\footnote{This is of course a simplification, as the parallel portion of the code can only contain a finite number of $M$ independent tasks. Thus, we should expect the speedup saturates as \(N\rightarrow M\).}.
 
 
 \subsection{Strategy overview and numerical implementation} \label{sec:numerical_implementation}
@@ -451,8 +452,8 @@ In Section \ref{sec:critical_temperature} we pointed out that \(C_V\) and \(\chi
 %By running our simulation for various temperatures we also obtain estimates for the expectation values of \(\epsilon\) and \(|m|\) as functions of temperature. 
 %By running our simulation for various temperatures we also obtain estimates for the expectation values of \(\epsilon\) and \(|m|\) as functions of temperature. 
 %Using these expectation values, we compute the heat capacity \(C_V\) and the magnetic susceptibility \(\chi\) using \eqref{eq:C_V_definition} and \eqref{eq:chi_definition}, respectively. 
-Exploiting this behavior, we also aim at estimating \(T_C(L)\) by identifying the temperature at which \(C_V\) and \(\chi\) peak for various lattice sizes \(L\).
-This is then compared with Onsager's result for the limit \(L\rightarrow\infty\), given in \eqref{eq:T_c_infintie}, using the scaling relations in \eqref{eq:scaling_relations}.
+Exploiting this behavior, we aim at estimating \(T_C(L)\) by identifying the temperature at which \(C_V\) and \(\chi\) peak for various lattice sizes \(L\).
+Then, we compare with Onsager's result for the limit \(L\rightarrow\infty\), given in \eqref{eq:T_c_infintie}, using the scaling relations in \eqref{eq:scaling_relations}.
 %and then compare this against Onsager's result for the limit \(L\rightarrow\infty\), using the scaling relations in \eqref{eq:scaling_relations}.
 
 We are also interested in investigating how many number of Monte Carlo cycles are needed before our numerical results converge to the expected values for the \(2\times 2\) Ising model, described in Appendix \ref{sec:example_2times2lattice}.
@@ -767,21 +768,26 @@ The typical personal computer might instead see shorter serial runtimes, but les
     \item \color{red}Andre utfordringer? \color{black}
     \item \color{red}Future works? \color{black}
 \end{itemize}
-\section{Conclusion}
-Difficulties introduced by finite size effects motivates the use of numerical methods to study the two-dimensional Ising model at finite lattice sizes.
-To this end, we have implemented a Metropolis-Hastings \gls{mcmc} algorithm to sample spin configurations \(\vec{s}\) from the Boltzmann distribution \(p(\vec{s}; T)\) at a given temperature \(T\).
-This can be used to estimate thermodynamic quantities such as the heat capacity and magnetic susceptibility of the model at a given temperature \(T\) and lattice size \(L\).
-Repeating these simulations for a range of temperatures, we have further estimated the critical temperature \(T_c(L)\).
-Applying finite size scaling relations, these estimates are then extrapolated to the case of an infinite lattice.
-This leads to the estimates
-\begin{align}
-    T^{(C_V)}_c(L\rightarrow\infty) = 2.268 \pm 0.029 \ \si{J/k_B}, \\
-    T^{(\chi)}_c(L\rightarrow\infty) = 2.270 \pm 0.071 \ \si{J/k_B},
-\end{align}
-derived from the heat capacity and magnetic susceptibility respectively.
-These are both consistent with the analytic result \(T_c \approx 2.269 \ \si{J/k_B}\) derived by Onsager \cite{LarsOnsager}.
 
-Additionally, we have examined the effect of parallelization on the performance of our code, and found a theoretical maximum speedup of roughly \(15.4\) times for our specific hardware setup. 
+
+\section{Conclusion}
+The finite-sized Ising model thermodynamic quantities are dependent on the size of the Ising model's lattice and no general solution exists, motivating numerical simulations.
+We have implemented the \gls{mcmc} algorithm to sample spin configurations \(\vec{s}\) from the Boltzmann distribution \(p(\vec{s}; T)\) at a given temperature \(T\).
+This allowed us to estimate thermodynamic quantities such as the energy \(E\), magnetization \(M\), heat capacity \(C_V\) and magnetic susceptibility \(\chi\).
+We tested our numerical implementation against the analytic solution of a \(2\times 2\) lattice in Appendix \ref{sec:example_2times2lattice}. 
+Considering the relative errors of \(E\), \(M\), \(C_V\) and \(\chi\), we found that it took approximately \(10^6\) Monte Carlo cycles before the relative errors of all four quantities dropped below \(\sim 10^{-2}\). 
+For a \(20\times 20\) lattice, we estimated that it took approximately \(10^3\) cycles before the simulation burned in. 
+In our simulations for greater lattice size, we used \(10^5\) burn in cycles, and \(10^6\) cycles for the stored data. 
+
+We saw a clear difference in the energy distribution for \(T=1.0 \ \si{J/k_B}\) and \(T=2.4\ \si{J/k_B}\), the former resembling an ordered state, while the latter a disordered state. 
+With this behavior in mind, together with Onsager's critical temperature \(T_c(L\rightarrow\infty)\approx 2.269\ \si{J/k_B}\)~\cite{LarsOnsager}, we expected to find a phase transition somewhere in between the former two temperatures. 
+
+Indeed, the behavior of the heat capacity and magnetic susceptibility displayed a peak within the temperatures ranges \(T_c^{(C_V)}(L)\approx 2.277\text{--}2.290\ \si{J/k_b}\) and \(T_c^{(\chi)}(L)\approx 2.290\text{--}2.321 \ \si{J/k_B}\), respectively, dependent on the size of the lattice.
+Using the finite size scaling relations \eqref{eq:scaling_relations}, we extrapolated \(T_c^{(C_V)}(L)\) and \(T_c(L)\) to the case of an infinite lattice, resulting in \(T^{(C_V)}_c(L\rightarrow\infty) = 2.268 \pm 0.029 \ \si{J/k_B}\) and \(T^{(\chi)}_c(L\rightarrow\infty) = 2.270 \pm 0.071 \ \si{J/k_B}\).
+Both of which, are consistent with the analytic result derived by Onsager~\cite{LarsOnsager}.
+
+Additionally, we examined the effect of parallelization on the performance of our code.
+This showed a theoretical maximum speedup of roughly \(15.4\) times, for our specific hardware setup. 
 
 \newpage
 \clearpage
@@ -837,7 +843,7 @@ Further, using \eqref{eq:expectation_values_2times2} we obtain the following exp
     \chi &\equiv \frac{1}{k_BT}\text{Var}(M) = \frac{8}{k_B T} \frac{e^x+1}{\cosh(x)+3}.\label{app:eq:chi}
 \end{align}
 
-
+\newpage
 
 % \bibliographystyle{apalike}
 % \bibliographystyle{unsrt}
