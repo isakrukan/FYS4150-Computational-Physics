@@ -417,20 +417,20 @@ Once a candidate sample \(x'\) is drawn in accordance with the proposal \gls{pdf
 This algorithm involves a particular choice of acceptance rule, and is the algorithm we have used in this project. 
 
 \subsection{Parallelization} \label{sec:parallelization}
-For our later numerical implementation, the use of parallelization will be vital to in shortening the runtime of our simulations.
-To further quantify the speedup achieved through parallelization, we would like to run some timing tests and attempt a fit of the results to a model
+For our later numerical implementation, the use of parallelization will be vital to shorten the runtime of our simulations.
+To further quantify the speedup achieved through parallelization, we would like to run some timing tests and attempt a fit of the results to the following model
 \begin{align}\label{eq:amdahl_T}
    T(N) =  \frac{1-f}{N} + f,
 \end{align}
 where \(T(N)\) is the runtime (taken in units of the serial runtime $T_\mathrm{serial} = T(1)$) when parallelizing with \(N\) cores, and \(f\) is a parameter to be fitted.
-In particular, we may then interpret \(f\) as the strictly serial contribution to the runtime, while \((1-f)/N\) is the parallelizable portion.
+We may interpret \(f\) as the strictly serial contribution to the runtime, while \((1-f)/N\) as the parallelizable portion.
 The latter can clearly be reduced by deploying more cores, while the former can not.
 This further predicts that the speedup factor $S(N)$ when parallelizing with \(N\) cores is given by 
 \begin{align}\label{eq:amdahl_S}
     S(N) = \frac{T(1)}{T(N)} = \frac{1}{\frac{1-f}{N} + f}.
 \end{align}
-This is known as \emph{Amdahl's law} \cite{cornell_parallel}.
-Taking \(N\rightarrow \infty\), this further suggests a theoretical maximum speedup of \(S = 1/f\)\footnote{This is of course a simplification, as the parallel portion of the code can only contain a finite number of $M$ independent tasks. Thus, we should expect the speedup saturates as \(N\rightarrow M\).}.
+This is known as \emph{Amdahl's law} \cite{amdahl1967validity}.
+Taking \(N\rightarrow \infty\) gives a theoretical maximum speedup of \(S = 1/f\)~\footnote{This is of course a simplification, as the parallel portion of the code can only contain a finite number of $M$ independent tasks. Thus, we should expect the speedup saturates as \(N\rightarrow M\).}.
 
 
 \subsection{Strategy overview and numerical implementation} \label{sec:numerical_implementation}
