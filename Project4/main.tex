@@ -635,8 +635,9 @@ These measures are shown in Figure~\ref{fig:temp_scan_error}.
 The latter figure shows that the average energy per spin, generally, has a larger \gls{ess} and a smaller \gls{mcse} than the magnetization.
 Both quantities do however see a dip in \gls{ess} and increase in \gls{mcse} for \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\).
 \color{red} Kanskje flytte det følgende etter denne kommentaren til diskusjon eller konklusjon? Jeg skjønte det ikke helt heller...kanskje du kunne forklart meg?\color{black}
-This is as expected, as the correlation length grows and approaches the system size $L$.
-Consequently, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated, reducing the \gls{ess}.
+This is to be expected when the correlation length approaches the system size $L$, as this leads to fluctuations on all length scales within the system.
+Consequently, even upon flipping many spins, the system may appear to be only "one" fluctuation away from the previous configuration.
+This leads to stronger correlations between successive samples in the Markov chain, and a smaller effective sample size.
 
 \subsection{The critical temperature}   \label{sec:Critical_temp_results}
 To find the critical temperature at finite lattice sizes, we identify the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility.
