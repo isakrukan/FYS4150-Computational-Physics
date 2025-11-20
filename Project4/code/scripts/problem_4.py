@@ -14,38 +14,6 @@ J   = 1.0
 k_B = 1.0
 T   = J / k_B
 
-"""# --- Compute predicted values ---
-data_predicted = np.zeros(6)  
-Z = 0
-E0 = 1e4
-for state in states:
-    M   = state["M"]
-    E   = state["E"]
-    deg = state["deg"]
-    weight = deg * np.exp(-E*J/(k_B*T))
-
-    data_predicted[0] += weight * E / N
-    data_predicted[1] += weight * E**2 / N**2
-    data_predicted[2] += weight * np.abs(M) / N
-    data_predicted[3] += weight * M**2 / N**2
-
-    Z += weight
-
-    if E < E0:
-        E0 = E  
-        
-
-data_predicted /= Z
-
-# Compute heat capacity and susceptibility
-eps_var = data_predicted[1] - data_predicted[0]**2
-m_var   = data_predicted[3] - data_predicted[2]**2
-
-C = eps_var * N / (k_B * T**2)
-X = m_var   * N / (k_B * T)"""
-
-
-
 ## Analytic predictions:
 def E_mean_analytic(T, k_B, E0):
     x = E0 / (T*k_B)

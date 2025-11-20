@@ -13,15 +13,8 @@ std::string generate_temp_scan_name(const Args &args)
     oss << "temp_scan"
         << "-n" << args.temperature_steps 
         << "-L" << args.lattice_size;
-    // oss << "L"              << args.lattice_size 
-    //    << "-T"             << args.temperature_steps 
-    //    << std::scientific
-    //    << "-cyc"           << static_cast<double>(args.total_cycles)
-    //    << "-n"             << static_cast<double>(args.steps_per_cycle)
-    //    << "-brn"           << static_cast<double>(args.burn_in_cycles);
 
     std::string name = oss.str();
-    //name.erase(std::remove(name.begin(), name.end(), '+'), name.end());
 
     return name;
 }
