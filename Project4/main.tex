@@ -135,7 +135,7 @@
 
 \begin{document}
 
-\title{Obtaining the critical temperature of the Ising model using the Markov chain Monte Carlo\\[0.5em]
+\title{Estimating Critical Behavior of the Two-Dimensional Ising Model Using the Markov Chain Monte Carlo Method\\[0.5em]
   \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project4}{\texttt{github.uio.no/icrukan/FYS4150/Project4}}
 }
 \author{Magnus Axelsen and Isak Cecil Onsager Rukan} % self-explanatory
@@ -541,7 +541,6 @@ This is done for lattice sizes \(L\in\{40, 60, 80, 100\}\), in order to estimate
 In this part of the code, see \texttt{utils::temperature\_scan}, \textsc{OpenMP}~\cite{openmp} is used to parallelize the temperature scans.
 This was done using the \texttt{parallel for} directive to automatically distribute iterations of the temperature loop over the available cores.
 The program was then run using 24 cores, on the \textsc{freebio3}/\textsc{freebio4} resources provided by the University of Oslo \cite{lightweight_hpc_uio}.
-({\color{red}kunne du spesifisert litt mer her?})
 Although clock speeds on \textsc{freebio3}/\textsc{freebio4} are smaller compared to many modern personal computers, some quick experiments showed that these are better optimized for parallel workloads, which is why they were chosen for this project.
 
 
