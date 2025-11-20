@@ -39,7 +39,7 @@
 
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
-\documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
+\documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
 % \documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
 % If you want a single-column, remove "reprint"
 % \raggedbottom
@@ -179,7 +179,7 @@ As a model of a ferromagnet, the phenomenon of spontaneous magnetization can be 
 When Ising first solved the Ising chain, he found that this model did not exhibit a phase transition at any nonzero temperature~\cite[p. 431]{IntroStatMekSwendsen}. 
 % However, in 1944, Lars Onsager solved the two-dimensional Ising model with a zero external magnetic field and derived an analytic expression for the critical temperature~\cite{LarsOnsager}. 
 However, in 1944, Lars Onsager solved the two-dimensional Ising model with a zero external magnetic field and did indeed find a nonzero critical temperature, and even derived an analytic expression for it in the limit of an infinite lattice~\cite{LarsOnsager}. 
-
+For finite-sized lattices however, the situation is complicated by finite size effects, motivating instead the use of numerical methods.
 
 In any case, the Ising model is an elegant and simple (in design) model which exceeds remarkably at illustrating statistical phenomenon, not necessarily directly tied to ferromagnets. 
 For instance, if one imagines sampling microstates of the Ising model at random, according to a given probability distribution, it is intuitive that the average of these microstates should converge toward the typical or most probable configuration.
@@ -187,21 +187,20 @@ This intuition is justified under the assumption that the \gls{lln} holds~\footn
 
 Some 18 years prior to Ising's Ph.D. thesis and its introduction of the Ising model, Andrey Markov imagined a way of constructing a sequence of random variables, each variable dependent on the immediately preceding one. 
 At the time, Markov were debating a colleague named Pavel Alekseevich Nekrasov, a member of the Russian Orthodox Church, on the topic of free will~\cite{lifeOfMarkov}. 
-Nekrasov believed that pairwise independence of two events is necessary for the observation of the (weak) \gls{lln} in everyday life observations~\footnote{See~\cite{Markov_and_birth_of_chain}. Informally, the \gls{wlln} only demands `likeliness' that the average approximates the expectation value.}. 
+Nekrasov believed that pairwise independence of two events is necessary for the observation of the (weak) \gls{lln} in everyday life observations~\footnote{See~\cite{Markov_and_birth_of_chain}. Informally, the \gls{wlln} only demands `likeliness' in that the average approximates the expectation value.}. 
 However, Markov applied his sequence of random variables to the distribution of vowels and consonants in A.S. Pushkin's poem ``Eugeny Onegin'', and showed that the (weak) \gls{lln} could be derived even in situations where successive events are, in fact, not independent~\cite{lifeOfMarkov}.
 
 Markov's sequence of random variables is now referred to as Markov chains and has proven to be remarkably applicable to a wide range of applications, from ranking webpages~\footnote{PageRank is an algorithm owned by Google, which makes use of Markov chains to efficiently rank webpages, see for instance~\cite{borkar2025smallnoiselimitsmarkov}.} to nuclear physics (see for instance~\cite{HALASZ2018429}). 
 
-In this report, we consider a two-dimensional Ising model and implement a Markov chain numerically. 
-Sampling from the Markov chain, we implement the \gls{mcmc} procedure and estimate the energy and magnetization distributions as functions of temperature. 
-By varying the temperature over several \gls{mcmc} runs, we estimate the Ising model's critical temperature, and in the end extrapolate towards the infinite-size Ising model and Onsager's analytic expression.
+In particular, we are now interested in using Markov chains to sample microstates of the Ising model, in which case we require the stationary distribution to be the Boltzmann distribution.
+Such a chain is constructed using the \gls{mcmc} method, with a Metropolis-Hastings acceptance rule.
+This is first used to numerically estimate the energy distribution for temperatures $T = 1.0 J/k_B$ and $T = 2.4 J/k_B$, where $J$ is a coupling constant and $k_B$ the Boltzmann constant.
+From this we see evidence of a phase transition, somewhere between these two temperatures.
+By sampling relevant statistics over a range of temperatures, we are then able to estimate the critical temperature of the Ising model for different lattice sizes.
+Using finite size scaling relations, we can furthermore extrapolate toward the infinite-size limit to compare our results with Onsager's analytic expression.
 
-\color{red}(The siste avsnittet kan kanskje gjøres bedre/lengre?)\color{black}
-
-Mer om prosjektet
-\begin{itemize}
-    \item Nevne alle hovedresultater
-\end{itemize}
+Numerical optimizations and implementation details are discussed along the way, with the full code available at~\cite{FYS4150Project4}.
+An essential part of the implementation is the use of \texttt{OpenMP}~\cite{openmp} for parallelization, leading to significant speed-ups.
 
 \section{Theory and Method} \label{sec:theory_and_method}
 Here we present the theory behind the two-dimensional Ising model, the \gls{mcmc} method and our numerical implementation and strategy.
@@ -277,7 +276,7 @@ With the Boltzmann distribution in hand, the expectation value of a random varia
 \begin{align}
     \langle X\rangle = \sum_{\{\vec{s}\}} X(\vec{s}) p(\vec{s}; T). \label{eq:general_expectation_vaue}
 \end{align}
-(Formally, a random variable is a function whose domain and range is the set of possible outcomes and some sort of measurable space, respectively \footnote{A measurable space has a technical definition which we will not get in to. For the interested reader, we recommend \cite{Schilling_2005}.}.) 
+(Formally, a random variable is a function whose domain and range is the set of possible outcomes and some sort of measurable space, respectively \footnote{A measurable space has a technical definition which we will not get into. For the interested reader, we recommend \cite{Schilling_2005}.}.) 
 In our case we are interested in the expectation value of the following random variables \(\epsilon(\vec{s})\), \(|m(\vec{s})|\), \(\epsilon(\vec{s})^2\) and \(m(\vec{s})^2\). 
 This allows us to also consider the heat capacity and magnetic susceptibility (per spin), which may be expressed as 
 %Moreover, we will also consider the heat capacity \(C_V\) and magnetic susceptibility \(\chi\), which can be expressed as 
@@ -291,8 +290,10 @@ where, generally, the variance $\text{Var(X)}$ is defined as
 \begin{align}
     \text{Var}(X) = \langle X^2\rangle - \langle X\rangle^2.
 \end{align}
-
-{\color{red}Comment on using $|m|$ vs $m$?}
+Note here that the absolute value \(|m|\) is used to study the magnetization, rather than \(m\) itself.
+This is because the lack of an external magnetic field means that there is no preferred direction for the orientation of spins in the paramagnetic phase.
+The sign of the magnetization essentially becomes redundant in this case, and states of $+m$ and $-m$ are physically equivalent.
+Perhaps more importantly, this means the \textit{signed} average magnetization $\langle m \rangle$ will be zero for all temperatures, due to identical counter-terms from states with opposite magnetization. 
 
 \subsubsection{The critical temperature}    \label{sec:critical_temperature}
 Since the energy of the Ising model increases when neighboring cites have opposite spins (see the interpretation following \eqref{eq:Hamiltonian}), we should expect to find a disorganized configuration for sufficiently high temperatures. For such temperatures, the average magnetization per cite, \(\langle |m|\rangle\), should thus be approximately zero. If we then imagine decreasing the temperature (`energy'), the neighboring spin-locations will at some point align themselves and we should see a spike in \(\langle |m|\rangle\) \footnote{This `spike' may be quite smooth for finite-sized lattices, see for instance the expected magnetization \eqref{app:eq:langleMrangle} for the example of a \(2\times 2\) Ising model in Appendix \ref{sec:example_2times2lattice}.}. The temperature at which this happens is called the critical temperature \(T_c\).  
@@ -519,7 +520,7 @@ This is done for lattice sizes \(L\in\{40, 60, 80, 100\}\), in order to estimate
 %This part of the code, see \texttt{utils::temperature\_scan}, is parallelized using \textsc{OpenMP}~\cite{openmp}.
 In this part of the code, see \texttt{utils::temperature\_scan}, \textsc{OpenMP}~\cite{openmp} is used to parallelize the temperature scans.
 This was done using the \texttt{parallel for} directive to automatically distribute iterations of the temperature loop over the available cores.
-The program was then run using 24 cores, on the \textsc{freebio3}/\textsc{freebio4} resources provided by the University of Oslo (see \href{https://www.mn.uio.no/ifi/tjenester/it/tjenester/compute/hpc/bioinfo-cluster/}{Lightweight HPC}) (\color{red}Link fungerer ikke, jeg vet ikke helst hva det skal være, kan du fikse det? Kanskje vi burde gjøre det om til en refereanse isteden også.)\color{black}. 
+The program was then run using 24 cores, on the \textsc{freebio3}/\textsc{freebio4} resources provided by the University of Oslo \cite{lightweight_hpc_uio}.
 ({\color{red}kunne du spesifisert litt mer her?})
 Although clock speeds on \textsc{freebio3}/\textsc{freebio4} are smaller compared to many modern personal computers, some quick experiments showed that these are better optimized for parallel workloads, which is why they were chosen for this project.
 
@@ -552,17 +553,17 @@ Not before approaching \(\sim 10^6\) cycles do \emph{all} four observables fall 
 
 
 \subsection{Equilibration time}   \label{sec:equilibration_time}
-An evolution of the energy per spin $\epsilon$ and its running average $\langle \epsilon \rangle$ for a \(L=20\) lattice is shown in Figure~\ref{fig:equilibration}.
+An evolution of the energy per spin $\epsilon$ and its cumulative average $\langle \epsilon \rangle$ for a \(L=20\) lattice is shown in Figure~\ref{fig:equilibration}.
 The figure display displays four simulations: the temperature is either \(T=1.0 \ \si{J/k_B}\) or \(T=2.4 \ \si{J/k_B}\), and the initial configuration of the Ising model's lattice is either set up randomly or all spin-locations are initially set to \(s_i=-1\).
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{figs/equilibration.pdf}
-    \caption{Evolution of the energy per spin $\epsilon$ (thin lines) and its running average $\langle \epsilon \rangle$ (thick lines) during a Monte Carlo simulation of the $L=20$ Ising model at temperatures ${T=1.0\ J/k_B}$ and ${T=2.4\ J/k_B}$. The initial configuration of the lattice is either ordered (green and purple; all spins \({s_i=-1}\)) or unordered (blue and red; spins assigned randomly).}
+    \caption{Evolution of the energy per spin $\epsilon$ (thin lines) and its cumulative average $\langle \epsilon \rangle$ (thick lines) during a Monte Carlo simulation of the $L=20$ Ising model at temperatures ${T=1.0\ J/k_B}$ and ${T=2.4\ J/k_B}$. The initial configuration of the lattice is either ordered (green and purple; all spins \({s_i=-1}\)) or unordered (blue and red; spins assigned randomly).}
     \label{fig:equilibration}
 \end{figure}
 
 For the first \(\sim 10^3\) Monte Carlo cycles, the evolution of \(\epsilon\) either is either decreasing or increasing, with the exception of the green line, corresponding to \({T=1.0 \ \si{J/k_B}}\), starting from a ordered initial configuration.
-At approximately \(10^3\) cycles, the running average \(\langle\epsilon\rangle\) for \({T=2.4\ \si{J/k_B}}\) (both unordered and ordered initial configurations) begins to fluctuate around \(\langle \epsilon\rangle \approx -1.25\).
+At approximately \(10^3\) cycles, the cumulated average \(\langle\epsilon\rangle\) for \({T=2.4\ \si{J/k_B}}\) (both unordered and ordered initial configurations) begins to fluctuate around \(\langle \epsilon\rangle \approx -1.25\).
 Similarly, for \(T=1.0 \ \si{J/k_B}\), \(\langle\epsilon\rangle\) stabilizes around \(\langle \epsilon\rangle \approx -2.00\) after approximately the same number of cycles.
 Hence, the simulation appears to have burned in after roughly $10^3$ Monte Carlo cycles.
 
@@ -603,7 +604,7 @@ In the next section we present the results from running our simulation for vario
 
 
 \subsection{Phase transitions \& temperature scans} \label{sec:Phase_trans_temp_ScAns}
-Figure~\ref{fig:temp_scan} shows the running average of the energy, magnetization, heat capacity and magnetic susceptibility per spin \(\langle \epsilon\rangle, \ \langle |m|\rangle, \ C_V/N\) and \(\chi/N\), respectively, as functions of temperature \(T\in[2.10, 2.40] \ \si{J/k_b}\) for lattice sizes $L = 40, 60, 80, 100$.
+Figure~\ref{fig:temp_scan} shows the cumulating average of the energy, magnetization, heat capacity and magnetic susceptibility per spin \(\langle \epsilon\rangle, \ \langle |m|\rangle, \ C_V/N\) and \(\chi/N\), respectively, as functions of temperature \(T\in[2.10, 2.40] \ \si{J/k_b}\) for lattice sizes $L = 40, 60, 80, 100$.
 Here, we have run a total of \(11\cdot 10^5\) Monte Carlo cycles, were \(10^5\) of those cycles are discarded as burn-in cycles, and the remaining \(10^6\) cycles stored and presented here.
 
 The average energy per spin is steadily increasing.
@@ -633,14 +634,10 @@ This peak becomes more pronounced as \(L\) increases.
     \label{fig:temp_scan_error}
 \end{figure}
 
-We have also estimated the \gls{mcse} and \gls{ess} associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}. (\color{red}We need to explain what \gls{mcse} and \gls{ess} are.\color{black})
+We have also estimated the errors and \gls{mcse} and \gls{ess} associated with the Monte Carlo simulations used to produce Figure~\ref{fig:temp_scan}.
 These measures are shown in Figure~\ref{fig:temp_scan_error}.
 The latter figure shows that the average energy per spin, generally, has a larger \gls{ess} and a smaller \gls{mcse} than the magnetization.
 Both quantities do however see a dip in \gls{ess} and increase in \gls{mcse} for \({T\approx 2.20\text{--}2.35\ \si{J/k_B}}\).
-\color{red} Kanskje flytte det følgende etter denne kommentaren til diskusjon eller konklusjon? Jeg skjønte det ikke helt heller...kanskje du kunne forklart meg?\color{black}
-This is to be expected when the correlation length approaches the system size $L$, as this leads to fluctuations on all length scales within the system.
-Consequently, even upon flipping many spins, the system may appear to be only "one" fluctuation away from the previous configuration.
-This leads to stronger correlations between successive samples in the Markov chain, and a smaller effective sample size.
 
 \subsection{The critical temperature}   \label{sec:Critical_temp_results}
 To find the critical temperature at finite lattice sizes, we identified the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility as shown in Figure~\ref{fig:temp_scan}.
@@ -656,7 +653,7 @@ These are tabulated in Table~\ref{table:crit_temps}.
         80  & 2.279 & 2.294 \\
         100 & 2.277 & 2.290 \\
     \end{tabular}
-    \caption{\color{red}Temporary numbers.\color{black} The critical temperatures for different lattice sizes \(L\), determined by the peak-values of the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) appearing in Figure~\ref{fig:temp_scan}.}
+    \caption{The critical temperatures for different lattice sizes \(L\), determined by the peak-values of the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) appearing in Figure~\ref{fig:temp_scan}.}
     \label{table:crit_temps}
 \end{table}
 Using the scaling relations \eqref{eq:scaling_relations}, we then estimated the critical temperature of the infinite lattice.
@@ -708,18 +705,18 @@ Figure~\ref{fig:epsilon_distribution} shows a clear difference in the energy dis
 For \(T=1.0 \ \si{J/k_B}\), the system appears organized: the energy per spin is approximately the same everywhere on the lattice. On the other hand, for \(T=2.4 \ \si{J/k_B}\), the system appears disorganized: the energy per spin varies noticeably between different spin-locations. 
 This behavior suggests that a phase transition occurs somewhere between \({T=1.0 \ \si{J/k_B}}\) and \(T=2.4 \ \si{J/k_B}\).
 
-Indeed, in Section \ref{sec:Phase_trans_temp_ScAns} we saw how the running average of the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) displayed a peak in the region \({T\approx2.20\text{--}2.35 \ \si{J/k_B}}\) (see Figure~\ref{fig:temp_scan}).
+Indeed, we saw in Figure~\ref{fig:temp_scan} how the heat capacity \(C_V\) and magnetic susceptibility \(\chi\) displayed peaks in the region \({T\approx2.20\text{--}2.35 \ \si{J/k_B}}\).
 The energy and magnetization showed a different behavior in the same region as well, though both displayed a much smoother behavior.
-This behavior is expected. 
-A true phase transition, in the strict thermodynamic sense, occurrs only in the thermodynamical limit, which in our case corresponds to an infinite lattice.
-This seems consisten with Figure~\ref{fig:temp_scan}, which shows the maximum of the heat capacity and magnetic susceptibility increase as \(L\) increases.  
+This behavior is expected.
+A true phase transition, in the strict thermodynamic sense, occurs only in the thermodynamic limit, which in our case corresponds to an infinite lattice.
+This seems consistent with Figure~\ref{fig:temp_scan}, which shows the maximum of the heat capacity and magnetic susceptibility increase as \(L\) increases.
 
-Moreover, from Figure~\ref{fig:temp_scan} it seems like the peak of \(\chi\) occured for a slightly higher temperature than the peak for \(C_V\).
+Moreover, from Figure~\ref{fig:temp_scan} it seems like the peak of \(\chi\) occurred for a slightly higher temperature than the peak for \(C_V\).
 We estimated the critical temperature using these peaks, presented in Table~\ref{table:crit_temps}, which does indeed give a slightly higher critical temperature when using \(\chi\) compared to \(C_V\). 
 Nonetheless, the estimated critical temperatures lie above Onsager's exact value \eqref{eq:T_c_infintie} in the limit \(L\rightarrow \infty\), and all decrease with increasing \(L\).
 
 Using the scaling relations \eqref{eq:scaling_relations}, we obtained estimates for the critical temperature \(T_c(L\rightarrow\infty)\), see Table~\ref{table:crit_temp_infinite}.
-These did indeed compute to a value with uncertainty within Onsager's exact value, though we only provided uncertainties from the linear regression we performed. 
+These did indeed compute to a value with uncertainties well within Onsager's exact value, though we only provided uncertainties from the linear regression we performed. 
 For the future, a better approach could be to estimate the variances of the critical temperatures $T_c(L)$ and use these as weights in a weighted linear regression. (\color{red}Kan du se på forrige setning?\color{black})
 \begin{itemize}
     \item The heat capacity is less noisy than the magnetic susceptibility, and should probably give a better estimate. \color{red}Hvorfor det?\color{black}
@@ -742,12 +739,32 @@ As \(L\) grows, correlated regions become larger, and the number of spin flips r
 In our simulations for \(L>20\), we have thus deliberatly chosen a higher number of burn-in cycles, than the amount needed for the \(L=20\) case.
 That is, beyond \(L=20\) we performed \(10^5\) burn-in cylces, \(10\%\) of the number of cycels (\(10^6\)) we stored values from. 
 
+
+From Figure~\ref{fig:temp_scan_error} we also see that that error estimates and effective sample sizes worsen around the critical temperature.
+This is to be expected, as the correlation length then approaches the system size $L$.
+Indeed, as large-scale correlations become more prominent, the act of flipping a single spin will not be as effective at decorrelating samples. 
+This naturally leads to stronger autocorrelations in the Markov chain, and thus a smaller effective sample size.
+
 \begin{itemize}
     \item \color{red}Kommentere parallelisering. \color{black}
     \item \color{red}Andre utfordringer? \color{black}
     \item \color{red}Future works? \color{black}
 \end{itemize}
 \section{Conclusion}
+Difficulties introduced by finite size effects motivates the use of numerical methods to study the two-dimensional Ising model at finite lattice sizes.
+To this end, we have implemented a Metropolis-Hastings \gls{mcmc} algorithm to sample spin configurations \(\vec{s}\) from the Boltzmann distribution \(p(\vec{s}; T)\) at a given temperature \(T\).
+This can be used to estimate thermodynamic quantities such as the heat capacity and magnetic susceptibility of the model at a given temperature \(T\) and lattice size \(L\).
+Repeating these simulations for a range of temperatures, we have further estimated the critical temperature \(T_c(L)\).
+Applying finite size scaling relations, these estimates are then extrapolated to the case of an infinite lattice.
+This leads to the estimates
+\begin{align}
+    T^{(C_V)}_c(L\rightarrow\infty) = 2.268 \pm 0.029 \ \si{J/k_B}, \\
+    T^{(\chi)}_c(L\rightarrow\infty) = 2.270 \pm 0.071 \ \si{J/k_B},
+\end{align}
+derived from the heat capacity and magnetic susceptibility respectively.
+These are both consistent with the analytic result \(T_c \approx 2.269 \ \si{J/k_B}\) derived by Onsager \cite{LarsOnsager}.
+
+Additionally, we have examined the effect of parallelization on the performance of our code, and found a theoretical maximum speedup of roughly \(15.4\) times for our specific hardware setup. 
 
 \newpage
 \clearpage
