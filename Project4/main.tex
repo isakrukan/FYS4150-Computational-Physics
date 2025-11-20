@@ -375,13 +375,19 @@ However, it is also possible that the beginning of the Markov chain appears to f
 For instance, its stationary distribution may have two peaks instead of the ``usual'' single one, and the chain may initially explore only one of these peaks.
 
 % In Section \ref{} we explain how we have estimated the number of needed burn-in cycles 
-
 The second issue is that simply keeping all the elements of the Markov chain can be quite demanding computationally, and the neighboring elements of the Markov chain may be quite correlated.
-Such a correlation may not necessarily be unfavorable, however. 
-In our case the difference between one element of the Markov chain and the next is only a single spin-flip. Thus, neighboring elements differ very little from one another, and it can take many steps before we obtain a new microstate that is meaningfully different from the initial microstate.
+Such a correlation may be unfavorable, however. 
+In our case the difference between one element of the Markov chain and the next is only a single spin-flip. 
+Thus, successive samples will differ very little from one another, and will it may take many steps to reduce auto-correlations significantly.
 One possible solution to this issue, which we will use, is the method of \emph{thinning}. 
 This is the process of simply skipping some amount of the elements of the Markov chain, only keeping the \(k\)-th element (for some \(k\)).
 
+Even \textit{with} thinning, however, we may not be able to fully rid ourselves of correlations between samples in the Markov chain.
+This is especially relevant as one approaches the critical temperature, as is discussed in Section \ref{sec:discussion}.
+When estimating errors, we must therefore account for this by computing an effective sample size, quantifying the number of independent samples required to yield the same variance as the correlated samples from the MCMC simulation.
+This effective sample size is computed following the approach in Chapter 16.4 of the Stan reference manual~\cite{Stan}, and then used to adjust our error estimates accordingly.
+In the text, we will often use the abbreviation \textit{ESS} to refer to the effective sample size.
+Likewise, we will use \textit{MCSE} to refer to the Monte Carlo standard error, this being the standard error adjusted for correlated samples.
 
 \subsubsection{The Metropolis-Hastings algorithm}    \label{sec:Metropolis-Hastings}
 Here, we give an overview of the Metropolis-Hastings algorithm which, originally introduced in \cite{Metropolis1953}.
@@ -405,8 +411,6 @@ Once a candidate sample \(x'\) is drawn in accordance with the proposal \gls{pdf
 \end{align*}
 
 This algorithm involves a particular choice of acceptance rule, and is the algorithm we have used in this project. 
-
-
 
 \subsection{Strategy overview and numerical implementation} \label{sec:numerical_implementation}
 In this section we give an overview of the strategy and aims of this project, as well how we have numerically implemented the theory described in the two preceding sections above \footnote{When working with this report we have occasionally consulted with the language model ChatGPT and Copilot. 
