@@ -1,9 +1,6 @@
 # Project 4: Computational Physics
 This repository contains the code and documentation for Project 4 in the FYS3150 - Computational Physics course at the University of Oslo.
 
-# TO DO
-- Finish report
-
 ## About the project
 This project investigates the Ising model and the Markov chain Monte Carlo (MCMC) method. We implement the MCMC method numerically and simulate the Ising model for various parameters. In particular, we estimate the critical temperature for our finite-sized lattice, and compare to Lars Onsager's exact [expression](https://journals.aps.org/pr/abstract/10.1103/PhysRev.65.117) for the infinite-sized lattice. Additionally, we explore how we can optimize our code both using i.a. parallelization.
 
