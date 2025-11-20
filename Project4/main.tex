@@ -364,6 +364,11 @@ Before we describe the Metropolis-Hastings algorithm, we would like to point out
 The first is that one may be ``unlucky'' with the first sample, drawing an somewhat improbable configuration.
 This can result in a distribution that is initially (after only a few step of the Markov chain) quite different from the stationary distribution. 
 A possible resolution is to discard some number of the first elements of the Markov chain, a procedure known as \emph{burn-in}.
+When the Markov chain has reached a state which is sufficiently close to its stationary distribution, we say that it is \emph{burned-in}, and refer to this point as the \emph{equilibration time}.  
+In practice, if the beginning of a Markov chain shows a clear trend (e.g. its mean state) away from its initial state, it has most likely \emph{not} yet burned in. 
+However, it is also possible that the beginning of the Markov chain appears to fluctuate around an apparently stationary state, while still being far away from the most probable state. 
+For instance, its stationary distribution may have two peaks instead of the ``usual'' single one, and the chain may initially explore only one of these peaks.
+
 % In Section \ref{} we explain how we have estimated the number of needed burn-in cycles 
 
 The second issue is that simply keeping all the elements of the Markov chain can be quite demanding computationally, and the neighboring elements of the Markov chain may be quite correlated.
@@ -513,8 +518,31 @@ Although clock speeds on \textsc{freebio3}/\textsc{freebio4} are smaller compare
 To reproduce a minimal version of the results of this project, navigate to the code directory in \cite{FYS4150Project4}, and run the command \texttt{make project}. 
 
 \section{Results}
+Here we present our results, which we have divided into the following five sections. 
+Section \ref{sec:realative_errors} presents relative errors from simulating the \(2\times 2\) lattice, using the analytic solution given in Appendix \ref{sec:example_2times2lattice}.
+Section \ref{sec:equilibration_time} considers a \(L=20\) lattice and examines the behavior of the energy per spin as function of number of Monte Carlo cycles for various temperatures. 
+Section \ref{sec:Energy_distribution} also considers a \(L=20\) lattice and shows the energy distribution for two different temperatures, starting from either an ordered or a disordered initial state. 
+Section \ref{sec:Phase_trans_temp_ScAns} presents the results from running the simulation for various lattice sizes and varying temperature, as to identify where the phase transition may take place.
+Section \ref{sec:Critical_temp_results} uses the peaks in the heat capacity and magnetic susceptibility from the preceding section to estimate the critical temperature, and extrapolates to the case of an infinite lattice, which is to be compared to Onsager's expression \eqref{eq:T_c_infintie}.
+Lastly, Section \ref{sec:timing_test_parallelization} presents how our simulation's run time scales under parallelization, in particular, as a function of number of threads.
 
-\subsection{Equilibration time (\color{red}Annen tittel eller introdusere `equilibration time' tidligere i teksten\color{black})}
+
+\subsection{Relative errors of \(2\times 2\) lattice simulation}    \label{sec:realative_errors}
+In Appendix \ref{sec:example_2times2lattice} we considered an analytic solution to the \(2\times 2\) Ising model, and derived expressions for i.a. \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\), see \eqref{app:eq:langleErangle}, \eqref{app:eq:langleMrangle}, \eqref{app:eq:C_V} and \eqref{app:eq:chi}, respectively. 
+The relative error is given by, for e.g. \(\langle E\rangle\), \(\Delta \langle E\rangle = |1 - \langle E_{n}\rangle / \langle E_{a}\rangle|\), where \(E_n\) and \(E_a\) represents the numerically computed version and analytic version, respectively.
+
+Figure~\ref{fig:app:2x2lattice} shows the evolution of the relative errors for these four quantities as functions of the number of Monte Carlo cycles, with the temperature of the simulation set to \(T=1.0 \ \si{J/k_B}\).
+The figure shows that the relative errors are decreasing for increasing number of cycles, though the relative error for the average energy and magnetization is overall smaller than those for the error for the heat capacity and magnetic susceptibility.
+Not before approaching \(\sim 10^6\) cycles do \emph{all} four observables fall below an relative error of \(\sim 10^{-2}\).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figs/errors_2x2.pdf}
+    \caption{Relative errors in the Monte Carlo estimates of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) for the \(2\times 2\) Ising model, shown as functions of the number of Monte Carlo cycles. The analytic values are given by \eqref{app:eq:langleErangle}, \eqref{app:eq:langleMrangle}, \eqref{app:eq:C_V} and \eqref{app:eq:chi}, respectively. The temperature of the simulation is set to \(T=1.0\ \si{J/k_B}\).}
+    \label{fig:app:2x2lattice}
+\end{figure}
+
+
+\subsection{Equilibration time}   \label{sec:equilibration_time}
 An evolution of the energy per spin $\epsilon$ and its running average $\langle \epsilon \rangle$ for a \(L=20\) lattice is shown in Figure~\ref{fig:equilibration}.
 The figure display displays four simulations: the temperature is either \(T=1.0 \ \si{J/k_B}\) or \(T=2.4 \ \si{J/k_B}\), and the initial configuration of the Ising model's lattice is either set up randomly or all spin-locations are initially set to \(s_i=-1\).
 \begin{figure}[h!]
@@ -530,7 +558,7 @@ Similarly, for \(T=1.0 \ \si{J/k_B}\), \(\langle\epsilon\rangle\) stabilizes aro
 Hence, the simulation appears to have burned in after roughly $10^3$ Monte Carlo cycles.
 
 
-\subsection{Energy distribution}
+\subsection{Energy distribution}    \label{sec:Energy_distribution}
 The distribution of the energy per spin \(\epsilon\) for a \(L=20\) lattice at temperatures $T=1.0\ \si{J/k_B}$ and ${T=2.4\ \si{J/k_B}}$ is displayed in Figure~\ref{fig:epsilon_distribution}.
 The corresponding variances are shown in Table~\ref{table:epsilon_distribution}.
 \begin{figure}[h!]
@@ -567,7 +595,7 @@ In the next section we present the results from running our simulation for vario
 % This is indeed what we will investigate next, by performing temperature scans and various lattice sizes.
 
 
-\subsection{Phase transitions \& temperature scans}
+\subsection{Phase transitions \& temperature scans} \label{sec:Phase_trans_temp_ScAns}
 Figure~\ref{fig:temp_scan} shows the running average of the energy, magnetization, heat capacity and magnetic susceptibility per spin \(\langle \epsilon\rangle, \ \langle |m|\rangle, \ C_V/N\) and \(\chi/N\), respectively, as functions of temperature \(T\in[2.10, 2.40] \ \si{J/k_b}\) for lattice sizes $L = 40, 60, 80, 100$.
 
 The average energy per spin is steadily increasing.
@@ -605,7 +633,7 @@ Both quantities do however see a dip in \gls{ess} and increase in \gls{mcse} for
 This is as expected, as the correlation length grows and approaches the system size $L$.
 Consequently, successive spin configurations $\vec{s}_i$ in the Markov chain are more strongly correlated, reducing the \gls{ess}.
 
-\subsection{The critical temperature}
+\subsection{The critical temperature}   \label{sec:Critical_temp_results}
 To find the critical temperature at finite lattice sizes, we identify the temperatures corresponding to the peaks in the heat capacity and magnetic susceptibility.
 These are tabulated in Table~\ref{table:crit_temps}.
 \begin{table}[h!]
@@ -642,7 +670,8 @@ Here we emphasize that the uncertainties shown are those from the linear regress
     }
     \label{table:crit_temp_infinite}
 \end{table}
-\subsection{Timing tests and parallelization}
+
+\subsection{Timing tests and parallelization}   \label{sec:timing_test_parallelization}
 To test the effect of parallelization on the performance of our code, we have run simulations of the $L=5$ lattice for $128$ temperatures in the range $T \in [2.1, 2.4]\ J/k_B$ using different numbers of threads.
 The results of this is shown in Figure~\ref{fig:parallelization}.
 Here we have additionally fitted a model (\color{red}Flytte dette til teori?\color{black})
@@ -728,15 +757,7 @@ Further, using \eqref{eq:expectation_values_2times2} we obtain the following exp
     \chi &\equiv \frac{1}{k_BT}\text{Var}(M) = \frac{8}{k_B T} \frac{e^x+1}{\cosh(x)+3}.\label{app:eq:chi}
 \end{align}
 
-Figure~\ref{fig:app:2x2lattice} shows the evolution of the relative errors for \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) evolve as functions of the number of Monte Carlo cycles.
-The figure shows that the relative errors are indeed decreasing for increasing number of cycles, though the relative error for the average energy and magnetization is overall smaller than those for the error for the heat capacity and magnetic susceptibility.
-Not before approaching \(\sim 10^6\) cycles do \emph{all} four observables fall below an relative error of \(\sim 10^{-2}\).
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{figs/errors_2x2.pdf}
-    \caption{Relative errors in the Monte Carlo estimates of \(\langle E\rangle\), \(\langle |M|\rangle\), \(C_V\) and \(\chi\) for the \(2\times 2\) Ising model, shown as functions of the number of Monte Carlo cycles. The analytic values are given by \eqref{app:eq:langleErangle}, \eqref{app:eq:langleMrangle}, \eqref{app:eq:C_V} and \eqref{app:eq:chi}, respectively. The relative errors are displayed as functions of number of cycles.}
-    \label{fig:app:2x2lattice}
-\end{figure}
+
 
 % \bibliographystyle{apalike}
 % \bibliographystyle{unsrt}
