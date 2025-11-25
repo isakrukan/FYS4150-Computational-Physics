@@ -40,4 +40,6 @@ int test_index(){
             assert(u_matrix[0](i,j) == u[0](k));
         }
     }
+
+    return 0;
 }
