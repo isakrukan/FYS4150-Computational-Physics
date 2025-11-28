@@ -69,12 +69,14 @@ void CrankNicolson::update_u(const unsigned int n){
     b_result = B * u[n];
     u[n+1] = arma::spsolve(A, b_result, "superlu");
 
-    // using "lapack" solver, i get
+    // Had some problems getting spsolve to work...
+    //
+    // using "lapack":
     //   > warning: spsolve(): not enough memory to use LAPACK based solver
     //   > terminate called after throwing an instance of 'std::runtime_error'
     //   > what():  spsolve(): solution not found
     //
-    // while using "superlu" i get
+    // using "superlu":
     //   > terminate called after throwing an instance of 'std::logic_error'
     //   > what() : spsolve() : use of SuperLU must be enabled
 }
