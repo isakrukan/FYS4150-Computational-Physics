@@ -6,8 +6,8 @@ BUILD 		:= build
 TESTS		:= tests
 LIB			:= 
 INCL 		:= -I./include
-CXXFLAGS 	:= -std=c++17 -O3 -march=native
-LDFLAGS 	:= -larmadillo
+CXXFLAGS 	:= -DARMA_USE_HDF5 -std=c++17 -O3 -march=native#  -g -O0 
+LDFLAGS 	:= -larmadillo -lsuperlu -lopenblas -llapack
 PY			:= 
 EXE			:= 
 LOGFILE 	:= problem9.log
@@ -28,8 +28,8 @@ ifeq ($(UNAME),Windows_NT)
 $(info I am sorry for using Windows)
 # INCL 		+= -I"C:/vcpkg/installed/x64-mingw-dynamic/include"
 # LIB 		:= -L"C:/vcpkg/installed/x64-mingw-dynamic/lib"
-# LDFLAGS   	+= #-lhdf5 -lhdf5_hl
-# DELETE		:= del /Q
+ LDFLAGS   += -lhdf5 -lhdf5_hl
+# DELETE	:= del /Q
 DELETE      := rm -f
 PY 			+= py 
 EXE			:= .exe
@@ -43,8 +43,10 @@ endef
 
 else 
 $(info I can't update my mac but I love it so much)
-CXXFLAGS += #$(shell pkg-config --cflags hdf5)
-LDFLAGS  += #$(shell pkg-config --libs hdf5)
+CXXFLAGS += $(shell pkg-config --cflags hdf5)
+#CXXFLAGS += $(shell pkg-config --cflags superlu)
+LDFLAGS  += $(shell pkg-config --libs hdf5)
+LDFLAGS  += $(shell pkg-config --libs superlu)
 DELETE		:= rm -f
 PY 			+= python3
 
