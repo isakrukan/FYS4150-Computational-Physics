@@ -1,27 +1,34 @@
 #include "CrankNicolsen.hpp"
 
 
-CrankNicolsen::CrankNicolsen(unsigned int N, unsigned int M, arma::cx_vec a, arma::cx_vec b, arma::cx_double r) : N(N), M(M), a(a), b(b), r(r), i_unit(0,1){
-    
-    create_A_matrix();
-    create_B_matrix();
+CrankNicolsen::CrankNicolsen(unsigned int N, unsigned int M, unsigned int T, arma::cx_vec a, arma::cx_vec b, arma::cx_double r) : N(N), M(M), T(T), a(a), b(b), r(r), i_unit(0,1){
+    initialize();
 }
 
-CrankNicolsen::CrankNicolsen(unsigned int N, unsigned int M, arma::cx_mat V, double h, double Delta_t, arma::cx_double r) : N(N), M(M), r(r), i_unit(0,1){
+CrankNicolsen::CrankNicolsen(unsigned int N, unsigned int M, unsigned int T, arma::cx_mat V, double h, double Delta_t) : N(N), M(M), T(T), i_unit(0,1){
     a.set_size(M-2);
     b.set_size(M-2);
+    r = i_unit * Delta_t / (2.0 * h*h);
     for (int k=0; k<M-2; k++){
         a[k] = arma::cx_double(1,0) + 4.0*r + i_unit * Delta_t/2.0 * V(k,k);
         b[k] = arma::cx_double(1,0) - 4.0*r - i_unit * Delta_t/2.0 * V(k,k);
     }
+}
 
+void CrankNicolsen::initialize(){
+    // Preallocating result of B*u^n:
     b_result.set_size(M-2);
-    u.resize(N, arma::sp_cx_mat(M-2, M-2));
+
+    // u_internal as submatrix of u:
+    for (int n=0; n<N; n++){
+        arma::cx_mat &u_tmp = u[n];
+        u_internal[n] = u_tmp.submat(1, 1, M-2, M-2);
+    }
+
+    // Creating matrices:
     create_A_matrix();
     create_B_matrix();
 }
-
-
 // Private methods:
 void CrankNicolsen::create_matrix(arma::sp_cx_mat &C, arma::cx_vec c, arma::cx_double r_) {
 
@@ -63,8 +70,8 @@ int CrankNicolsen::get_flat_index(int i, int j, unsigned int M){
 }
 
 void CrankNicolsen::update_u(const unsigned int n){
-    b_result = B * u[n];
-    u[n+1] = arma::spsolve(A, b_result);
+    b_result = B * u_internal[n];
+    u_internal[n+1] = arma::spsolve(A, b_result);
 }
 
 
@@ -79,10 +86,4 @@ void CrankNicolsen::create_B_matrix(){
     int size = (M-2)*(M-2);
     B.set_size(size, size);
     create_matrix(B, b, r);
-}
-
-void CrankNicolsen::initial_u(arma::cx_mat u_){
-    if ((u_.n_rows == u_.n_cols) && (u_.n_rows == M-2)){
-        u[0] = u_;
-    }
 }

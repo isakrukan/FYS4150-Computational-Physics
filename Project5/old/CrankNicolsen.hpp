@@ -5,13 +5,12 @@ class CrankNicolsen
 
 private:
 
-unsigned int N; ///< Time points 
-unsigned int M; ///< Space points 
 arma::cx_vec a;
 arma::cx_vec b; 
 arma::cx_double r;
 const arma::cx_double i_unit;
 arma::cx_mat b_result; ///< For storing result of \f$B\vec{u}^n = \vec{b}\f$.
+std::vector<arma::cx_mat> u_internal;
 
 int get_flat_index(int i, int j, unsigned int M);
 
@@ -29,14 +28,16 @@ void create_matrix(arma::sp_cx_mat &C, arma::cx_vec c, arma::cx_double r_);
  */
 void update_u(const unsigned int n); 
 
+
+void initialize();
+
 public:
 
 
 
-CrankNicolsen(unsigned int N, unsigned int M, arma::cx_vec a, arma::cx_vec b, arma::cx_double r);
-CrankNicolsen(unsigned int N, unsigned int M, arma::cx_mat V, double h, double Delta_t, arma::cx_double r);
+CrankNicolsen(unsigned int N, unsigned int M, unsigned int T, arma::cx_vec a, arma::cx_vec b, arma::cx_double r);
+CrankNicolsen(unsigned int N, unsigned int M, unsigned int T, arma::cx_mat V, double h=0.005, double Delta_t=2.5*1e-5);
 
-std::vector<arma::sp_cx_mat> u;
 arma::sp_cx_mat A;
 arma::sp_cx_mat B;
 
@@ -44,8 +45,14 @@ arma::sp_cx_mat B;
 void create_A_matrix();
 void create_B_matrix();
 
-void initial_u(arma::cx_mat u);
-void initial_u_Gaussian(arma::cx_mat u);
+
+/**
+ * @brief Initializes the wave function like a Gaussian wave packet.
+ * @param xy_c Center of Gaussian.
+ * @param sigma_xy Initial width of Gaussian.
+ * @param p_xy Wave packet momentum.
+ */
+void initial_u_Gaussian(std::vector<double> xy_c, std::vector<double> sigma_xy, std::vector<double> p_xy);
 
 
 };
