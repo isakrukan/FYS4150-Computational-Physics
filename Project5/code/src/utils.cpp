@@ -22,3 +22,8 @@ arma::cx_double gaussian_wave_packet(double x, double y, Args args)
 
     return gaussian_wave_packet(x, y, x_c, y_c, sigma_x, sigma_y, p_x, p_y);
 }
+
+
+int get_flat_index(int i, int j, unsigned int M){
+    return i*M + j;
+}

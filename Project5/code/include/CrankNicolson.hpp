@@ -16,7 +16,6 @@ arma::cx_double r;
 const arma::cx_double i_unit;
 arma::cx_mat b_result; ///< For storing result of \f$B\vec{u}^n = \vec{b}\f$.
 
-int get_flat_index(int i, int j, unsigned int M);
 
 /**
  * @brief Creates block diagonal matrix.

@@ -98,5 +98,6 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "variant": "cpp"
-    }
+    },
+    "github-enterprise.uri": "https://github.uio.no/"
 }

@@ -16,8 +16,7 @@ Args parse_args(int argc, char *argv[])
     };
 
     // Parse each argument
-    for (int i = 1; i < argc; i++)
-    {
+    for (int i = 1; i < argc; i++){
         std::string arg = argv[i];
 
         // Check for aliases
@@ -27,32 +26,40 @@ Args parse_args(int argc, char *argv[])
         // ----------------------------
         // General/lattice parameters
         // ----------------------------
-        if (arg == "--sigma_x" && i + 1 < argc)
-        {
-            args.sigma_x = std::stoi(argv[++i]);
+        if (arg == "--sigma_x" && i + 1 < argc){
+            args.sigma_x = std::stod(argv[++i]);
         }
-        else if (arg == "--sigma_y" && i + 1 < argc)
-        {
-            args.sigma_y = std::stoi(argv[++i]);
+        else if (arg == "--sigma_y" && i + 1 < argc){
+            args.sigma_y = std::stod(argv[++i]);
         }
-        else if (arg == "--center_x" && i + 1 < argc)
-        {
-            args.center_x = std::stoi(argv[++i]);
+        else if (arg == "--center_x" && i + 1 < argc){
+            args.center_x = std::stod(argv[++i]);
         }
-        else if (arg == "--center_y" && i + 1 < argc)
-        {
-            args.center_y = std::stoi(argv[++i]);
+        else if (arg == "--center_y" && i + 1 < argc){
+            args.center_y = std::stod(argv[++i]);
         }
-        else if (arg == "--momentum_x" && i + 1 < argc)
-        {
-            args.momentum_x = std::stoi(argv[++i]);
+        else if (arg == "--momentum_x" && i + 1 < argc){
+            args.momentum_x = std::stod(argv[++i]);
         }
-        else if (arg == "--momentum_y" && i + 1 < argc)
-        {
-            args.momentum_y = std::stoi(argv[++i]);
+        else if (arg == "--momentum_y" && i + 1 < argc){
+            args.momentum_y = std::stod(argv[++i]);
         }
-        else if (arg == "--help")
-        {
+        else if (arg == "--Delta_t" && i + 1 < argc){
+            args.Delta_t = std::stod(argv[++i]);
+        }
+        else if (arg == "--L" && i + 1 < argc){
+            args.L = std::stod(argv[++i]);
+        }
+        else if (arg == "--h" && i + 1 < argc){
+            args.h = std::stod(argv[++i]);
+        }
+        else if (arg == "--T" && i + 1 < argc){
+            args.T = std::stod(argv[++i]);
+        }
+        else if (arg == "--v0" && i + 1 < argc){
+            args.v0 = std::stod(argv[++i]);
+        }
+        else if (arg == "--help"){
             std::cout 
                     << "Usage:\n"
                     << "  ./main [options]\n"
@@ -69,8 +76,7 @@ Args parse_args(int argc, char *argv[])
 
             exit(0);
         }
-        else
-        {
+        else{
             std::cerr << "Unknown argument: " << arg << "\n";
             exit(1);
         }

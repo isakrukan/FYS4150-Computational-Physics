@@ -16,13 +16,16 @@ struct Args
     double center_y = 0.5;
     double momentum_x = 200.0;
     double momentum_y = 0.0;
-    double V_0 = 0.0;
+    double v0 = 0.0;
 
     // Simulation parameters
     double T = 0.008;          ///< Total simulation time
-    double dt = 2.5e-5;        ///< Time step size
+    double Delta_t = 2.5e-5;        ///< Time step size
     double L = 1.0;            ///< Total simulation length
     double h = 0.005;          ///< Spatial step size
+
+    int N;  ///< Number of time steps.
+    int M;  ///< Number of spatial steps.
 };
 
 /**

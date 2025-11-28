@@ -61,10 +61,6 @@ void CrankNicolson::create_matrix(arma::sp_cx_mat &C, arma::cx_vec c, arma::cx_d
 }
 
 
-int CrankNicolson::get_flat_index(int i, int j, unsigned int M){
-    return i*(M-2) + j;
-}
-
 void CrankNicolson::update_u(const unsigned int n){
     b_result = B * u[n];
     u[n+1] = arma::spsolve(A, b_result, "superlu");
