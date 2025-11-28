@@ -1,7 +1,7 @@
 #include <armadillo>
 #include <cassert>
 
-//Change to using CrankNicolsen class
+//Change to using CrankNicolson class
 int get_flat_index(int i, int j, unsigned int M){
     return i*(M-2) + j;
 }

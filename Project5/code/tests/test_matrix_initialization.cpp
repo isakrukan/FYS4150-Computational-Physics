@@ -1,4 +1,4 @@
-#include "../include/CrankNicolsen.hpp"
+#include "../include/CrankNicolson.hpp"
 #include <cassert> 
 #include <vector>
 #include <string>
@@ -54,7 +54,7 @@ void print_sp_matrix_structure(const arma::sp_cx_mat& A)
 
 void test_matrix_initialization(){
     /**
-     * Tests using explicit forms for A and B for the M=5,6 cases that these matrices are initialized correctly by class CrankNicolsen
+     * Tests using explicit forms for A and B for the M=5,6 cases that these matrices are initialized correctly by class CrankNicolson
      */
 
     unsigned int N = 1;
@@ -128,8 +128,8 @@ void test_matrix_initialization(){
     };
 
     // Matrices A and B should be created in constructor
-    CrankNicolsen test_9x9(N, M9, a, b, r);
-    CrankNicolsen test_16x16(N, M16, a, b, r);
+    CrankNicolson test_9x9(N, M9, a, b, r);
+    CrankNicolson test_16x16(N, M16, a, b, r);
 
 
     // print_sp_matrix_structure(test_9x9.A);
