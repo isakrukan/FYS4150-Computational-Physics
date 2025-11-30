@@ -14,7 +14,7 @@ arma::cx_vec a;
 arma::cx_vec b; 
 arma::cx_double r;
 const arma::cx_double i_unit;
-arma::cx_mat b_result; ///< For storing result of \f$B\vec{u}^n = \vec{b}\f$.
+arma::cx_vec b_result; ///< For storing result of \f$B\vec{u}^n = \vec{b}\f$.
 
 
 /**

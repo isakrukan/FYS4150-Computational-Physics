@@ -45,8 +45,8 @@ void SlitExperiment::add_wave_packet(std::vector<double> xy_c, std::vector<doubl
     u_initial /= std::sqrt(normalization);
 }
 
-void SlitExperiment::add_double_slit(double v0, double cx, double wt, double d, double dy) : v0(v0) {
-
+void SlitExperiment::add_double_slit(double v0_, double cx, double wt, double d, double dy){
+    v0 = v0_;
     double y_center = 0.5;
 
     for (int i=0; i<M; i++){

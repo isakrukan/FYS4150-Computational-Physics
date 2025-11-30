@@ -3,13 +3,15 @@
 #include "EvolverAlgorithm.hpp"
 #include "utils.hpp"
 
+//********** Constructors **********//
+
 
 EvolverAlgorithm::EvolverAlgorithm(double h, double Delta_t){
 
-    M = int(1/h + 1);
-    N = int(1/Delta_t + 1);
-    h = double(1/(M-1));
-    Delta_t = double(1/(N-1));
+    M = int(1.0/h + 1.0);
+    N = int(1.0/Delta_t + 1.0);
+    this->h = double(1.0/(M-1));
+    this->Delta_t = double(1.0/(N-1));
     M_set = true;
     N_set = true;
 }
@@ -22,18 +24,7 @@ CrankNicolsen::CrankNicolsen(arma::cx_mat &V_, double h, double Delta_t) : Evolv
     initialize();
 }
 
-
-void CrankNicolsen::set_potential(arma::cx_mat &V_){
-    V = V_;
-    V_set = true;
-    initialize();
-}
-void CrankNicolsen::set_grid_size(const unsigned int M_){
-    M = M_;
-    h = double(1/(M-1));
-    M_set = true;
-    initialize();
-}
+//********** Private methods **********//
 
 void CrankNicolsen::initialize(){
 
@@ -49,8 +40,8 @@ void CrankNicolsen::initialize(){
         for (int i=0; i < M-2; ++i) {
             for (int j=0; j < M-2; ++j) {
                 int k = get_flat_index(i,j,M-2);
-                a[k] = 1.0 + 4.0*r + i_unit * Delta_t/2.0 * V(i+1, j+1);
-                b[k] = 1.0 - 4.0*r - i_unit * Delta_t/2.0 * V(i+1, j+1);
+                a[k] = 1.0 + 4.0*r + i_unit * Delta_t/2.0 * V(i, j);
+                b[k] = 1.0 - 4.0*r - i_unit * Delta_t/2.0 * V(i, j);
             }
         }
 
@@ -98,22 +89,40 @@ void CrankNicolsen::create_matrix(arma::sp_cx_mat &C, arma::cx_vec &c, arma::cx_
     C(C.n_rows-1, C.n_rows-1) = c(C.n_rows-1);
 }
 
-arma::cx_vec CrankNicolsen::update_u(arma::cx_vec &u_internal){
-    b_result = B * u_internal;
-    // u_internal[n+1] = arma::spsolve(A, b_result);
-    return arma::spsolve(A, b_result);
-}
-
-
-// Public methods:
 void CrankNicolsen::create_A_matrix(){
     int size = (M-2)*(M-2);
     A.set_size(size, size);
     create_matrix(A, a, -r);
+    // print_sp_matrix_structure(A);
 }
 
 void CrankNicolsen::create_B_matrix(){
     int size = (M-2)*(M-2);
     B.set_size(size, size);
     create_matrix(B, b, r);
+}
+
+//********** Public methods **********//
+
+arma::cx_vec CrankNicolsen::update_u(arma::cx_vec &u_internal){
+
+    b_result = B * u_internal;
+
+    arma::cx_vec u_new;  
+    arma::spsolve(u_new, A, b_result, "superlu");
+
+    return u_new;
+
+}
+
+void CrankNicolsen::set_potential(arma::cx_mat &V_){
+    V = V_;
+    V_set = true;
+    initialize();
+}
+void CrankNicolsen::set_grid_size(const unsigned int M_){
+    M = M_;
+    h = double(1.0/(M-1));
+    M_set = true;
+    initialize();
 }

@@ -3,7 +3,7 @@ import numpy as np
 from utils import *
 from matplotlib.animation import FuncAnimation
 
-t, u = read_hd5_data("data.h5")
+t, u = read_hd5_data("out/data.h5")
 
 print(t)
 

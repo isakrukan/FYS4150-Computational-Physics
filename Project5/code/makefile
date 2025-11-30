@@ -6,9 +6,10 @@ BUILD 		:= build
 TESTS		:= tests
 LIB			:= 
 INCL 		:= -I./include
-CXXFLAGS 	:= -DARMA_USE_HDF5 -std=c++17 -O3 -march=native#  -g -O0 
+CXXFLAGS 	:= -DARMA_USE_HDF5 -DARMA_USE_SUPERLU -std=c++17 -O3 -march=native#  -g -O0 
 # LDFLAGS 	:= -larmadillo -lsuperlu -lopenblas -llapack
-LDFLAGS 	:= -larmadillo -lsuperlu -llapack
+# LDFLAGS 	:= -larmadillo -lsuperlu -llapack
+LDFLAGS 	:= -larmadillo 
 PY			:= 
 EXE			:= 
 LOGFILE 	:= problem9.log

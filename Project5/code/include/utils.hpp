@@ -13,4 +13,6 @@ arma::cx_double gaussian_wave_packet(double x, double y, Args args);
 
 
 int get_flat_index(int i, int j, unsigned int M);
+
+void print_sp_matrix_structure(const arma::sp_cx_mat& A);
 #endif

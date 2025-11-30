@@ -13,10 +13,10 @@ Solver::Solver(double h, double Delta_t, std::string solvertype){
         throw std::logic_error(solvertype + " is not recognized as an (implemented) algorithm.");
     }
 
-    M = int(1/h + 1);
-    N = int(1/Delta_t + 1);
-    h = double(1/(M-1));
-    Delta_t = double(1/(N-1));
+    M = int(1.0/h + 1.0);
+    N = int(1.0/Delta_t + 1.0);
+    h = double(1.0/(M-1));
+    Delta_t = double(1.0/(N-1));
     evolverAlgorithm_set = true;
 }
 
@@ -58,16 +58,17 @@ void Solver::evolve(double T_){
         u_internal[n+1] = evolverAlgorithm->update_u(u_internal[n]);
     }
 
-    // Assigning values to internal points:
+    // Assigning values from internal values to u
     for (int n = 1; n < N; ++n) {
-        for (int i=1; i<M-1; i++){
-            for (int j=1; j<M-1; j++){
+        for (int i = 1; i < M-1; ++i) {
+            for (int j = 1; j < M-1; ++j) {
                 int k_internal = get_flat_index(i-1, j-1, M-2);
-                int k = get_flat_index(i, j, M);
-                u_internal[n](k_internal) = u[n](k);
+                int k         = get_flat_index(i,   j,   M);
+                u[n](k) = u_internal[n](k_internal);   // <-- swapped
             }
         }
     }
+
 }
 
 
