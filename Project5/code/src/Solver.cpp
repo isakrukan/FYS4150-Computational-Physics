@@ -135,5 +135,5 @@ void Solver::save(const std::string &out_dir) const{
         U.row(n) = u[n].t();        // transposing to fit into row
     }
 
-    U.save(arma::hdf5_name(out_dir + "data.h5", "u", arma::hdf5_opts::append));
+    U.save(arma::hdf5_name(out_dir + "_data.h5", "u", arma::hdf5_opts::append));
 }
