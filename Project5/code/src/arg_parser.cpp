@@ -44,8 +44,8 @@ Args parse_args(int argc, char *argv[])
         else if (arg == "--momentum_y" && i + 1 < argc){
             args.momentum_y = std::stod(argv[++i]);
         }
-        else if (arg == "--Delta_t" && i + 1 < argc){
-            args.Delta_t = std::stod(argv[++i]);
+        else if (arg == "--dt" && i + 1 < argc){
+            args.dt = std::stod(argv[++i]);
         }
         else if (arg == "--L" && i + 1 < argc){
             args.L = std::stod(argv[++i]);

@@ -5,11 +5,9 @@
 
 class SlitExperiment{
 
-private:
-
 public:
 
-
+//**** Public variables ****//
 unsigned int M; ///< Space points. 
 double h; ///< Space separation. 
 arma::vec x;
@@ -17,6 +15,8 @@ arma::vec y;
 arma::cx_mat V; ///< Potential.
 arma::cx_vec u_initial; ///< Initial wave function.
 double v0; ///< Potential height of slit wall.
+
+//********** Constructor(s) **********//
 
 /**
  * @brief Default constructor, sets up the space environment using the number of points.
@@ -30,6 +30,8 @@ SlitExperiment(unsigned int M);
  */
 SlitExperiment(double h);
 SlitExperiment() = default;
+
+//********** Public methods **********//
 
 /**
  * @brief Adds Gaussian wave packet to desired location.
@@ -48,6 +50,5 @@ void add_wave_packet(std::vector<double> xy_c, std::vector<double> sigma_xy, std
  * @param dy Height of slits (y-direction).
  */
 void add_double_slit(double v0=1e10, double cx=0.5, double wt=0.02, double d=0.05, double dy=0.05);
-
 
 };

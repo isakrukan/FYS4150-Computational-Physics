@@ -2,6 +2,10 @@
 #include "utils.hpp"
 #include <cmath>
 
+
+
+//********** Constructors **********//
+
 SlitExperiment::SlitExperiment(unsigned int M) : M(M) {
     
     h = double(1/(M-1));
@@ -13,10 +17,9 @@ SlitExperiment::SlitExperiment(unsigned int M) : M(M) {
     V.zeros(M, M);  
 };
 
-SlitExperiment::SlitExperiment(double h){
+SlitExperiment::SlitExperiment(double h) : h(h){
     
-    M = int(1/h + 1);
-    h = double(1/(M-1));
+    M = static_cast<int>(std::llround(1.0 / h) + 1);  // Rounding 1/h + 1, assuming a grid of size [0,1]x[0,1]
     u_initial = arma::cx_vec(M*M, arma::fill::zeros);
 
     // Grid and time points:
@@ -24,6 +27,8 @@ SlitExperiment::SlitExperiment(double h){
     y = arma::linspace(0,1,M);
     V.zeros(M, M);  
 };
+
+//********** Public methods **********//
 
 void SlitExperiment::add_wave_packet(std::vector<double> xy_c, std::vector<double> sigma_xy, std::vector<double> p_xy){
     double normalization = 0;
@@ -38,7 +43,7 @@ void SlitExperiment::add_wave_packet(std::vector<double> xy_c, std::vector<doubl
    
 
             int k = get_flat_index(i,j,M);
-            u_initial(k) = u_tmp;
+            u_initial(k) += u_tmp;
             normalization += std::norm(u_tmp);
         }
     }

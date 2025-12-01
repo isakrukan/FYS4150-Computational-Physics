@@ -86,10 +86,18 @@ link:
 	g++ $(MAIN_OBJS) $(LIB) $(LDFLAGS) -o $(BUILD)/main$(EXE)
 	g++ $(TEST_OBJS) $(LIB) $(LDFLAGS) -o $(BUILD)/test$(EXE)
 
+compile_openmp:
+	g++ -fopenmp -c $(wildcard src/*.cpp) $(INCL) $(LIB) $(CXXFLAGS)
+	g++ -fopenmp -c main.cpp -o main_openmp.o $(INCL) $(LIB) $(CXXFLAGS)
+
+link_openmp:
+	g++ $(SRC_OBJS) main_openmp.o $(LIB) $(LDFLAGS) -fopenmp -o $(BUILD)/main_openmp$(EXE)
+
+
 clean:
 	-$(DELETE) *.o
 
-all: outfolder compile link clean
+all: outfolder compile link compile_openmp link_openmp clean
 
 			
 

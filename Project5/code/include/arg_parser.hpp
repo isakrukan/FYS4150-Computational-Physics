@@ -20,7 +20,7 @@ struct Args
 
     // Simulation parameters
     double T = 0.008;          ///< Total simulation time
-    double Delta_t = 2.5e-5;        ///< Time step size
+    double dt = 2.5e-5;        ///< Time step size
     double L = 1.0;            ///< Total simulation length
     double h = 0.005;          ///< Spatial step size
 

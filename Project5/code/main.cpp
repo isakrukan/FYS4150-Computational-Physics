@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
     // doubleSlit.add_double_slit();
     doubleSlit.add_wave_packet({0.25, 0.5}, {0.05, 0.05}, {200,0});
 
-    Solver solve = Solver(args.h, args.Delta_t); // Defaults to CrankNicolsen with arma::spsolve (the only one implemented yet)
+    Solver solve = Solver(args.h, args.dt); // Defaults to CrankNicolsen with arma::spsolve (the only one implemented yet)
     solve.add_SlitExperiment(doubleSlit);
     solve.evolve(args.T);
     solve.save("out/");
