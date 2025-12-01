@@ -86,20 +86,16 @@ link:
 	g++ $(MAIN_OBJS) $(LIB) $(LDFLAGS) -o $(BUILD)/main$(EXE)
 	g++ $(TEST_OBJS) $(LIB) $(LDFLAGS) -o $(BUILD)/test$(EXE)
 
-compile_openmp:
-	g++ -fopenmp -c $(wildcard src/*.cpp) $(INCL) $(LIB) $(CXXFLAGS)
-	g++ -fopenmp -c main.cpp -o main_openmp.o $(INCL) $(LIB) $(CXXFLAGS)
-
-link_openmp:
-	g++ $(SRC_OBJS) main_openmp.o $(LIB) $(LDFLAGS) -fopenmp -o $(BUILD)/main_openmp$(EXE)
-
 
 clean:
 	-$(DELETE) *.o
 
-all: outfolder compile link compile_openmp link_openmp clean
+all: outfolder compile link clean
 
-			
+
+run_problem_7:
+	@$(BUILD)/main --identifier default_noSlit
+	@$(BUILD)/main --identifier default_Slit --double_slit true --sigma_y 0.10
 
 py_plots:
 
@@ -108,5 +104,5 @@ run_tests:
 
 
 # Build first (via 'all'), then run everything and plot
-project: all run_tests py_plots
+project: all run_tests run_problem_7 py_plots
 	@echo "Complete project generated."

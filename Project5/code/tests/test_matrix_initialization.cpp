@@ -1,108 +1,133 @@
-#include "../include/CrankNicolson.hpp"
+#include "../include/EvolverAlgorithm.hpp"
 #include <cassert> 
 #include <vector>
 #include <string>
-
+#include <complex> 
 
 void test_matrix_initialization(){
     /**
      * Tests using explicit forms for A and B for the M=5,6 cases that these matrices are initialized correctly by class CrankNicolson
      */
 
+    // Parameters
+    double eps = 1e-15; // Tolerance
+
     unsigned int N = 1;
     unsigned int M9 = 5;
     unsigned int M16 = 6;
-    arma::cx_vec a = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-    arma::cx_vec b = {16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1};
-    arma::cx_double r = 0.1;
+    double h9 = 1.0 / (M9 - 1); 
+    double h16 = 1.0 / (M16 - 1); 
+    double dt = 0.000025;
+
+    arma::cx_double r9 = arma::cx_double(0,1) * dt / (2.0 * h9*h9);
+    arma::cx_double r16 = arma::cx_double(0,1) * dt / (2.0 * h16*h16);
+
+    arma::cx_double i_unit(0, 1);
+
+    arma::cx_double alpha9  = 1.0 + 4.0*r9  + i_unit * dt / 2.0;
+    arma::cx_double beta9   = 1.0 - 4.0*r9  - i_unit * dt / 2.0;
+    arma::cx_double alpha16 = 1.0 + 4.0*r16 + i_unit * dt / 2.0;
+    arma::cx_double beta16  = 1.0 - 4.0*r16 - i_unit * dt / 2.0;
+
+
+    // Computed:
+    arma::cx_mat V9(M9-2, M9-2, arma::fill::ones);
+    arma::cx_mat V16(M16-2, M16-2, arma::fill::ones); 
+    CrankNicolsen test_9x9(V9, h9, dt);
+    CrankNicolsen test_16x16(V16, h16, dt);
 
     // Expected:
     arma::cx_mat A_9x9 = {
-        { a[0], -r,   0,    -r,   0,    0,    0,    0,    0    },
-        { -r,   a[1], -r,   0,    -r,   0,    0,    0,    0    },
-        {  0,   -r,   a[2], 0,    0,    -r,   0,    0,    0    },
-        { -r,   0,    0,    a[3], -r,   0,    -r,   0,    0    },
-        {  0,   -r,   0,    -r,   a[4], -r,   0,    -r,   0    },
-        {  0,   0,    -r,   0,    -r,   a[5], 0,    0,    -r   },
-        {  0,   0,    0,    -r,   0,    0,    a[6], -r,   0    },
-        {  0,   0,    0,    0,    -r,   0,    -r,   a[7], -r   },
-        {  0,   0,    0,    0,    0,    -r,   0,    -r,   a[8] }
+        { alpha9, -r9,    0,     -r9,   0,     0,     0,     0,     0 },
+        { -r9,    alpha9, -r9,   0,     -r9,   0,     0,     0,     0 },
+        { 0,      -r9,    alpha9,0,     0,     -r9,   0,     0,     0 },
+        { -r9,    0,      0,     alpha9,-r9,   0,     -r9,   0,     0 },
+        { 0,      -r9,    0,     -r9,   alpha9,-r9,   0,     -r9,   0 },
+        { 0,      0,      -r9,   0,     -r9,   alpha9,0,     0,     -r9 },
+        { 0,      0,      0,     -r9,   0,     0,     alpha9,-r9,   0 },
+        { 0,      0,      0,     0,     -r9,   0,     -r9,   alpha9,-r9 },
+        { 0,      0,      0,     0,     0,     -r9,   0,     -r9,   alpha9 }
     };
 
     arma::cx_mat B_9x9 = {
-        { b[0], r,    0,    r,    0,    0,    0,    0,    0    },
-        { r,    b[1], r,    0,    r,    0,    0,    0,    0    },
-        { 0,    r,    b[2], 0,    0,    r,    0,    0,    0    },
-        { r,    0,    0,    b[3], r,    0,    r,    0,    0    },
-        { 0,    r,    0,    r,    b[4], r,    0,    r,    0    },
-        { 0,    0,    r,    0,    r,    b[5], 0,    0,    r    },
-        { 0,    0,    0,    r,    0,    0,    b[6], r,    0    },
-        { 0,    0,    0,    0,    r,    0,    r,    b[7], r    },
-        { 0,    0,    0,    0,    0,    r,    0,    r,    b[8] }
+        { beta9,  r9,     0,     r9,    0,     0,     0,     0,     0 },
+        { r9,     beta9,  r9,    0,     r9,    0,     0,     0,     0 },
+        { 0,      r9,     beta9, 0,     0,     r9,    0,     0,     0 },
+        { r9,     0,      0,     beta9, r9,    0,     r9,    0,     0 },
+        { 0,      r9,     0,     r9,    beta9, r9,    0,     r9,    0 },
+        { 0,      0,      r9,    0,     r9,    beta9, 0,     0,     r9 },
+        { 0,      0,      0,     r9,    0,     0,     beta9, r9,    0 },
+        { 0,      0,      0,     0,     r9,    0,     r9,    beta9, r9 },
+        { 0,      0,      0,     0,     0,     r9,    0,     r9,    beta9 }
     };
 
+
     arma::cx_mat A_16x16 = {
-    { a[0], -r,    0,     0,   -r,   0,    0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
-    { -r,   a[1], -r,     0,   0,    -r,   0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
-    { 0,    -r,   a[2],  -r,   0,    0,    -r,   0,    0,    0,    0,     0,     0,     0,     0,     0     },
-    { 0,    0,    -r,    a[3], 0,    0,    0,    -r,   0,    0,    0,     0,     0,     0,     0,     0     },
-    { -r,   0,    0,     0,    a[4], -r,   0,    0,    -r,   0,    0,     0,     0,     0,     0,     0     },
-    { 0,    -r,   0,     0,    -r,   a[5], -r,   0,    0,    -r,   0,     0,     0,     0,     0,     0     },
-    { 0,    0,    -r,    0,    0,    -r,   a[6], -r,   0,    0,    -r,    0,     0,     0,     0,     0     },
-    { 0,    0,    0,     -r,   0,    0,    -r,   a[7], 0,    0,    0,     -r,    0,     0,     0,     0     },
-    { 0,    0,    0,     0,    -r,   0,    0,    0,    a[8], -r,   0,     0,     -r,    0,     0,     0     },
-    { 0,    0,    0,     0,    0,    -r,   0,    0,    -r,   a[9], -r,    0,     0,     -r,    0,     0     },
-    { 0,    0,    0,     0,    0,    0,    -r,   0,    0,    -r,   a[10], -r,    0,     0,     -r,    0     },
-    { 0,    0,    0,     0,    0,    0,    0,    -r,   0,    0,    -r,    a[11], 0,     0,     0,     -r    },
-    { 0,    0,    0,     0,    0,    0,    0,    0,    -r,   0,    0,     0,     a[12], -r,    0,     0     },
-    { 0,    0,    0,     0,    0,    0,    0,    0,    0,    -r,   0,     0,     -r,    a[13], -r,    0     },
-    { 0,    0,    0,     0,    0,    0,    0,    0,    0,    0,    -r,    0,     0,     -r,    a[14], -r    },
-    { 0,    0,    0,     0,    0,    0,    0,    0,    0,    0,    0,     -r,    0,     0,     -r,    a[15] }
+    { alpha16, -r16,    0,     0,   -r16,   0,    0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
+    { -r16,   alpha16, -r16,     0,   0,    -r16,   0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
+    { 0,    -r16,   alpha16,  -r16,   0,    0,    -r16,   0,    0,    0,    0,     0,     0,     0,     0,     0     },
+    { 0,    0,    -r16,    alpha16, 0,    0,    0,    -r16,   0,    0,    0,     0,     0,     0,     0,     0     },
+    { -r16,   0,    0,     0,    alpha16, -r16,   0,    0,    -r16,   0,    0,     0,     0,     0,     0,     0     },
+    { 0,    -r16,   0,     0,    -r16,   alpha16, -r16,   0,    0,    -r16,   0,     0,     0,     0,     0,     0     },
+    { 0,    0,    -r16,    0,    0,    -r16,   alpha16, -r16,   0,    0,    -r16,    0,     0,     0,     0,     0     },
+    { 0,    0,    0,     -r16,   0,    0,    -r16,   alpha16, 0,    0,    0,     -r16,    0,     0,     0,     0     },
+    { 0,    0,    0,     0,    -r16,   0,    0,    0,    alpha16, -r16,   0,     0,     -r16,    0,     0,     0     },
+    { 0,    0,    0,     0,    0,    -r16,   0,    0,    -r16,   alpha16, -r16,    0,     0,     -r16,    0,     0     },
+    { 0,    0,    0,     0,    0,    0,    -r16,   0,    0,    -r16,   alpha16, -r16,    0,     0,     -r16,    0     },
+    { 0,    0,    0,     0,    0,    0,    0,    -r16,   0,    0,    -r16,    alpha16, 0,     0,     0,     -r16    },
+    { 0,    0,    0,     0,    0,    0,    0,    0,    -r16,   0,    0,     0,     alpha16, -r16,    0,     0     },
+    { 0,    0,    0,     0,    0,    0,    0,    0,    0,    -r16,   0,     0,     -r16,    alpha16, -r16,    0     },
+    { 0,    0,    0,     0,    0,    0,    0,    0,    0,    0,    -r16,    0,     0,     -r16,    alpha16, -r16    },
+    { 0,    0,    0,     0,    0,    0,    0,    0,    0,    0,    0,     -r16,    0,     0,     -r16,    alpha16 }
     };
 
     arma::cx_mat B_16x16 = {
-    { b[0], r,    0,    0,    r,    0,    0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
-    {  r,   b[1], r,    0,    0,    r,    0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
-    {  0,   r,    b[2], r,    0,    0,    r,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
-    {  0,    0,   r,    b[3], 0,    0,    0,    r,    0,    0,    0,     0,     0,     0,     0,     0     },
-    {  r,    0,   0,    0,    b[4], r,    0,    0,    r,    0,    0,     0,     0,     0,     0,     0     },
-    {  0,   r,    0,    0,    r,    b[5], r,    0,    0,    r,    0,     0,     0,     0,     0,     0     },
-    {  0,    0,   r,    0,    0,    r,    b[6], r,    0,    0,    r,     0,     0,     0,     0,     0     },
-    {  0,    0,   0,    r,    0,    0,    r,    b[7], 0,    0,    0,     r,     0,     0,     0,     0     },
-    {  0,    0,   0,    0,    r,    0,    0,    0,    b[8], r,    0,     0,     r,     0,     0,     0     },
-    {  0,    0,   0,    0,    0,    r,    0,    0,    r,    b[9], r,     0,     0,     r,     0,     0     },
-    {  0,    0,   0,    0,    0,    0,    r,    0,    0,    r,    b[10], r,     0,     0,     r,     0     },
-    {  0,    0,   0,    0,    0,    0,    0,    r,    0,    0,    r,     b[11], 0,     0,     0,     r     },
-    {  0,    0,   0,    0,    0,    0,    0,    0,    r,    0,    0,     0,     b[12], r,     0,     0     },
-    {  0,    0,   0,    0,    0,    0,    0,    0,    0,    r,    0,     0,     r,     b[13], r,     0     },
-    {  0,    0,   0,    0,    0,    0,    0,    0,    0,    0,    r,     0,     0,     r,     b[14], r     },
-    {  0,    0,   0,    0,    0,    0,    0,    0,    0,    0,    0,     r,     0,     0,     r,     b[15] }
+    { beta16, r16,    0,    0,    r16,    0,    0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
+    {  r16,   beta16, r16,    0,    0,    r16,    0,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
+    {  0,   r16,    beta16, r16,    0,    0,    r16,    0,    0,    0,    0,     0,     0,     0,     0,     0     },
+    {  0,    0,   r16,    beta16, 0,    0,    0,    r16,    0,    0,    0,     0,     0,     0,     0,     0     },
+    {  r16,    0,   0,    0,    beta16, r16,    0,    0,    r16,    0,    0,     0,     0,     0,     0,     0     },
+    {  0,   r16,    0,    0,    r16,    beta16, r16,    0,    0,    r16,    0,     0,     0,     0,     0,     0     },
+    {  0,    0,   r16,    0,    0,    r16,    beta16, r16,    0,    0,    r16,     0,     0,     0,     0,     0     },
+    {  0,    0,   0,    r16,    0,    0,    r16,    beta16, 0,    0,    0,     r16,     0,     0,     0,     0     },
+    {  0,    0,   0,    0,    r16,    0,    0,    0,    beta16, r16,    0,     0,     r16,     0,     0,     0     },
+    {  0,    0,   0,    0,    0,    r16,    0,    0,    r16,    beta16, r16,     0,     0,     r16,     0,     0     },
+    {  0,    0,   0,    0,    0,    0,    r16,    0,    0,    r16,    beta16, r16,     0,     0,     r16,     0     },
+    {  0,    0,   0,    0,    0,    0,    0,    r16,    0,    0,    r16,     beta16, 0,     0,     0,     r16     },
+    {  0,    0,   0,    0,    0,    0,    0,    0,    r16,    0,    0,     0,     beta16, r16,     0,     0     },
+    {  0,    0,   0,    0,    0,    0,    0,    0,    0,    r16,    0,     0,     r16,     beta16, r16,     0     },
+    {  0,    0,   0,    0,    0,    0,    0,    0,    0,    0,    r16,     0,     0,     r16,     beta16, r16     },
+    {  0,    0,   0,    0,    0,    0,    0,    0,    0,    0,    0,     r16,     0,     0,     r16,     beta16 }
     };
 
-    // Matrices A and B should be created in constructor
-    CrankNicolson test_9x9(N, M9, a, b, r);
-    CrankNicolson test_16x16(N, M16, a, b, r);
 
 
-    // print_sp_matrix_structure(test_9x9.A);
-    // print_sp_matrix_structure(test_16x16.A);
     int size = (M9-2)*(M9-2);
+    arma::sp_cx_mat A_computed_9x9 = test_9x9.get_A_matrix();
+    arma::sp_cx_mat B_computed_9x9 = test_9x9.get_B_matrix();
     for (int i=0; i<size; i++){
         for (int j=0; j<size; j++){
             
-            // Real components:
-            assert(test_9x9.A(i,j).real() == A_9x9(i,j));
-            assert(test_9x9.B(i,j).real() == B_9x9(i,j));
+
+            double norm1 = std::abs(static_cast<arma::cx_double>(A_computed_9x9(i,j)) - A_9x9(i,j));
+            double norm2 = std::abs(static_cast<arma::cx_double>(B_computed_9x9(i,j)) - B_9x9(i,j));
+
+            assert(norm1 < eps);
+            assert(norm2 < eps);
         }
     }
 
     size = (M16-2)*(M16-2);
+    arma::sp_cx_mat A_computed_16x16 = test_16x16.get_A_matrix();
+    arma::sp_cx_mat B_computed_16x16 = test_16x16.get_B_matrix();
     for (int i=0; i<size; i++){
         for (int j=0; j<size; j++){
             
-            // Real components:
-            assert(test_16x16.A(i,j).real() == A_16x16(i,j));
-            assert(test_16x16.B(i,j).real() == B_16x16(i,j));
+            double norm1 = std::abs(static_cast<arma::cx_double>(A_computed_16x16(i,j)) - A_16x16(i,j));
+            double norm2 = std::abs(static_cast<arma::cx_double>(B_computed_16x16(i,j)) - B_16x16(i,j));
+
+            assert(norm1 < eps);
+            assert(norm2 < eps);
         }
     }
 

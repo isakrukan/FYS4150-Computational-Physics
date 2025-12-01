@@ -59,6 +59,7 @@ void Solver::evolve(double T_){
         }
     }
 
+
     auto start = std::chrono::high_resolution_clock::now();
     std::cout << "Starting " << N << "-time points simulation of " << M << "x" << M << " grid" << std::endl;; 
     
@@ -80,7 +81,7 @@ void Solver::evolve(double T_){
             // Progress update:
             auto end = std::chrono::high_resolution_clock::now();
             elapsed = end - start;
-            double percent = 100.0 * n / (N - 1);
+            double percent = 100.0 * (n+step) / (N - 1);
             std::cout << "\r" // Starting from start of line
                     << std::fixed << std::setprecision(2)
                         << percent << "% complete, time elapsed: "
@@ -128,10 +129,10 @@ void Solver::save(const std::string &out_dir) const{
 
     // Storing vecors/matrices:
     t.save(arma::hdf5_name(out_dir + "data.h5", "t", arma::hdf5_opts::append));
-    arma::cx_mat U(N, u[0].size());  // or arma::mat if real
+    arma::cx_mat U(N, u[0].size());  // (N x M*M)
 
     for (int n = 0; n < N; ++n) {
-        U.row(n) = u[n].st();        // assuming u[n] is a column vector
+        U.row(n) = u[n].t();        // transposing to fit into row
     }
 
     U.save(arma::hdf5_name(out_dir + "data.h5", "u", arma::hdf5_opts::append));

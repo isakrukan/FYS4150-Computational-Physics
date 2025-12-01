@@ -47,6 +47,7 @@ void SlitExperiment::add_wave_packet(std::vector<double> xy_c, std::vector<doubl
             normalization += std::norm(u_tmp);
         }
     }
+    
     u_initial /= std::sqrt(normalization);
 }
 

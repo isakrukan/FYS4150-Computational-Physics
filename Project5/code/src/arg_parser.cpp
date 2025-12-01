@@ -23,9 +23,7 @@ Args parse_args(int argc, char *argv[])
         if (alias_map.count(arg))
             arg = alias_map[arg];
 
-        // ----------------------------
-        // General/lattice parameters
-        // ----------------------------
+        /***  Wave packet parameters ***/
         if (arg == "--sigma_x" && i + 1 < argc){
             args.sigma_x = std::stod(argv[++i]);
         }
@@ -44,6 +42,36 @@ Args parse_args(int argc, char *argv[])
         else if (arg == "--momentum_y" && i + 1 < argc){
             args.momentum_y = std::stod(argv[++i]);
         }
+
+        /***  Wall/slit parameters ***/
+        else if (arg == "--wc" && i + 1 < argc){
+            args.wc = std::stod(argv[++i]);
+        }
+        else if (arg == "--wt" && i + 1 < argc){
+            args.wt = std::stod(argv[++i]);
+        }
+        else if (arg == "--d" && i + 1 < argc){
+            args.d = std::stod(argv[++i]);
+        }
+        else if (arg == "--dy" && i + 1 < argc){
+            args.dy = std::stod(argv[++i]);
+        }
+        else if (arg == "--v0" && i + 1 < argc){
+            args.v0 = std::stod(argv[++i]);
+        }
+        
+        /***  Simulation parameters ***/
+        else if (arg == "--double_slit" && i + 1 < argc){
+            std::string val = argv[++i];
+            if (val == "true" || val == "1")
+                args.double_slit = true;
+            else if (val == "false" || val == "0")
+                args.double_slit = false;
+            else {
+                std::cerr << "Invalid value for --double_slit: " << val << "\n";
+                std::exit(1);
+    }
+        }
         else if (arg == "--dt" && i + 1 < argc){
             args.dt = std::stod(argv[++i]);
         }
@@ -56,8 +84,8 @@ Args parse_args(int argc, char *argv[])
         else if (arg == "--T" && i + 1 < argc){
             args.T = std::stod(argv[++i]);
         }
-        else if (arg == "--v0" && i + 1 < argc){
-            args.v0 = std::stod(argv[++i]);
+        else if (arg == "--identifier" && i + 1 < argc){
+            args.identifier = std::string(argv[++i]);
         }
         else if (arg == "--help"){
             std::cout 

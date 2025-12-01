@@ -8,11 +8,15 @@ from matplotlib.figure import Figure
 
 def generate_animation(ax:Axes, fig:Figure, data:dict):
     h = data["h"]; dt = data["dt"]
+    M = data["M"]
     
-    # Set up a 2D xy grid
-    h = 0.005
     x_points = np.arange(0, 1+h, h)
     y_points = np.arange(0, 1+h, h)
+
+
+    x_points = np.linspace(0,1,M)
+    y_points = np.linspace(0,1,M)
+
     x, y = np.meshgrid(x_points, y_points, sparse=True)
 
     #
@@ -57,8 +61,7 @@ def generate_animation(ax:Axes, fig:Figure, data:dict):
         img.set_data(u_squared[i])
 
         # Update the time label
-        current_time = t_min + i * dt
-        time_txt.set_text("t = {:.3e}".format(current_time))
+        time_txt.set_text(f"t = {t[i]:.3e}")
 
         return img
 
@@ -67,10 +70,14 @@ def generate_animation(ax:Axes, fig:Figure, data:dict):
     plt.show()
     return ani
 
-data = read_hd5_data("out/data.h5")
-
+data = read_hd5_data("out/default_noSlitdata.h5")
+# data = read_hd5_data("out/default_Slitdata.h5")
 u = data["u"]
-print(np.linalg.norm(u[1]))
+
+print("u[0] norm:", np.linalg.norm(u[0]))
+print("u[1] norm:", np.linalg.norm(u[1]))
+print("u[0] max abs:", np.max(np.abs(u[0])))
+
 
 # Create figure
 fig = plt.figure(figsize=(9,9))

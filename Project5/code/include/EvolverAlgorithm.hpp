@@ -63,7 +63,21 @@ public:
 
 //*** Constructor(s) ***/
 
+/**
+ * @brief Construct a new Crank Nicolsen object.
+ * 
+ * @param V Potential.
+ * @param h Space separation.
+ * @param dt Time separation.
+ */
 CrankNicolsen(arma::cx_mat &V, double h, double dt);
+
+/**
+ * @brief Construct a new Crank Nicolsen object.
+ * 
+ * @param h Space separation.
+ * @param dt Time separation.
+ */
 CrankNicolsen(double h, double dt);
 
 //********** Public methods **********//
@@ -77,6 +91,9 @@ virtual arma::cx_vec update_u(arma::cx_vec &u_internal) override;
 
 virtual void set_potential(arma::cx_mat &V) override;
 virtual void set_grid_size(unsigned int M) override;
+
+const arma::sp_cx_mat& get_A_matrix() const { return A; }  ///< Returns matrix A (for testing purposes).
+const arma::sp_cx_mat& get_B_matrix() const { return B; }  ///< Returns matrix B (for testing purposes).
 
 private:
 

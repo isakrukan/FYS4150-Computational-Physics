@@ -32,7 +32,7 @@ int test_index(){
 
     for (int i=0; i<M-2; i++){
         for (int j=0; j<M-2; j++){
-            int k = get_flat_index(i,j,M);
+            int k = get_flat_index(i,j,M-2);
             assert(u_matrix[0](i,j) == u[0](k));
         }
     }

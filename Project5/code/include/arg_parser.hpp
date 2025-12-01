@@ -9,23 +9,33 @@
  */
 struct Args
 {
-    // General parameters
+    /***  General parameters ***/
+
+    // Wave packet parameters
     double sigma_x = 0.05;
     double sigma_y = 0.05;
     double center_x = 0.25;
     double center_y = 0.5;
     double momentum_x = 200.0;
     double momentum_y = 0.0;
-    double v0 = 0.0;
+
+    // Wall/slit parameters
+    double v0 = 1e10;    ///< Potential height of slit "wall".
+    double wc = 0.5;    ///< Centre position of wall in the x-direction.
+    double wt = 0.02;   ///< Wall thickness in the x-direction.
+    double d = 0.05;    ///< Distance between the two slits.
+    double dy = 0.05;   ///< Height of slits (y-direction).
 
     // Simulation parameters
     double T = 0.008;          ///< Total simulation time
     double dt = 2.5e-5;        ///< Time step size
     double L = 1.0;            ///< Total simulation length
     double h = 0.005;          ///< Spatial step size
+    bool double_slit = false;  ///< Whether to include double slit in simulation.
 
     int N;  ///< Number of time steps.
     int M;  ///< Number of spatial steps.
+    std::string identifier = "";  ///< Identifier for output files.
 };
 
 /**
