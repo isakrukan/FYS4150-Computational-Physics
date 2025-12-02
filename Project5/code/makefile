@@ -100,6 +100,10 @@ run_problem_7:
 run_problem_8:
 	@$(BUILD)/main --identifier double_Slit_problem8 --double_slit true --sigma_y 0.20 --T 0.002
 
+run_problem_9:
+	@$(BUILD)/main --identifier single_Slit_problem9 --single_slit true --sigma_y 0.20 --T 0.002
+	@$(BUILD)/main --identifier triple_Slit_problem9 --triple_slit true --sigma_y 0.20 --T 0.002
+
 py_plots:
 
 run_tests:
@@ -107,5 +111,5 @@ run_tests:
 
 
 # Build first (via 'all'), then run everything and plot
-project: all run_tests run_problem_7 run_problem_8 py_plots
+project: all run_tests run_problem_7 run_problem_8 run_problem_9 py_plots
 	@echo "Complete project generated."

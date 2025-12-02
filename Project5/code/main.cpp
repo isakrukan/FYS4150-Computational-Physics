@@ -24,8 +24,23 @@ int main(int argc, char *argv[]){
     Args args = parse_args(argc, argv);
     SlitExperiment doubleSlit = SlitExperiment(args.h);
 
-    if (args.double_slit){ // If true, add double slit
+    if (args.single_slit){ // If true, adds single slit
+        doubleSlit.add_single_slit( args.v0,
+                                args.wc, 
+                                args.wt, 
+                                args.dy);
+    }
+
+    if (args.double_slit){ // If true, adds double slit
         doubleSlit.add_double_slit( args.v0, 
+                                args.wc, 
+                                args.wt, 
+                                args.d, 
+                                args.dy);
+    }
+
+    if (args.triple_slit){ // If true, adds triple slit
+        doubleSlit.add_triple_slit( args.v0, 
                                 args.wc, 
                                 args.wt, 
                                 args.d, 

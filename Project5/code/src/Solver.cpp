@@ -61,7 +61,7 @@ void Solver::evolve(double T_){
 
 
     auto start = std::chrono::high_resolution_clock::now();
-    std::cout << "Starting " << N << "-time points simulation of " << M << "x" << M << " grid" << std::endl;; 
+    std::cout << "Starting " << N << "-time points simulation of a " << M << "x" << M << " grid" << std::endl;; 
     
     int step = (N-1)/100; // Dividing up the following loop, as to print progress
     int remainder = (N-1) % 100;
@@ -73,6 +73,12 @@ void Solver::evolve(double T_){
 
     else {
         std::chrono::duration<double> elapsed; 
+
+        std::cout << "\r" // Starting from start of line
+                    << "0.00% complete, time elapsed: 0.00 seconds"
+                    << std::flush;
+
+
         for (int n=0; n<N-1; n+=step){
             for (int k=n; k<n+step && k<N - 1; k++){
                 u_internal[k+1] = evolverAlgorithm->update_u(u_internal[k]);
@@ -81,9 +87,9 @@ void Solver::evolve(double T_){
             // Progress update:
             auto end = std::chrono::high_resolution_clock::now();
             elapsed = end - start;
-            double percent = 100.0 * (n+step) / (N - 1);
+            double percent = 100.0 * (n+step) / (N - 2);
             std::cout << "\r" // Starting from start of line
-                    << std::fixed << std::setprecision(2)
+                        << std::fixed << std::setprecision(2)
                         << percent << "% complete, time elapsed: "
                         << elapsed.count() << " seconds"
                         << std::flush;
@@ -117,18 +123,18 @@ void Solver::save(const std::string &out_dir) const{
     // Storing parameters:
     arma::vec tmp(1);
     tmp(0) = M;
-    tmp.save(arma::hdf5_name(out_dir + "data.h5", "M"));
+    tmp.save(arma::hdf5_name(out_dir + "_data.h5", "M"));
     tmp(0) = N;
-    tmp.save(arma::hdf5_name(out_dir + "data.h5", "N", arma::hdf5_opts::append));
+    tmp.save(arma::hdf5_name(out_dir + "_data.h5", "N", arma::hdf5_opts::append));
     tmp(0) = h;
-    tmp.save(arma::hdf5_name(out_dir + "data.h5", "h", arma::hdf5_opts::append));
+    tmp.save(arma::hdf5_name(out_dir + "_data.h5", "h", arma::hdf5_opts::append));
     tmp(0) = dt;
-    tmp.save(arma::hdf5_name(out_dir + "data.h5", "dt", arma::hdf5_opts::append));
+    tmp.save(arma::hdf5_name(out_dir + "_data.h5", "dt", arma::hdf5_opts::append));
     tmp(0) = slitExperiment.v0;
-    tmp.save(arma::hdf5_name(out_dir + "data.h5", "v0", arma::hdf5_opts::append));
+    tmp.save(arma::hdf5_name(out_dir + "_data.h5", "v0", arma::hdf5_opts::append));
 
     // Storing vecors/matrices:
-    t.save(arma::hdf5_name(out_dir + "data.h5", "t", arma::hdf5_opts::append));
+    t.save(arma::hdf5_name(out_dir + "_data.h5", "t", arma::hdf5_opts::append));
     arma::cx_mat U(N, u[0].size());  // (N x M*M)
 
     for (int n = 0; n < N; ++n) {

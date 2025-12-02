@@ -31,7 +31,9 @@ struct Args
     double dt = 2.5e-5;        ///< Time step size
     double L = 1.0;            ///< Total simulation length
     double h = 0.005;          ///< Spatial step size
+    bool single_slit = false;  ///< Whether to include single slit in simulation.
     bool double_slit = false;  ///< Whether to include double slit in simulation.
+    bool triple_slit = false;  ///< Whether to include triple slit in simulation.
 
     int N;  ///< Number of time steps.
     int M;  ///< Number of spatial steps.

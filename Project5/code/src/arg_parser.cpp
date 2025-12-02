@@ -61,16 +61,44 @@ Args parse_args(int argc, char *argv[])
         }
         
         /***  Simulation parameters ***/
-        else if (arg == "--double_slit" && i + 1 < argc){
+        else if (arg == "--single_slit" && i + 1 < argc){ // Single slit
             std::string val = argv[++i];
-            if (val == "true" || val == "1")
+            if (val == "true" || val == "1"){
+                args.single_slit = true;
+            }
+            else if (val == "false" || val == "0"){
+                args.single_slit = false;
+            }
+            else {
+                std::cerr << "Invalid value for --single_slit: " << val << "\n";
+                std::exit(1);
+            }
+        }
+        else if (arg == "--double_slit" && i + 1 < argc){ // Double slit
+            std::string val = argv[++i];
+            if (val == "true" || val == "1"){
                 args.double_slit = true;
-            else if (val == "false" || val == "0")
+            }
+            else if (val == "false" || val == "0"){
                 args.double_slit = false;
+            }   
             else {
                 std::cerr << "Invalid value for --double_slit: " << val << "\n";
                 std::exit(1);
-    }
+            }
+        }
+        else if (arg == "--triple_slit" && i + 1 < argc){ // Triple slit
+            std::string val = argv[++i];
+            if (val == "true" || val == "1"){
+                args.triple_slit = true;
+            }
+            else if (val == "false" || val == "0"){
+                args.triple_slit = false;
+            }
+            else {
+                std::cerr << "Invalid value for --triple_slit: " << val << "\n";
+                std::exit(1);
+            }
         }
         else if (arg == "--dt" && i + 1 < argc){
             args.dt = std::stod(argv[++i]);
