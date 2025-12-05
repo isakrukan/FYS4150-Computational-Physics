@@ -1,0 +1,264 @@
+% USEFUL LINKS:
+% -------------
+%
+% - UiO LaTeX guides:          https://www.mn.uio.no/ifi/tjenester/it/hjelp/latex/
+% - Mathematics:               https://en.wikibooks.org/wiki/LaTeX/Mathematics
+% - Physics:                   https://ctan.uib.no/macros/latex/contrib/physics/physics.pdf
+% - Basics of Tikz:            https://en.wikibooks.org/wiki/LaTeX/PGF/Tikz
+% - All the colors!            https://en.wikibooks.org/wiki/LaTeX/Colors
+% - How to make tables:        https://en.wikibooks.org/wiki/LaTeX/Tables
+% - Code listing styles:       https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+% - \includegraphics           https://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
+% - Learn more about figures:  https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+% - Automagic bibliography:    https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management  (this one is kinda difficult the first time)
+%
+%                              (This document is of class "revtex4-1", the REVTeX Guide explains how the class works)
+%   REVTeX Guide:              http://www.physics.csbsju.edu/370/papers/Journal_Style_Manuals/auguide4-1.pdf
+%
+%
+% COMPILING THE .pdf FILE IN THE LINUX TERMINAL
+% ---------------------------------------------
+%
+% [terminal]$ pdflatex report_example.tex
+%
+% Run the command twice, always.
+%
+% When using references, footnotes, etc. you should run the following chain of commands:
+%
+% [terminal]$ pdflatex report_example.tex
+% [terminal]$ bibtex report_example
+% [terminal]$ pdflatex report_example.tex
+% [terminal]$ pdflatex report_example.tex
+%
+% This series of commands can of course be gathered into a single-line command:
+% [terminal]$ pdflatex report_example.tex && bibtex report_example.aux && pdflatex report_example.tex && pdflatex report_example.tex
+%
+% ----------------------------------------------------
+
+
+
+% \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
+% \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
+\documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
+% \documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
+% If you want a single-column, remove "reprint"
+% \raggedbottom
+
+
+% Allows special characters (including æøå)
+\usepackage[utf8]{inputenc}
+% \usepackage[english]{babel}
+
+% Note that you may need to download some of these packages manually, it depends on your setup.
+% It may be usefult to download TeXMaker, because it includes a large library of the most common packages.
+
+
+%%%%%%%%%%% Important packages %%%%%%%%%%%
+\usepackage{coffeestains}
+% \AddToHookNext{shipout/background}{%
+%   \coffeestainA{0.8}{1}{-25}{5cm}{1.5cm}%
+% }
+
+% \AddToHookNext{shipout/background}{%
+%   \coffeestainC{1}{1}{180}{0}{-5mm}%
+% }
+
+% \directlua{package.path = package.path .. ";./?.lua;./?/init.lua"}
+% \usepackage{typewriter}
+% \providecommand\ttgreybolda{0.6}
+% \providecommand\ttgreyboldb{0.3}
+% \providecommand\ttrotatebold{12}
+% \providecommand\ttdownbold{20000}
+% \providecommand\ttrightbold{35000}
+% \providecommand\ttoverprintbolda{1}
+% \providecommand\ttoverprintboldb{1}
+% \providecommand\ttoverprintboldc{1}
+% \providecommand\ttgreynormala{0.3}
+% \providecommand\ttgreynormalb{0.5}
+% \providecommand\ttrotatenormal{8}
+% \providecommand\ttrightnormal{20000}
+% \providecommand\ttdownnormal{20000}
+% \providecommand\ttoverprintnormal{1}
+% \providecommand\ttbasefont{cmuntt.otf}
+% \providecommand\ttmathfont{\ttbasefont}
+% \providecommand\ttfontsize{12pt}
+
+%%%%%%%%%%% Important packages %%%%%%%%%%%
+% \usepackage[justification=raggedright,singlelinecheck=false]{caption}
+\usepackage{physics,amssymb}   % physics already loads amsmath
+% \usepackage{amsmath}         
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{listings}
+% \usepackage{subcaption}
+\usepackage{standalone}   % for \includestandalone
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\definecolor{codegreen}{RGB}{87,166,74}
+\algrenewcommand\algorithmiccomment[1]{\hfill\textcolor{codegreen}{\textit{// #1}}}
+\newcommand{\AlgComment}[1]{\Statex \textcolor{codegreen}{\textit{// #1}}}
+
+% \algrenewcommand\algorithmiccomment[1]{\hfill\textcolor{green}{// #1}}
+
+\usepackage[acronym]{glossaries}    % e.g. partial density function (pdf)
+\makeglossaries
+
+% Acronyms:
+\newacronym{pdf}{PDF}{partial density function}
+\newacronym{mcmc}{MCMC}{Markov chain Monte Carlo}
+\newacronym{wlln}{WLLN}{Weak Law Of Large Numbers}
+\newacronym{lln}{LLN}{Law Of Large Numbers}
+\newacronym{mcse}{MCSE}{Monte Carlo standard error}
+\newacronym{ess}{ESS}{effective sample size}
+
+
+\usepackage{tikz}
+\usepackage{quantikz}          
+\usepackage{hyperref}
+\usepackage{float}             % optional, for [H] placement
+
+
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+
+% ===================== Shortcuts/new commands ======================
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\newcommand{\eqdef}{\mathrel{\mathop:}=}
+\newcommand{\eqdefback}{\mathrel{=\mathop:}}
+
+\begin{document}
+
+\title{PROJECT 5 NAME\\[0.5em]
+  \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project5}{\texttt{github.uio.no/icrukan/FYS4150/Project5}}
+}
+\author{Magnus Axelsen and Isak Cecil Onsager Rukan} % self-explanatory
+\date{\today}                             % self-explanatory
+\noaffiliation                            % ignore this, but keep it.
+
+\begin{abstract}
+    Abstract
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+The double slit experiment is a famous demonstration of the wave-properties of matter and light in quantum mechanics.
+
+\section{Theory and Method} \label{sec:theory_and_method}
+
+\subsection{Quantum Mechanics and the double slit}
+
+The evolution of a quantum system is famously described by the Schr\"{o}dinger equation, whose general form is given by
+\begin{align}
+    i \hbar \dv{}{t}\ket{\Psi} = \hat{H} \ket{\Psi},
+\end{align}
+where $\ket{\Psi}$ is the quantum state, $\hat{H}$ is the Hamiltonian operator, and $\hbar$ is the reduced Planck constant.
+In particular, we will be interested in the case of a single non-relativistic particle in two dimensions.
+Simplified to its dimensionless form, the Schr\"{o}dinger equation is then given by
+\begin{align} \label{eq:schrodinger_equation}
+   i \pdv{u}{t} = -\nabla^2 u + v(x,y) u,
+\end{align}
+where $u = u(x,y,t)$ is the wave function, $v(x,y)$ is a potential, and $\nabla^2 = \pdv[2]{}{x} + \pdv[2]{}{y}$ is the Laplace operator in two dimensions.
+
+Modelling a slit experiment, the potential $v(x,y)$ is taken to be zero everywhere aside from the barrier, where we assign it some constant value $v_0$.
+The barrier height $v_0$ will in principle be material specific, and determine the reflection and transmission coefficients.
+As we are not be interested in studying tunneling effects here however, we simply take the barrier height to be a large value $v_0 = 1\times 10^{10}$ in our simulations.
+
+\subsection{The Crank-Nicolson scheme}
+
+Considering a square domain over a time interval $[0,T]$, we may discretize equation \eqref{eq:schrodinger_equation} by mapping the continuous variables $(x,y,t)$ to discrete grid points $(x_i,y_j,t_n)$ as follows: 
+\begin{subequations}    
+\begin{align}
+    x \rightarrow x_i &= ih, \quad \text{with} \quad i = 0, 1, \ldots, M-1, \\
+    y \rightarrow y_j &= jh, \quad \text{with} \quad j = 0, 1, \ldots, M-1, \\
+    t \rightarrow t_n &= n\Delta t, \quad \text{with} \quad n = 0, 1, \ldots, N-1.
+\end{align}
+\end{subequations}
+Here, $M$ is the number of grid points in each spatial dimension, $h$ is the spatial step size, $N$ is the number of time steps, and $\Delta t$ is the time step size.
+Using respectively a forward and backwards difference scheme for the time derivative, we obtain the following discretizations of equation \eqref{eq:schrodinger_equation}:
+\begin{align}
+    \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} &= -i F_{ij}^{n},
+    \\
+    \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} &= -i F_{ij}^{n+1}.
+\end{align}
+Here, the term $F_{ij}^n$ represents the discretization of the right-hand side of equation \eqref{eq:schrodinger_equation} at time step $n$, and is given by
+\begin{subequations}
+\begin{align}
+    F_{ij}^n
+    = 
+    &-\frac{1}{h^2} \left[ u_{i+1,j}^n - 2u_{i,j}^n + u_{i-1,j}^n\right] 
+    \\
+    &-\frac{1}{h^2} \left[ u_{i,j+1}^n - 2u_{i,j}^n + u_{i,j-1}^n\right]
+    \\
+    &+ v_{i,j}^n u_{i,j}^n.
+\end{align}
+\end{subequations}
+These are combined to form the Crank-Nicolson scheme by taking the following linear combination of the two discretizations
+\begin{align}
+    \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} 
+    = 
+    -\frac{i}{2} \left( F_{ij}^{n+1} + F_{ij}^{n} \right).
+\end{align}
+In particular, we may now collect all time step $n+1$ terms on the left-hand side and all time step $n$ terms on the right-hand side, yielding
+\begin{subequations}
+\begin{align}
+    u_{ij}^{n+1} 
+    &- r \left[ u_{i+1,j}^{n+1} - 2u_{ij}^{n+1} + u_{i-1,j}^{n+1} \right]
+    \\
+    &- r \left[ u_{i,j+1}^{n+1} - 2u_{ij}^{n+1} + u_{i,j-1}^{n+1} \right]
+    \\
+    &+ \frac{i \Delta t}{2} v_{i,j}^{n+1} u_{i,j}^{n+1}.
+    \\
+    =
+    \\
+    u_{ij}^{n}
+    &+ r \left[ u_{i+1,j}^{n} - 2u_{ij}^{n} + u_{i-1,j}^{n} \right]
+    \\
+    &+ r \left[ u_{i,j+1}^{n} - 2u_{ij}^{n} + u_{i,j-1}^{n} \right]
+    \\
+    &- \frac{i \Delta t}{2} v_{i,j}^n u_{i,j}^n.
+\end{align}
+\end{subequations}
+
+This may further be expressed in matrix form as
+\begin{align}
+    A \vec{u}^{n+1} = B \vec{u}^{n},
+\end{align}
+where $\vec{u}^n$ is now the $(M-2)^2$-dimensional vector of the flattened wave function at time step $n$, and $A$ and $B$ are sparse matrices of dimension $(M-2)^2 \times (M-2)^2$.
+
+\subsection{The algorithm}
+At any given time step $n$, we may then evolve our system by first multiplying $B\vec{u}^n \equiv \vec{b}$ to obtain the right-hand side, and then solving the equation $A \vec{u}^{n+1} = \vec{b}$ for $\vec{u}^{n+1}$.
+The caveat here is that the matrices $A$ and $B$ will quite quickly grow too large to use a dense matrix solver.
+Indeed, even for modest grid sizes $M=100$, we see that the number of elements in the matrices grow to be on the order of $10^8$.
+Storing both real and imaginary parts as double-precision floating point numbers, this amounts to around $1.6$ GB of memory per matrix.
+We emphasize that this is just to store the matrices, and does not include any overhead from the solver itself.
+To get around this, one should instead store $A$ and $B$ as sparse matrices and employ a sparse matrix solver.
+In particular, we will be using the \texttt{SuperLU} library via the \texttt{spsolve} function in the C++ library \texttt{armadillo}.
+
+\section{Results}
+
+\section{Discussion}    \label{sec:discussion}
+
+\section{Conclusion}
+
+\newpage
+\clearpage
+\onecolumngrid
+\appendix
+\section{Appendix} \label{sec:code_excerpts}
+
+\newpage
+
+% \bibliographystyle{apalike}
+% \bibliographystyle{unsrt}
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
+
+
+\end{document}
