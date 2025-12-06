@@ -1,10 +1,13 @@
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt 
+from matplotlib import rc
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 import matplotlib.cm as cm
+import scienceplots
+
 
 def read_hd5_data(filename_and_path:str) -> dict:
     """
@@ -107,14 +110,15 @@ def generate_animation(ax:Axes, fig:Figure, data:dict):
     
     return ani
 
-def plot_colormap(data:dict, t0:float, f:callable, z_label=None, ax=None, fig=None) -> Axes|Figure:
+def plot_colormap(data:dict, t0:float, f:callable, 
+                  z_label=None, ax=None, fig=None, title=None) -> Axes|Figure:
     """
     Creates colormap of "u" using "f" for the given "times".
     """
 
     if (ax is None) or (fig is None):
 
-        fig, ax = plt.subplots(figsize=(9,9))
+        fig, ax = plt.subplots()
 
     t = data["t"]
     u = data["u"]
@@ -139,66 +143,23 @@ def plot_colormap(data:dict, t0:float, f:callable, z_label=None, ax=None, fig=No
     cbar.ax.tick_params(labelsize=fontsize)
 
 
-    plt.title(f"t = {t[index_t0]:.3e}")
+    if not(title is None):
+        plt.title(title)
 
     return ax, fig
 
 latex_fonts_called = False 
 
-def latex_fonts(double_coulmn=True):
+def latex_fonts():
     """
-    Sets a bunch of parameters in matplotlib.pyplot to create nice figures.
+    To create nice figures in prl-style.
     """
 
-    global latex_fonts_called
-    if latex_fonts_called:
-        return 
-    
-    latex_fonts_called= True
-    # \the\columnwidth\par -> 246.0pt
-    # \the\textwidth\par   -> 510.pt
+    # plt.style.use(['science', 'ieee'])
+    # plt.style.use(['science', 'nature'])
+    plt.style.use(['science'])
 
-    # Default fig_width, for UiO master thesis template type 
-    fig_width_pt = 418.25368  # Get this from LaTeX using \showthe\columnwidth
-
-    if double_coulmn:   # Double column report
-        fig_width_pt = 246 + 25
-    
-    inches_per_pt = 1.0/72.27               # Convert pt to inch
-    golden_mean = (np.sqrt(5)-1.0)/2.0         # Aesthetic ratio
-    fig_width = fig_width_pt * inches_per_pt  # width in inches
-    fig_height = fig_width * golden_mean      # height in inches
-    fig_size =  [fig_width,fig_height]
-
-    plt.rcParams["text.latex.preamble"] = r"\usepackage{mathrsfs}"
-    plt.rcParams["text.latex.preamble"] = r"\usepackage{siunitx}"
-    
-    plt.rcParams["text.usetex"] = True
-    plt.rcParams["axes.titlepad"] = 10 
-    plt.rcParams.update({
-        "font.family": "euclid",
-        "font.weight": "bold",
-        "font.size": 10,       
-        "axes.labelsize": 10,  
-        "axes.titlesize": 10,  
-        "xtick.labelsize": 10, 
-        "ytick.labelsize": 10,
-        "ytick.left": True,
-        "xtick.bottom": True,
-        "ytick.right": True,
-        "xtick.top": True,
-        "legend.fontsize": 10, 
-        "figure.titlesize": 10,
-        "legend.fontsize": 10,
-        "figure.figsize": fig_size,
-        "figure.subplot.bottom": 0.2,
-    })
-    # Ticks inside
-    plt.rcParams["xtick.direction"] = "in"
-    plt.rcParams["ytick.direction"] = "in"
-    plt.rcParams["xtick.major.size"] = 4  
-    plt.rcParams["ytick.major.size"] = 4
-    plt.rcParams["xtick.minor.size"] = 2
-    plt.rcParams["ytick.minor.size"] = 2
-
-    plt.style.use('ggplot')
+    # Correct fonts:
+    rc('font', **{'family': 'serif', 'serif': ['Times']})
+    rc('text', usetex=True)
+    plt.rcParams["text.latex.preamble"] = r"\usepackage{siunitx}" # For si units
