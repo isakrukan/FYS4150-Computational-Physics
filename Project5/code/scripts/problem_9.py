@@ -30,7 +30,7 @@ for data, data_name in zip(datas, data_names):
     plt.xlabel("y")
     plt.ylabel(r"$|u(x=0.8, y, t)|^2$")
     plt.legend()
-    plt.savefig(f"../figs/problem_9/probability_x0p8_{data_name}")
+    plt.savefig(f"../figs/problem_9/probability_x0p8_{data_name}.pdf")
     plt.show()
 
 
