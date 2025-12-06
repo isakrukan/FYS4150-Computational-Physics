@@ -15,8 +15,9 @@
 # Keep all PDFs under results/
 !/results/
 !/results/*.pdf
-!/figs/
-!/figs/*.pdf
+!/results/problem_7/*.pdf
+!/results/problem_8/*.pdf
+!/results/problem_9/*.pdf
 
 # Precompiled Headers
 *.gch
