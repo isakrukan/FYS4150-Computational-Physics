@@ -27,5 +27,5 @@ ax.set_yscale("log")
 ax.legend()
 
 plt.tight_layout(pad=0.5)
-plt.savefig("../figs/problem_7/problem_7.pdf")
+plt.savefig("../results/problem_7/problem_7.pdf")
 plt.show()

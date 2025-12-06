@@ -5,7 +5,7 @@ data = read_hd5_data("out/double_Slit_problem8_data.h5")
 t = data["t"]
 u = data["u"]
 
-OUT_DIR = "../figs/problem_8/"
+OUT_DIR = "../results/problem_8/"
 
 times = [0, 0.001, 0.002]
 
