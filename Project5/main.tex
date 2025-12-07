@@ -41,7 +41,7 @@
 % \documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-2}  % defines the basic parameters of the document
 % \documentclass[english,notitlepage,reprint]{revtex4-2}  % defines the basic parameters of the document
 % \documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
-\documentclass[aps,prl,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
+\documentclass[aps,pra,reprint,amsmath,amssymb,twocolumn,preprintnumbers,superscriptaddress,10pt]{revtex4-2}
 % If you want a single-column, remove "reprint"
 % \raggedbottom
 
@@ -161,13 +161,23 @@ The evolution of a quantum system is famously described by the Schr\"{o}dinger e
 \begin{align}
     i \hbar \dv{}{t}\ket{\Psi} = \hat{H} \ket{\Psi},
 \end{align}
-where $\ket{\Psi}$ is the quantum state, $\hat{H}$ is the Hamiltonian operator, and $\hbar$ is the reduced Planck constant.
-In particular, we will be interested in the case of a single non-relativistic particle in two dimensions.
+where $\ket{\Psi}$ is the quantum state, $\hat{H}$ is the Hamiltonian operator, and $\hbar$ is the reduced Planck constant. The wave function \(\Psi(\vec{x}; t)\) is given by the projection of \(\ket{\Psi}\) onto the position eigenbasis:
+\begin{align}
+    \Psi(\vec{x}; t) = \bra{\vec{x}}\ket{\Psi}.
+\end{align}
+Letting \(\ket{\Psi}\) represent a single particle state, the wave function encodes the probability of detecting this particle at some position in time.
+More precisely, the probability density \(p(\vec{x};t)\) for detecting a particle at position \(\vec{x}\) is given by
+\begin{align}
+    p(\vec{x};t) = |\Psi(\vec{x},t)|^2.    \label{eq:Born_rule}
+\end{align}
+This is a special case of the Born rule~\footnote{For an introduction to the Born rule or related concepts, see any standard quantum-mechanics textbook, such as \cite{GriffithsSchroeter2018}.}.
+
+Here, we will be interested in the case of a single non-relativistic particle in two dimensions.
 Simplified to its dimensionless form, the Schr\"{o}dinger equation is then given by
 \begin{align} \label{eq:schrodinger_equation}
    i \pdv{u}{t} = -\nabla^2 u + v(x,y) u,
 \end{align}
-where $u = u(x,y,t)$ is the wave function, $v(x,y)$ is a potential, and $\nabla^2 = \pdv[2]{}{x} + \pdv[2]{}{y}$ is the Laplace operator in two dimensions.
+where $u = u(x,y,t)$ is the wave function, $v(x,y)$ is a given potential, and $\nabla^2 = \pdv[2]{}{x} + \pdv[2]{}{y}$ is the Laplace operator in two dimensions.
 
 Modelling a slit experiment, the potential $v(x,y)$ is taken to be zero everywhere aside from the barrier, where we assign it some constant value $v_0$.
 The barrier height $v_0$ will in principle be material specific, and determine the reflection and transmission coefficients.
@@ -244,13 +254,22 @@ We emphasize that this is just to store the matrices, and does not include any o
 To get around this, one should instead store $A$ and $B$ as sparse matrices and employ a sparse matrix solver.
 In particular, we will be using the \texttt{SuperLU} library via the \texttt{spsolve} function in the C++ library \texttt{armadillo}.
 
-\section{Results}
+\subsection{Tools}
+
+
+\section{Results and discussion}
+**\emph{Working titles}**
+
+
+\subsection{Sanity check}
 
 \begin{figure}[h!]
     \includegraphics{results/problem_7/problem_7.pdf}
+    \caption{Deviation from total probability as a function of time for both the absence and the presence of a double slit. Mathematically, the figure displays \(1 - p(x,y;t)\), where \(p(x,y;t)\) is the probability density given in \eqref{eq:Born_rule}.}
 \end{figure}
 
 
+\subsection{Evolution of wave function}
 \begin{figure*}[h!]
     \centering
 
@@ -302,6 +321,7 @@ In particular, we will be using the \texttt{SuperLU} library via the \texttt{sps
     \label{fig:evolution_wave_func}
 \end{figure*}
 
+\subsection{Interference pattern}
 \begin{figure*}[h!]
     \centering
 

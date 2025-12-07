@@ -14,7 +14,7 @@ p_noSlit = [np.abs(1 - np.linalg.norm(un)) for un in u_noSlit]
 p_Slit = [np.abs(1 - np.linalg.norm(un)) for un in u_Slit]
 
 latex_fonts()
-t *= 1e3  # ms
+t *= 1e3  # s -> ms
 
 fig, ax = plt.subplots()
 
