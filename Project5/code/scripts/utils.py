@@ -111,7 +111,7 @@ def generate_animation(ax:Axes, fig:Figure, data:dict):
     return ani
 
 def plot_colormap(data:dict, t0:float, f:callable, 
-                  z_label=None, ax=None, fig=None, title=None) -> Axes|Figure:
+                  z_label=None, ax=None, fig=None, title=None, cmap="viridis") -> Axes|Figure:
     """
     Creates colormap of "u" using "f" for the given "times".
     """
@@ -127,7 +127,7 @@ def plot_colormap(data:dict, t0:float, f:callable,
 
     norm = cm.colors.Normalize(vmin=0.0, vmax=np.max(f(u[index_t0])))
 
-    img = ax.imshow(f(u[index_t0]), extent=[0,1,0,1], cmap=plt.get_cmap("viridis"), norm=norm)
+    img = ax.imshow(f(u[index_t0]), extent=[0,1,0,1], cmap=plt.get_cmap(cmap), norm=norm)
 
 
     fontsize = 12

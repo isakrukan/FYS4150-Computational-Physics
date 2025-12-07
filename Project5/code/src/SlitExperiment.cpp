@@ -51,7 +51,7 @@ void SlitExperiment::add_wave_packet(std::vector<double> xy_c, std::vector<doubl
     u_initial /= std::sqrt(normalization);
 }
 
-void SlitExperiment::add_double_slit(double v0_, double cx, double wt, double d, double dy, double cy){
+void SlitExperiment::add_double_slit(double v0_, double cx, double wt, double a, double d, double cy){
     v0 = v0_;
 
     for (int i=0; i<M; i++){
@@ -61,7 +61,7 @@ void SlitExperiment::add_double_slit(double v0_, double cx, double wt, double d,
             if (std::abs(x[i] - cx) <= wt/2.0){
                 
                 // Between the two slits || outside the two slits
-                if ((std::abs(y[j] - cy) <= d/2.0) || (std::abs(y[j] - cy) > d/2.0 + dy/2.0)){
+                if ((std::abs(y[j] - cy) <= a/2.0) || (std::abs(y[j] - cy) > a/2.0 + d/2.0)){
                     V(i,j) = v0;
                 }
             }
@@ -69,7 +69,7 @@ void SlitExperiment::add_double_slit(double v0_, double cx, double wt, double d,
     }
 }
 
-void SlitExperiment::add_single_slit(double v0_, double cx, double wt, double dy, double cy){
+void SlitExperiment::add_single_slit(double v0_, double cx, double wt, double d, double cy){
     v0 = v0_;
 
     for (int i=0; i<M; i++){
@@ -79,7 +79,7 @@ void SlitExperiment::add_single_slit(double v0_, double cx, double wt, double dy
             if (std::abs(x[i] - cx) <= wt/2.0){
                 
                 // Outside the slit
-                if (std::abs(y[j] - cy) > dy/2.0){
+                if (std::abs(y[j] - cy) > d/2.0){
                     V(i,j) = v0;
                 }
             }
@@ -87,7 +87,7 @@ void SlitExperiment::add_single_slit(double v0_, double cx, double wt, double dy
     }
 }
 
-void SlitExperiment::add_triple_slit(double v0_, double cx, double wt, double d, double dy, double cy){
+void SlitExperiment::add_triple_slit(double v0_, double cx, double wt, double a, double d, double cy){
     v0 = v0_;
 
     for (int i=0; i<M; i++){
@@ -98,10 +98,10 @@ void SlitExperiment::add_triple_slit(double v0_, double cx, double wt, double d,
                 
                 
                 // Outside the slit
-                bool two_center_walls = ((std::abs(y[j] - cy) > dy/2.0) && std::abs(y[j] - cy) < d + dy/2.0); // Outside middle slit and outside outer slits
+                bool two_center_walls = ((std::abs(y[j] - cy) > d/2.0) && std::abs(y[j] - cy) < a + d/2.0); // Outside middle slit and outside outer slits
 
                 // Outside outer slits
-                bool outer_walls = (std::abs(y[j] - cy) > d + dy/2.0 + dy); 
+                bool outer_walls = (std::abs(y[j] - cy) > a + d/2.0 + d); 
 
                 if (two_center_walls || outer_walls){ // Either two center walls or outer walls
                     V(i,j) = v0;

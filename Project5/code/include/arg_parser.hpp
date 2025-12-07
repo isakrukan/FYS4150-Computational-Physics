@@ -23,8 +23,8 @@ struct Args
     double v0 = 1e10;    ///< Potential height of slit "wall".
     double wc = 0.5;    ///< Centre position of wall in the x-direction.
     double wt = 0.02;   ///< Wall thickness in the x-direction.
-    double d = 0.05;    ///< Distance between the two slits.
-    double dy = 0.05;   ///< Height of slits (y-direction).
+    double a = 0.05;    ///< Distance between the two slits.
+    double d = 0.05;   ///< Height of slits (y-direction).
 
     // Simulation parameters
     double T = 0.008;          ///< Total simulation time

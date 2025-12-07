@@ -50,11 +50,11 @@ Args parse_args(int argc, char *argv[])
         else if (arg == "--wt" && i + 1 < argc){
             args.wt = std::stod(argv[++i]);
         }
+        else if (arg == "--a" && i + 1 < argc){
+            args.a = std::stod(argv[++i]);
+        }
         else if (arg == "--d" && i + 1 < argc){
             args.d = std::stod(argv[++i]);
-        }
-        else if (arg == "--dy" && i + 1 < argc){
-            args.dy = std::stod(argv[++i]);
         }
         else if (arg == "--v0" && i + 1 < argc){
             args.v0 = std::stod(argv[++i]);

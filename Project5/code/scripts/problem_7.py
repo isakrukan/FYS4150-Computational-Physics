@@ -21,7 +21,7 @@ fig, ax = plt.subplots()
 ax.plot(t, p_noSlit, label="No slit")
 ax.plot(t, p_Slit, label="Double slit")
 
-ax.set_xlabel(r"time $[\si{ms}]$")
+ax.set_xlabel(r"time")
 ax.set_ylabel(r"deviation from total probability")  # or r"$1-p(t)$"
 ax.set_yscale("log")
 ax.legend()

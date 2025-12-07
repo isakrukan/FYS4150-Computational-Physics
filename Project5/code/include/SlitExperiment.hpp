@@ -46,31 +46,29 @@ void add_wave_packet(std::vector<double> xy_c, std::vector<double> sigma_xy, std
  * @param v0 Potential of slit "wall".
  * @param cx Centre position of wall in the x-direction.
  * @param wt Wall thickness in the x-direction.
- * @param d Distance between the two slits.
- * @param dy Height of slits (y-direction).
+ * @param a Distance between the two slits.
+ * @param d Height of slits (y-direction).
  * @param cy Centre position of the two slits in the y-direction, defaults to 0.5 (middle of grid).
  */
-void add_double_slit(double v0=1e10, double cx=0.5, double wt=0.02, double d=0.05, double dy=0.05, double cy=0.5);
-
+void add_double_slit(double v0=1e10, double cx=0.5, double wt=0.02, double a=0.05, double d=0.05, double cy=0.5);
 /**
  * @brief Adds a (symmetric) single slit to the experiment.
  * @param v0 Potential of slit "wall".
  * @param cx Centre position of wall in the x-direction.
  * @param wt Wall thickness in the x-direction.
- * @param dy Height of slit (y-direction).
+ * @param d Height of slit (y-direction).
  * @param cy Centre position of the slit in the y-direction, defaults to 0.5 (middle of grid).
  */
-void add_single_slit(double v0=1e10, double cx=0.5, double wt=0.02,double dy=0.1, double cy=0.5);
+void add_single_slit(double v0=1e10, double cx=0.5, double wt=0.02,double d=0.1, double cy=0.5);
 
 /**
  * @brief Adds a (symmetric) triple slit to the experiment.
  * @param v0 Potential of slit "wall".
  * @param cx Centre position of wall in the x-direction.
  * @param wt Wall thickness in the x-direction.
- * @param d Distance between the three slits.
- * @param dy Height of slits (y-direction).
+ * @param a Distance between the three slits.
+ * @param d Height of slits (y-direction).
  * @param cy Centre position of the three slits in the y-direction, defaults to 0.5 (middle of grid).
  */
-void add_triple_slit(double v0=1e10, double cx=0.5, double wt=0.02, double d=0.05, double dy=0.05, double cy=0.5);
-
+void add_triple_slit(double v0=1e10, double cx=0.5, double wt=0.02, double a=0.05, double d=0.05, double cy=0.5);
 };
