@@ -421,7 +421,7 @@ The deviation begins at approximately \(10^{-15}\) and increases toward \(10^{-1
 \subsection{Evolution of wave function in double slit experiment}
 In Figure~\ref{fig:evolution_wave_func_0}, Figure~\ref{fig:evolution_wave_func_1} and Figure~\ref{fig:evolution_wave_func_2} we have displayed the wave function \(u(x,y,t)\) at times \(t=0,\ 0.001\) and \(0.002\), respectively.  
 All figures show the absolute value squared (a), real (b) and imaginary (c) value of \(u(x,y,t)\). 
-These figures are obtained from running the simulation with \(\sigma_y=0.20\) and the default parameters of the initial state described in the beginning of Section \ref{sec:results_discussion}.
+The simulations producing these figures were performed with \(\sigma_y=0.20\) and the default parameters of the initial state described in the beginning of Section \ref{sec:results_discussion}.
 \begin{figure}[h!]
     \centering
 
@@ -439,12 +439,16 @@ These figures are obtained from running the simulation with \(\sigma_y=0.20\) an
     \label{fig:evolution_wave_func_0}
 \end{figure}
 
-The magnitude squared of the wave function in Figure~\ref{fig:evolution_wave_func_0} displays a Gaussian-like shape centered around \((x,y)=(0.25, 0.5)\), consistent with the chosen initial state.
+At \(t=0\) (Fig.~\ref{fig:evolution_wave_func_0}), the magnitude squared of the wave function exhibits a Gaussian profile centered around \((x,y)=(0.25, 0.5)\), consistent with the chosen initial state.
 The real and imaginary parts, on the other hand, exhibit oscillatory wave fronts that are out of phase with one another.
 From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them.
 
 
-In Figure~\ref{fig:evolution_wave_func_1}, the wave function has just reached the double slit.\color{red}Stopped here\color{black}.
+At \(t=0.001\) (Fig.~\ref{fig:evolution_wave_func_1}), the wave packet has reached the double-slit barrier and propagated through.
+Since the transverse width \(\sigma_y = 0.20\) is greater then the length of the two slits and the barrier between them, \(2a+d=0.015\), a substantial portion of the wave packet should be reflected.
+Indeed, the magnitude squared, i.e. the probability of detecting the particle (within a grid cell of size \(h^2\)), shows that the most probable evolution is backward reflection from the barrier.
+Nevertheless, a significant portion of the wave function passes through the double slit and interferes with itself on the other side.
+The interference between contributions from the upper and lower slits are especially evident in the real and imaginary components of the wave function.
 \begin{figure}[h!]
     \centering
 
@@ -458,11 +462,13 @@ In Figure~\ref{fig:evolution_wave_func_1}, the wave function has just reached th
         \includegraphics[width=0.33\linewidth]{results/problem_8/imag_value0.001.pdf}%
     }
 
-    \caption{The absolute value squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.001\).}
+    \caption{The magnitude squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.001\).}
     \label{fig:evolution_wave_func_1}
 \end{figure}
 
-
+At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function which passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
+The real and imaginary components show clear interference patterns; five noticeable wavefronts separated by a small distance. 
+The magnitude squared is somewhat dimmer at \(x=0.8\) than at \(x=0.2\).
 \begin{figure}[h!]
     \centering
 
@@ -476,11 +482,17 @@ In Figure~\ref{fig:evolution_wave_func_1}, the wave function has just reached th
         \includegraphics[width=0.33\linewidth]{results/problem_8/imag_value0.002.pdf}%
     }
 
-    \caption{The absolute value squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.002\).}
+    \caption{The magnitude squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.002\).}
     \label{fig:evolution_wave_func_2}
 \end{figure}
 \end{widetext}
-
+In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected portion of the magnitude squared, seen at approximately \(x=0.2\) in Figure~\ref{fig:evolution_wave_func_2}. \color{red}Stopped here\color{black}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics{results/problem_8/absolute_value0.002_ignored.pdf}
+    \caption{The magnitude squared of the wave function at time \(t=0.002\), ignoring the reflected portion appearing at \(x\approx 0.2\) in Figure~\ref{fig:evolution_wave_func_2}.}
+    \label{fig:evolution_wave_func_2_ignored}
+\end{figure}
 
 \subsection{Interference pattern}
 \begin{figure*}[h!]

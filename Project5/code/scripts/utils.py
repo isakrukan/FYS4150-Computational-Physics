@@ -131,10 +131,9 @@ def plot_colormap(data:dict, t0:float, f:callable,
 
 
     fontsize = 12
-    plt.xlabel("x", fontsize=fontsize)
-    plt.ylabel("y", fontsize=fontsize)
-    plt.xticks(fontsize=fontsize)
-    plt.yticks(fontsize=fontsize)
+    ax.set_xlabel("x", fontsize=fontsize)
+    ax.set_ylabel("y", fontsize=fontsize)
+    ax.tick_params(labelsize=fontsize)
 
     # Add a colourbar
     cbar = fig.colorbar(img, ax=ax)
