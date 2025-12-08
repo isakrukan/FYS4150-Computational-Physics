@@ -148,20 +148,43 @@
 \noaffiliation                            % ignore this, but keep it.
 
 \begin{abstract}
-    Abstract
+    Using a Crank-Nicolson scheme, we numerically solve the time-dependent Schrödinger equation in two spatial dimensions, simulating a single particle propagating towards a barrier with single-, double- and triple-slit apertures.
+    The resulting interference patterns are discussed and compared with theoretical and experimental results. 
+    \\{\color{red}(TODO)}\\
 \end{abstract}
 \maketitle
 
 \section{Introduction}
-The double slit experiment is a famous demonstration of the wave-properties of matter and light in quantum mechanics.
+At the core of quantum mechanics lies the principle of superposition, and the construction of multi-partite systems via the tensor product.
+These further give rise to two of the most characteristic features of quantum mechanics, being entanglement and  wave-particle duality.
+Conceptually, these are quite different phenomena:
+Whereas entanglement is a true departure from classical thinking \footnote{Here we are somewhat paraphrasing the following famous quote by Schrödinger; ''I would not call [entanglement] one but rather the characteristic trait of quantum mechanics, the one that enforces its entire departure from classical lines of thought.'' \cite{schrodinger1935}.}, wave-particle duality still admits analogies to classical physics.
 
-The double slit experiment was first conducted by Thomas Young in 1801 \cite{Young1804}.
+In particular, an iconic illustration of wave-particle duality in quantum mechanics is the double-slit experiment.
+Historically, this traces back to work by Thomas Young in the early 19th century~\cite{Young1804}. 
+Here, Young sent beams of light through two closely spaced slits and observed an interference pattern on a screen behind the barrier. 
+In contrast to Newton's corpuscular theory of light, which had proven influential since its introduction in the early 18th century, Young's experiment suggested light behave as a classical wave \cite{sottie2025}.
+Little over a century later, the experiment was revisited using cathode rays (i.e. electrons) in place of light~\cite{thomson1927}, with similar interference patterns emerging.
+Yet, both light and electrons hit the interference screen as if they were classical particles, registering as discrete impacts.
+Perhaps even more dramatically, it was found that measuring which slit the electrons passed through destroyed the interference pattern altogether, seemingly making the electrons behave in a particle-like way.
+
+To this day, we still lack an unambiguous way of interpreting the results of the double-slit experiment, and in particular, the meaning of measurements in quantum mechanics.
+That being said, what we \textit{do} have is a well-established and consistent mathematical framework for predicting the evolution and statistical nature of the outcomes of such experiments.
+%That being said, a mathematically consistent framework for predicting the evolution and the probabilistic nature of the outcomes of such experiments has been established.
+
+Using the Schr\"odinger equation to model the evolution of a single particle wave function, we can therefore simulate the double-slit experiment and use the Born rule to obtain predictions for the resulting interference pattern.
+In this report, we will do this using a Crank--Nicolson scheme to discretize and numerically solve the time-dependent Schr\"odinger equation in two spatial dimensions.
+
+The remainder of this report is organized as follows. 
+In Sec.~\ref{sec:theory_and_method} we introduce the dimensionless Schr\"odinger equation, specify the potential and initial state, and derive the Crank--Nicolson scheme used to solve it numerically. 
+In Sec.~\ref{sec:results_discussion} we present our numerical results, including snapshots of the evolving wave function, as well as interference patterns for different slit geometries. In Sec.~\ref{sec:discussion} we discuss {\color{red}(TODO)}, and we conclude with a brief summary and outlook in Sec.~\ref{sec:conclusion}.
+
 
 \section{Theory and Method} \label{sec:theory_and_method}
 
 \subsection{Quantum Mechanics and the double slit}
 
-The evolution of a quantum system is famously described by the Schr\"{o}dinger equation, whose general form is given by
+The evolution of a quantum system is famously described by the Schrödinger equation, whose general form is given by
 \begin{align}
     i \hbar \dv{}{t}\ket{\Psi} = \hat{H} \ket{\Psi},
 \end{align}
@@ -177,19 +200,19 @@ More precisely, the probability density \(p(\vec{x};t)\) for detecting a particl
 This is a special case of the Born rule~\footnote{For an introduction to the Born rule or related concepts, see any standard quantum-mechanics textbook, such as \cite{GriffithsSchroeter2018}.}.
 
 Here, we will be interested in the case of a single non-relativistic particle in two dimensions, propagating towards a barrier with a single, double or triple slit.
-We denote the single particle's wave function as \(u(x,y,t)\).
-Simplified to its dimensionless form, the Schr\"{o}dinger equation is then given by
+%We denote the single particle's wave function as \(u(x,y,t)\).
+Simplified to its dimensionless form, the Schrödinger equation is then given by
 \begin{align} \label{eq:schrodinger_equation}
    i \pdv{u}{t} = -\nabla^2 u + v(x,y) u,
 \end{align}
-where $u = u(x,y,t)$ is the wave function, $v(x,y)$ is a given potential, and $\nabla^2 = \pdv[2]{}{x} + \pdv[2]{}{y}$ is the Laplace operator in two dimensions.
+where $u = u(x,y,t)$ is the (dimensionally reduced) wave function, $v(x,y)$ is a given potential, and $\nabla^2 = \pdv[2]{}{x} + \pdv[2]{}{y}$ is the Laplace operator in two dimensions.
 
 Modelling a slit experiment, we let the potential \(v(x,y)\) be zero everywhere aside from the barrier, where we assign it some constant value $v_0$, which we refer to as the \emph{barrier height}.
 The potential will in principle be material specific, and determines the reflection and transmission coefficients of the barrier.
 We imagine the barrier as strongly reflecting and will set \(v_0\) to be large value in our simulation.
 
 \subsection{Setup and initial state}
-Working with the dimensionless version of the Schr\"{o}dinger equation in \eqref{eq:schrodinger_equation}, we consider the spatial domain 
+Working with the dimensionless version of the Schrödinger equation in \eqref{eq:schrodinger_equation}, we consider the spatial domain 
 $(x,y)\in[0,1]\times[0,1]$ and time interval $t\in[0,T]$. 
 We discretize the domain using $M$ points in each spatial direction and $N$
 points in time. Concretely, we introduce the uniform grid
@@ -215,7 +238,7 @@ We denote the discretized wave function at time step \(n\) as
     u_{ij}^n = u(x_{i}, y_{j}, t_n), \quad i,j = 0, 1, \ldots, M-1.
 \end{align}
 
-Since the boundary points remain zero for all \(n\), only the interior points, \(u_{ij}^{n}\) for \(i,j=1,\ldots M-2\), represents degrees of freedom.
+Since the boundary points remain zero for all \(n\), only the interior points, \(u_{ij}^{n}\) for \(i,j=1,\ldots M-2\), represents actual degrees of freedom.
 We therefore collect these values into a one-dimensional vector \(\vec{u}^{\,n}\) of size \((M-2)^2\), with components
 \begin{align}
     (\vec{u}^n)_k = u^n_{i+1j+1}, \quad k = i\cdot(M-2) + j,
@@ -230,7 +253,7 @@ Here, \((x_c, y_c)\) determines the center position of the wave packet, \(\sigma
 
 
 In the continuous setting, the probability density \eqref{eq:Born_rule} should integrate to one. 
-On our discrete grid with spatial step size \(h\), this translates to the requirement that \({\sum_{ij}ph^2 = 1}\).
+On our discrete grid with spatial step size \(h\), this translates to the requirement that \({\sum_{ij}p^n_{ij} h^2 = 1}\).
 However, for convenience, we choose to normalize our discretized wave function
 \begin{align}
     \sum_{i,j=0}^{M-1} |u^n_{ij}|^2 = 1, \quad n=0,1, \ldots, N-1.
@@ -363,9 +386,9 @@ In particular, we may now collect all time step $n+1$ terms on the left-hand sid
     % \\
     + \frac{i \Delta t}{2} v_{i,j}^{n+1} u_{i,j}^{n+1}
     \notag \\
-    &=
+    =
     u_{ij}^{n}
-    + r \left[ u_{i+1,j}^{n} - 2u_{ij}^{n} + u_{i-1,j}^{n} \right]
+    &+ r \left[ u_{i+1,j}^{n} - 2u_{ij}^{n} + u_{i-1,j}^{n} \right]
     \notag \\
     &+ r \left[ u_{i,j+1}^{n} - 2u_{ij}^{n} + u_{i,j-1}^{n} \right]
     % \\
@@ -376,16 +399,17 @@ This may further be expressed in matrix form as
 \begin{align}
     A \vec{u}^{n+1} = B \vec{u}^{n},
 \end{align}
-where $\vec{u}^n$ is now the $(M-2)^2$-dimensional vector of the flattened wave function at time step $n$, and $A$ and $B$ are sparse matrices of dimension $(M-2)^2 \times (M-2)^2$.
+%where $\vec{u}^n$ is now the $(M-2)^2$-dimensional vector of the flattened wave function at time step $n$, and $A$ and $B$ are sparse matrices of dimension $(M-2)^2 \times (M-2)^2$.
+where $A$ and $B$ are dimension $(M-2)^2 \times (M-2)^2$ sparse matrices.
 
 \subsection{The algorithm}
 At any given time step $n$, we may then evolve our system by first multiplying $B\vec{u}^n \equiv \vec{b}$ to obtain the right-hand side, and then solving the equation $A \vec{u}^{n+1} = \vec{b}$ for $\vec{u}^{n+1}$.
 The caveat here is that the matrices $A$ and $B$ will quite quickly grow too large to use a dense matrix solver.
 Indeed, even for modest grid sizes $M=100$, we see that the number of elements in the matrices grow to be on the order of $10^8$.
 Storing both real and imaginary parts as double-precision floating point numbers, this amounts to around $1.6$ GB of memory per matrix.
-We emphasize that this is just to store the matrices, and does not include any overhead from the solver itself.
+We emphasize that this is just to store the matrices themselves, and does not include any overhead from the solver itself.
 To get around this, one should instead store $A$ and $B$ as sparse matrices and employ a sparse matrix solver.
-In particular, we will be using the \texttt{SuperLU} library via the \texttt{spsolve} function in the C++ library \texttt{armadillo}.
+In particular, we will be using the \texttt{SuperLU} library via the function \texttt{spsolve} in the C++ library \texttt{armadillo}.
 
 \subsection{Tools}
 \color{red}Needs to be double checked\color{black}.
