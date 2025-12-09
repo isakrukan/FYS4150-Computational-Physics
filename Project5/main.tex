@@ -560,7 +560,7 @@ To understand this, we may recall the update rule given by the Crank-Nicolson sc
     -\frac{i}{2} \left( \hat{H} u^{n+1} + \hat{H} u^{n} \right),
 \end{align}
 where we have now written the right-hand side in terms of the Hamiltonian operator \(\hat{H}\) acting on the wave function.
-Rearranging this, we see that each time step in the Crank-Nicolson scheme corresponds to applying the following operator to the wave function:
+Rearranging this, we see that each time step in the Crank-Nicolson scheme corresponds to applying the following operator to the wave function at each time step:
 \begin{align}
     u^{n+1} 
     &=
@@ -569,10 +569,11 @@ Rearranging this, we see that each time step in the Crank-Nicolson scheme corres
 \end{align}
 In particular, given that the Hamiltonian \(\hat{H}\) indeed is Hermitian, one may verify that this operator is unitary.
 This means that we should in principle expect the Crank-Nicolson scheme to conserve total probability exactly.
-Errors in the total probability should therefore originate from other sources, such as the floating-point arithmetic mentioned previously.
+Yet, we still observed the total probability start to increase slightly beyond that of the numerical noise level at \(\sim 10^{-15}\) as the simulation progressed.
+This can likely be attributed to the step-by-step accumulation of rounding errors and other imperfections inherent to floating-point arithmetic.
 
-We might think of the unitarity of the Crank-Nicolson scheme as a reflection of its unconditional stability.
-For an example of an unstable scheme, we can consider the forward Euler method, which corresponds to the update rule
+In any case, we might think of the unitarity of Crank-Nicolson scheme as reflecting its unconditional stability.
+For an example of an unstable scheme, we may for instance consider the forward Euler method, which corresponds to the update rule
 \begin{align}
     u^{n+1} = \left( 1 - i \Delta t \hat{H} \right) u^{n}.
 \end{align}
@@ -580,6 +581,17 @@ In particular, one may verify that this operator is generally not unitary, so th
 
 
 \section{Conclusion}
+We have numerically solved the Schrödinger equation, simulating the time evolution of a single particle wave function propagating towards a barrier with a single, double and triple slits.
+Our results and visualizations may for instance be used pedagogically to illustrate wave-like behavior of particles in quantum mechanics, and in particular, the appearance of interference patterns in the double-slit experiment.
+The predicted interference patterns could also be used as benchmarks for experimental tests of the theory.
+
+The simulations themselves were performed in two spatial dimensions, using a Crank-Nicolson scheme to discretize and solve the Schrödinger equation implicitly in time.
+In particular, the Crank-Nicolson scheme has the benefit of being (in principle) exactly unitary, ensuring stability and the conservation of total probability up to numerical precision.
+All in all, this made the Crank-Nicolson scheme a quite successful choice for our simulations of the Schrödinger equation, something one may expect holds for more complex quantum systems as well.
+
+A relevant issue here is the scaling of the method to larger systems.
+In particular, the Crank-Nicolson scheme in $n$ spatial dimensions involves a sparse system of $(M-2)^{n}$ linear equations to solve at each time step, where $M$ is the number of grid points in each spatial direction.
+Especially as one moves to larger grid sizes and higher dimensions, this motivates further research on sparse matrix solvers and preconditioners to efficiently solve such systems.
 
 \newpage
 \clearpage
