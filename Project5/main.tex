@@ -161,22 +161,24 @@ Among these is that of entanglement, which appears as we superpose states of a m
 Another, present already at the level of a unipartite system, is that of wave-particle duality.
 %This further gives rise to two of the most characteristic features of quantum mechanics, being entanglement when applied to a multipartite system, and wave-particle duality, which already manifests at the single-particle level.
 Conceptually, these are nonetheless two quite different phenomena:
-Whereas entanglement represents a true departure from classical thinking \footnote{Here we are somewhat paraphrasing the following famous quote by Schrödinger; ''I would not call [entanglement] \textit{one}, but rather \textit{the} characteristic trait of quantum mechanics, the one that enforces its entire departure from classical lines of thought.'' \cite{schrodinger1935}.}, wave-particle duality still admits analogies to classical physics.
+Whereas entanglement represents a true departure from classical thinking \footnote{Here we are somewhat paraphrasing the following famous quote by Schrödinger; ``I would not call [entanglement] \textit{one}, but rather \textit{the} characteristic trait of quantum mechanics, the one that enforces its entire departure from classical lines of thought.'' \cite{schrodinger1935}.}, wave-particle duality still admits analogies to classical physics.
 
 In particular, an iconic illustration of wave-particle duality in quantum mechanics is the double-slit experiment.
-Historically, this traces back to work by Thomas Young in the early 19th century~\cite{Young1804}. 
-Here, Young sent beams of light through two closely spaced slits and observed an interference pattern on a screen behind the barrier. 
+Historically, this traces back to work by Thomas Young in the early 19th century~\cite{Young1804}, in which Young sent beams of light through two closely spaced slits and observed an interference pattern on a screen behind the barrier. 
 In contrast to Newton's corpuscular theory of light, which had proven influential since its introduction in the early 18th century, Young's experiment suggested light behave as a classical wave \cite{sottie2025}.
 Little over a century later, the experiment was revisited using cathode rays (i.e. electrons) in place of light beams, with similar interference patterns emerging~\cite{thomson1927}.
-Yet, both light and electrons hit the interference screen as if they were classical particles, registering as discrete impacts.
+Yet, both light and electrons hit the interference screen as if they were classical particles, registering as discrete impacts on the screen.
 Perhaps even more dramatically, it was found that measuring which slit the electrons passed through destroyed the interference pattern altogether, seemingly making the electrons behave in a particle-like way.
 
 To this day, we still lack an unambiguous way of interpreting the results of the double-slit experiment, and in particular, the meaning of measurements in quantum mechanics.
-That being said, what we \textit{do} have is a well-established and consistent mathematical framework for predicting the evolution and statistical nature of the outcomes of such experiments.
+That being said, what we \textit{do} have is a well-established and consistent mathematical framework for predicting the evolution of such systems, and the statistical nature of the possible outcomes.
 %That being said, a mathematically consistent framework for predicting the evolution and the probabilistic nature of the outcomes of such experiments has been established.
 
 Using the Schr\"odinger equation to model the evolution of a single particle wave function, we can therefore simulate the double-slit experiment and use the Born rule to obtain predictions for the resulting interference pattern.
-In this report, we will do this using a Crank--Nicolson scheme to discretize and numerically solve the time-dependent Schr\"odinger equation in two spatial dimensions.
+
+In particular, we will implicitly solve the Schr\"odinger in two spatial dimensions implicitly in time using a Crank-Nicolson scheme.
+This approach has the benefit of being accurate to second order in both space and time as well as being unconditionally stable.
+%In this report, we will do this using a Crank-Nicolson scheme to discretize and numerically solve the time-dependent Schr\"odinger equation in two spatial dimensions.
 
 The remainder of this report is organized as follows. 
 In Sec.~\ref{sec:theory_and_method} we introduce the dimensionless Schr\"odinger equation, specify the potential and initial state, and derive the Crank--Nicolson scheme used to solve it numerically. 
@@ -375,7 +377,7 @@ Here, the term $F_{ij}^n$ represents the discretization of the right-hand side o
     &+ v_{i,j}^n u_{i,j}^n.
 \end{align}
 These are combined to form the Crank-Nicolson scheme by taking the following linear combination of the two discretizations
-\begin{align}
+\begin{align}\label{eq:crank_nicolson}
     \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} 
     = 
     -\frac{i}{2} \left( F_{ij}^{n+1} + F_{ij}^{n} \right).
@@ -541,6 +543,41 @@ In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected
 
 
 \section{Discussion}    \label{sec:discussion}
+
+
+\subsection{Total probability deviation}
+{\color{red}Possibly move this to method or rewrite it?}
+\\
+An interesting result, seen in Figure~\ref{fig:devation_from_probability}, was that the deviation from total probability only on the level of the numerical noise from doing floating-point arithmetic.
+Indeed, this is smaller than what one would expect from naively applying the second order error estimates expected for the Crank-Nicolson scheme.
+To understand this, we may recall the update rule given by the Crank-Nicolson scheme, being
+\begin{align}
+    \frac{u^{n+1} - u^{n}}{\Delta t} 
+    &= 
+    -\frac{i}{2} \left( F^{n+1} + F^{n} \right). 
+    \\
+    &=
+    -\frac{i}{2} \left( \hat{H} u^{n+1} + \hat{H} u^{n} \right),
+\end{align}
+where we have now written the right-hand side in terms of the Hamiltonian operator \(\hat{H}\) acting on the wave function.
+Rearranging this, we see that each time step in the Crank-Nicolson scheme corresponds to applying the following operator to the wave function:
+\begin{align}
+    u^{n+1} 
+    &=
+    \left( 1 + \frac{i \Delta t}{2} \hat{H} \right)^{-1}
+    \left( 1 - \frac{i \Delta t}{2} \hat{H} \right) u^{n}.
+\end{align}
+In particular, given that the Hamiltonian \(\hat{H}\) indeed is Hermitian, one may verify that this operator is unitary.
+This means that we should in principle expect the Crank-Nicolson scheme to conserve total probability exactly.
+Errors in the total probability should therefore originate from other sources, such as the floating-point arithmetic mentioned previously.
+
+We might think of the unitarity of the Crank-Nicolson scheme as a reflection of its unconditional stability.
+For an example of an unstable scheme, we can consider the forward Euler method, which corresponds to the update rule
+\begin{align}
+    u^{n+1} = \left( 1 - i \Delta t \hat{H} \right) u^{n}.
+\end{align}
+In particular, one may verify that this operator is generally not unitary, so that the total probability will not be conserved.
+
 
 \section{Conclusion}
 
