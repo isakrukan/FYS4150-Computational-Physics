@@ -17,7 +17,7 @@ Results include predictions for the resulting interference patterns.
 
     - [Main program usage](#usage)
 
-    - [Python scripts](#python-scripts)
+    - [Python scripts](#python-scripts) (TODO)
 
 - [Animations](#results)
 
@@ -29,7 +29,7 @@ Results include predictions for the resulting interference patterns.
 - - **`code/build`** Build files.
 - - **`code/tests`** Tests for our code.
 - **`figs/`** All figures used in main.tex
-- **`docs/`** Documentation of the code struture generated using doxygen [doxygen](https://www.doxygen.nl/)
+- **`docs/`** Documentation of the code struture generated using [doxygen](https://www.doxygen.nl/)
 
 
 # Installation & Usage
@@ -113,7 +113,7 @@ make project
 
 TODO
 
-# Results
+# Animations
 ![hippo](https://github.uio.no/icrukan/FYS4150/blob/master/Project5/animations/double_slit.gif)
 
 
