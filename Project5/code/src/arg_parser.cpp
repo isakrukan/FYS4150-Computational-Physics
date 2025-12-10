@@ -116,19 +116,38 @@ Args parse_args(int argc, char *argv[])
             args.identifier = std::string(argv[++i]);
         }
         else if (arg == "--help"){
-            std::cout 
-                    << "Usage:\n"
-                    << "  ./main [options]\n"
-                    << "\n"
-                    << "Options:\n"
-                    << "  --sigma_x,     -sx              Standard deviation in x\n"
-                    << "  --sigma_y,     -sy              Standard deviation in y\n"
-                    << "  --center_x,    -cx              Center position in x\n"
-                    << "  --center_y,    -cy              Center position in y\n"
-                    << "  --momentum_x,  -px              Momentum in x\n"
-                    << "  --momentum_y,  -py              Momentum in y\n"
-                    << "\n"
-                    << "  --help                 Show this help message\n";
+            std::cout
+                << "Usage:\n"
+                << "  ./main [options]\n"
+                << "\n"
+                << "Options:\n"
+                << "  [ Wall/slit parameters ]\n"
+                << "  --single_slit,                  Include single slit (true/false)\n"
+                << "  --double_slit,                  Include double slit (true/false)\n"
+                << "  --triple_slit,                  Include triple slit (true/false)\n"
+                << "\n"
+                << "  --wc,                           Centre position of wall in x-direction\n"
+                << "  --wt,                           Wall thickness in x-direction\n"
+                << "  --a,                            Distance between slits\n"
+                << "  --d,                            Height of slits in y-direction\n"
+                << "  --v0,                           Potential height of slit wall\n"
+                << "\n"
+                << "  [ Wavepacket parameters ]\n"
+                << "  --sigma_x,     -sx              Standard deviation in x\n"
+                << "  --sigma_y,     -sy              Standard deviation in y\n"
+                << "  --center_x,    -cx              Center position in x\n"
+                << "  --center_y,    -cy              Center position in y\n"
+                << "  --momentum_x,  -px              Momentum in x\n"
+                << "  --momentum_y,  -py              Momentum in y\n"
+                << "\n"
+                << "  [ Simulation parameters ]\n"
+                << "  --dt,                           Time step size\n"
+                << "  --L,                            Length of the domain\n"
+                << "  --h,                            Height of the domain\n"
+                << "  --T,                            Total simulation time\n"
+                << "  --identifier,                   Unique identifier for the simulation\n"
+                << "\n"
+                << "  --help                 Show this help message\n";
 
             exit(0);
         }
