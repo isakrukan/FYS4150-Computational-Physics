@@ -3,7 +3,7 @@
 - Finish this README (e.g. *Python scripts* section at the botto,)
 
 # Project 5
-This repository contains the code and documentation for Project 4 in the course *Computational Physics (FYS4150)* at the University of Oslo.
+This repository contains the code and documentation for Project 5 in the course *Computational Physics (FYS4150)* at the University of Oslo.
 
 The project uses the Crank-Nicolson scheme to solve the Schrödinger equation for a particle passing through a barrier with single-, double- and triple-slits.
 Results include predictions for the resulting interference patterns.
@@ -21,13 +21,15 @@ Results include predictions for the resulting interference patterns.
 
 - [Animations](#results)
 
+- [Authors](#authors)
+
 # Structure
 - **`code/`** All code used to generate results for this project.
-- - **`code/include`** Header files for the project.
-- - **`code/src`** All source code files for the project.
-- - **`code/scripts`** Python scripts for plotting & analyzing results.
-- - **`code/build`** Build files.
-- - **`code/tests`** Tests for our code.
+    - **`code/include`** Header files for the project.
+    - **`code/src`** All source code files for the project.
+    - **`code/scripts`** Python scripts for plotting & analyzing results.
+    - **`code/build`** Build files.
+    - **`code/tests`** Tests for our code.
 - **`figs/`** All figures used in main.tex
 - **`docs/`** Documentation of the code struture generated using [doxygen](https://www.doxygen.nl/)
 
