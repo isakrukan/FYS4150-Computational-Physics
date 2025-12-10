@@ -1,17 +1,27 @@
-# Project 5
-![hippo](https://github.uio.no/icrukan/FYS4150/blob/master/Project5/animations/double_slit.gif)
-
-## TODO
+# TODO
 - Finish report
 - Finish this README (e.g. *Python scripts* section at the botto,)
 
+# Project 5
 This repository contains the code and documentation for Project 4 in the course *Computational Physics (FYS4150)* at the University of Oslo.
 
-## About the project
-This project uses the Crank-Nicolson scheme to solve the Schrödinger equation for a particle passing through a barrier with single-, double- and triple-slits.
+The project uses the Crank-Nicolson scheme to solve the Schrödinger equation for a particle passing through a barrier with single-, double- and triple-slits.
 Results include predictions for the resulting interference patterns.
 
-## Structure
+## Table of Contents:
+- [Structure](#code-structure)
+
+- [Installation & Usage](#installation--usage)
+
+    - [Requirements](#requirements)
+
+    - [Main program usage](#usage)
+
+    - [Python scripts](#python-scripts)
+
+- [Animations](#results)
+
+# Structure
 - **`code/`** All code used to generate results for this project.
 - - **`code/include`** Header files for the project.
 - - **`code/src`** All source code files for the project.
@@ -22,7 +32,7 @@ Results include predictions for the resulting interference patterns.
 - **`docs/`** Documentation of the code struture generated using doxygen [doxygen](https://www.doxygen.nl/)
 
 
-# Code Implementation
+# Installation & Usage
 To build and run the code, start by navigating to the **`code/`** directory. 
 
 ## Requirements
@@ -50,8 +60,8 @@ For the python scripts, the basic dependencies are:
 - h5py
 - SciencePlots
 
-## Usage
-### Compiling and running entire project using make
+## Main program usage
+### Compile and run entire project using make
 The entire project may be compiled and run using
 ```bash
 make project 
@@ -99,10 +109,15 @@ make project
 
 
 
-### Python scripts
+## Python scripts
 
 TODO
+
+# Results
+![hippo](https://github.uio.no/icrukan/FYS4150/blob/master/Project5/animations/double_slit.gif)
+
 
 ## Authors 
 - Magnus Axelsen
 - Isak Cecil Onsager Rukan
+
