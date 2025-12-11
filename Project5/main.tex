@@ -149,8 +149,11 @@
 
 \begin{abstract}
     Using a Crank-Nicolson scheme, we numerically solve the time-dependent Schrödinger equation in two spatial dimensions, simulating a single particle propagating towards a barrier with single-, double- and triple-slit apertures.
-    The resulting interference patterns are discussed and compared with theoretical and experimental results. 
-    \\{\color{red}(TODO)}\\
+    The Crank-Nicolson scheme is found to very well suited for simulations of this type, motivating its use also for more complex quantum systems.
+    For this reason, we also suggest further research on efficient sparse-matrix solvers for future work.
+    In particular, we expect that different classes of Hamiltonians may benefit from different strategies when solving the sparse linear systems arising in the Crank-Nicolson scheme.
+    %The resulting interference patterns are discussed and compared with theoretical and experimental results. 
+    %\\{\color{red}(TODO)}\\
 \end{abstract}
 \maketitle
 
@@ -175,17 +178,17 @@ To this day, we still lack an unambiguous way of interpreting the results of the
 That being said, what we \textit{do} have is a well-established and consistent mathematical framework for predicting the evolution of such systems, and the statistical nature of the possible outcomes.
 %That being said, a mathematically consistent framework for predicting the evolution and the probabilistic nature of the outcomes of such experiments has been established.
 
-Using the Schr\"odinger equation to model the evolution of a single particle wave function, we can therefore simulate the double-slit experiment and use the Born rule to obtain predictions for the resulting interference pattern.
+Using the Schr\"odinger equation to model the evolution of a single-particle wave function, we can therefore simulate the double-slit experiment and use the Born rule to obtain predictions for the resulting interference pattern.
 
-In particular, we will solve the Schr\"odinger equation in two spatial dimensions using an implicit Crank--Nicolson scheme for the time evolution.
+In particular, we will here solve the Schr\"odinger equation in two spatial dimensions using an implicit Crank--Nicolson scheme for the time evolution.
 This approach has the benefit of being accurate to second order in both space and time, as well as being unconditionally stable.
 %In this report, we will do this using a Crank-Nicolson scheme to discretize and numerically solve the time-dependent Schr\"odinger equation in two spatial dimensions.
 
 The remainder of this report is organized as follows. 
 In Sec.~\ref{sec:theory_and_method}, we introduce the dimensionless Schr\"odinger equation, specify the potential and initial state, and derive the Crank--Nicolson scheme used to solve it numerically. 
-We also provide an explanation of our numerical algorithm using the Crank--Nicolsen scheme, as well as a declaration of the various tools we have used.
-In Sec.~\ref{sec:results_discussion}, we present our numerical results, including snapshots of the evolving wave function, as well as interference patterns for different slit geometries. In Sec.~\ref{sec:discussion}, we discuss {\color{red}(TODO)}, and we conclude with a brief summary and outlook in Sec.~\ref{sec:conclusion}.
-
+We also provide an explanation of our numerical algorithm using the Crank--Nicolson scheme, as well as a declaration of the various tools we have used.
+In Sec.~\ref{sec:results_discussion}, we present and discuss our numerical results, including snapshots of the evolving wave function, as well as interference patterns for different slit geometries.
+Finally, in Sec.~\ref{sec:conclusion}, we summarize our findings and suggest directions for future research.
 
 \section{Theory and Method} \label{sec:theory_and_method}
 
@@ -205,9 +208,9 @@ where $\ket{\Psi}$ is the quantum state, $\hat{H}$ is the Hamiltonian operator, 
 Letting \(\ket{\Psi}\) represent a single particle state, the wave function encodes the probability of detecting this particle at some position in time.
 More precisely, the probability density \(p(\vec{x};t)\) for detecting a particle at position \(\vec{x}\) is given by
 \begin{align}
-    p(\vec{x};t) = |\Psi(\vec{x},t)|^2.    \label{eq:Born_rule}
+    p(\vec{x};t) = |\Psi(\vec{x},t)|^2,    \label{eq:Born_rule}
 \end{align}
-This is a special case of the Born rule~\footnote{For an introduction to the Born rule or related concepts, see any standard quantum-mechanics textbook, such as \cite{GriffithsSchroeter2018}.}.
+which is a special case of the Born rule~\footnote{For an introduction to the Born rule or related concepts, see any standard quantum-mechanics textbook, such as \cite{GriffithsSchroeter2018}.}.
 
 We consider a single nonrelativistic particle in two spatial dimensions, propagating toward a barrier that contains either one, two, or three slits (see Figure~\ref{fig:slit_setup}).
 %We denote the single particle's wave function as \(u(x,y,t)\).
@@ -305,14 +308,14 @@ points in time. Concretely, we introduce the uniform grid
 \end{subequations}
 where $h=1/(M-1)$ is the spatial step size and $\Delta t=T/(N-1)$ is the temporal step size. 
 
-Throughout, we impose homogeneous Dirichlet boundary conditions
+Additionally, we impose homogeneous Dirichlet boundary conditions
 \begin{subequations}
 \begin{align}
     u(0,y,t) &= u(x,0,t) = 0, \\
     u(1,y,t) &= u(x,1,t) = 0,
 \end{align}
 \end{subequations}
-so that the wave function vanishes on the boundary.
+throughout, so that the wave function vanishes on the boundary.
 We denote the discretized wave function at time step \(n\) as
 \begin{align}
     u_{ij}^n = u(x_{i}, y_{j}, t_n), \quad i,j = 0, 1, \ldots, M-1.
@@ -347,7 +350,7 @@ as the probability of detecting the particle within the grid cell of area \(h^2\
 In our simulations, the initial state \eqref{eq:Initial_state} is normalized by computing
 \(\sum_{i,j} |u_{ij}^0|^2\) and rescaled accordingly.
 
-We let the initial wave packet \eqref{eq:Initial_state} propagate towards a single-, double- or triple-slit barriers. Figure~\ref{fig:slit_setup} displays the three different barriers.
+We let the initial wave packet \eqref{eq:Initial_state} propagate towards single-, double- or triple-slit barriers. Figure~\ref{fig:slit_setup} displays the three different barriers.
 Each slit has an aperture \(a\) (opening width) and any two adjacent slits are separated by a distance \(d\) in the \(y\)-direction.
 The barrier is placed at \(x=0\), and the slits are centered symmetrically around \(y=0.5\). 
 We denote the barrier thickness in the \(x\)-direction by \(s_x\).
@@ -441,10 +444,11 @@ These geometric parameters are illustrated for the double-slit case in Figure~\r
 
 
 \subsection{Interference patterns}
-As the wave packet propagates through the slits, we expect in general to observe some form of interference pattern as the wave packet reaches the far side of the barrier.
+As the wave packet propagates through the slits, we generally expect to observe some form of interference pattern as the wave packet reaches the far side of the barrier.
 This can be understood classically from Huygens' principle, which states that each point on a wavefront may be considered the source of a spherical wavelet.
 As the wave passes the barrier, we may then think of each slit as sourcing such wavelets.
-As these propagate throughout the right side of the barrier, one naturally expects the wavelets to interfere constructively and destructively at different points in space, leading to an interference pattern.
+As these propagate throughout the right side of the barrier, one naturally expects the wavelets to interfere constructively and destructively at different points in space, leading to an interference pattern (as long as multiple slits are present).
+Due to the wave properties of matter in quantum mechanics, we should expect a similar phenomenon to occur as the wave function passes through the slits, leading to an interference pattern in the probability density \(|u(x,y,t)|^2\) on the far side of the barrier.
 
 A specific example of this is given by a classical monochromatic wave passing through a double-slit barrier.
 In this case one may find specific analytical expressions for the resulting intensity pattern \(I(\theta)\), with \(\theta\) is the angle relative to the center line perpendicular to the barrier.
@@ -455,7 +459,8 @@ In particular, for the far-field we have an intensity pattern \cite{jenkins1957}
 \end{align}
 in which \(I_0\) is the maximum intensity, and \(\lambda\) is the wavelength of the incoming wave.
 
-\subsection{The Crank-Nicolson scheme}  \label{sec:Crank_Nicolsen}
+
+\subsection{The Crank-Nicolson scheme}  \label{sec:Crank_Nicolson}
 \subsubsection{Deriving the scheme}
 Using respectively a forward and backwards difference scheme for the time derivative, we obtain the following discretizations of equation \eqref{eq:schrodinger_equation}:
 \begin{align}
@@ -547,7 +552,7 @@ For an example of a scheme that is neither unitary nor stable, we may for instan
         \underbrace{
         \textcolor{black}{
         \left( 1 - i \Delta t \hat{H} \right)    
-        }}_{\raisebox{-3pt}{$\equiv U_{\text{CN}}$}} 
+        }}_{\raisebox{-3pt}{$\equiv U_{\text{FE}}$}} 
     }
     u^{n}
 \end{align}
@@ -555,7 +560,7 @@ In this case, one may immediately verify that the operator \(U_{\text{FE}}\) is 
 
 \subsection{The algorithm}  \label{sec:Algorithm}
 To evolve our system using \eqref{eq:A_B_eq}, we first compute the right-hand side, $\vec{b}\equiv B\vec{u}^n$, and then proceed to solve the equation $A \vec{u}^{n+1} = \vec{b}$ for $\vec{u}^{n+1}$.
-A challenge here is that the matrices \(A\) and \(B\) grows rapidly in size as \(M\) increases. 
+A challenge here is that the matrices \(A\) and \(B\) will grow rapidly in size as \(M\) increases. 
 % The caveat here is that the matrices $A$ and $B$ will quite quickly grow too large to use a dense matrix solver.
 Even for modest grid sizes $M=100$, the matrices will contain on the order of \(10^8\) entries.
 Storing both real and imaginary parts as double-precision floating point numbers requires roughly $1.6$ GB of memory per matrix.
@@ -586,7 +591,7 @@ The barrier height is set to \(v_0=1\times 10^{10}\) for all simulations, expect
 
 \subsection{Total probability deviation}
 Figure~\ref{fig:devation_from_probability} displays the deviation from total probability for two simulations: one one with a double slit and one without.
-Both simulations are run over a time interval \(t\in[0,8]\) with \(h=0.005\) and \(\Delta t=2.5\times 10^{-5}\).
+Both simulations are run over a time interval \(t\in[0,8\times 10^{-3}]\) with \(h=0.005\) and \(\Delta t=2.5\times 10^{-5}\).
 The deviation begins at approximately \(10^{-15}\) and increases to about \(10^{-14}\) by the end of the simulation. 
 The total probability should theoretically remain equal to one, and a deviation of order \(10^{-14}\) is only one order of magnitude larger than the numerical noise level (\(\sim 10^{-15}\)) associated with double-precision floating-point computations. 
 \begin{figure}[h!]
@@ -668,7 +673,6 @@ However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2
 
 In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected portion of the magnitude squared, seen at approximately \(x=0.2\) in Figure~\ref{fig:evolution_wave_func_2}. 
 Here we clearly observe a pattern resembling six distinct wave packets emerging from the double slit.
-\color{red}Putte noe i teori delen om interferens??\color{black}
 \begin{figure}[h!]
     \centering
     \includegraphics{results/problem_8/absolute_value0.002_ignored.pdf}
@@ -760,11 +764,7 @@ The
 % \label{tab:peaks}
 % \end{table}
 
-
-
-\section{Discussion}    \label{sec:discussion}
-
-\section{Conclusion}
+\section{Conclusion}    \label{sec:conclusion}
 We have numerically solved the Schrödinger equation, simulating the time evolution of a single particle wave function propagating towards a barrier with a single, double and triple slits.
 Our results and visualizations may for instance be used pedagogically to illustrate wave-like behavior of particles in quantum mechanics, and in particular, the appearance of interference patterns in the double-slit experiment.
 The predicted interference patterns could also be used as benchmarks for experimental tests of the theory.
@@ -776,6 +776,7 @@ All in all, this made the Crank-Nicolson scheme a quite successful choice for ou
 A relevant issue here is the scaling of the method to larger systems.
 In particular, the Crank-Nicolson scheme in $n$ spatial dimensions involves a sparse system of $(M-2)^{n}$ linear equations to solve at each time step, where $M$ is the number of grid points in each spatial direction.
 Especially as one moves to larger grid sizes and higher dimensions, this motivates further research on sparse matrix solvers and preconditioners to efficiently solve such systems.
+For instance, we may in principle imagine that different classes of Hamiltonians benefit from different strategies for solving the sparse linear systems in Crank-Nicolson.
 
 % \newpage
 % \clearpage
