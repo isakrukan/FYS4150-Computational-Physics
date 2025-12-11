@@ -182,7 +182,7 @@ This approach has the benefit of being accurate to second order in both space an
 The remainder of this report is organized as follows. 
 In Section~\ref{sec:theory_and_method}, we introduce the dimensionless Schr\"odinger equation, specify the potential and initial state, and derive the Crank--Nicolson scheme used to solve it numerically. 
 We also provide a brief explanation of the expected interference pattern, an explanation of our numerical algorithm using the Crank--Nicolsen scheme, and a declaration of the various tools we have used.
-In Section~\ref{sec:results_discussion}, we present our numerical results and an discussion along the way. 
+In Section~\ref{sec:results_discussion}, we present our numerical results and a discussion along the way. 
 Here we analyze the deviation from total probability, include snapshots of the evolving wave function, and interference patterns for different slit geometries. Lastly, in Section~\ref{sec:conclusion}, we conclude with a brief summary of our results and interpretations, and mention possible future optimizations and interests.
 
 
@@ -328,7 +328,7 @@ We let the initial state at \(t=0\) of the single particle be given by a Gaussia
 \begin{align}
     u(x,y,0) = \exp[-\frac{(x-x_c)^2}{2\sigma_x^2} - \frac{(y-y_c)^2}{2\sigma_y^2} + ip_x x + ip_y y].    \label{eq:Initial_state}
 \end{align}
-Here, \((x_c, y_c)\) determines the center position of the wave packet, \(\sigma_x\) and \(\sigma_y\) are the widths in the \(x\)- and \(y\)-directions, respectively, and \((p_x, p_y)\) is the wave packet momenta.
+Here, \((x_c, y_c)\) determines the center position of the wave packet, \(\sigma_x\) and \(\sigma_y\) are the widths in the \(x\)- and \(y\)-directions, respectively, and \((p_x, p_y)\) is the wave packet's mean momenta.
 
 
 In the continuous setting, the probability density \eqref{eq:Born_rule} should integrate to one. 
@@ -346,7 +346,7 @@ as the probability of detecting the particle within the grid cell of area \(h^2\
 In our simulations, the initial state \eqref{eq:Initial_state} is normalized by computing
 \(\sum_{i,j} |u_{ij}^0|^2\) and rescaled accordingly.
 
-We let the initial wave packet \eqref{eq:Initial_state} propagate toward a single-, double- or triple-slit barriers. Figure~\ref{fig:slit_setup} displays the three different barriers.
+We let the initial wave packet \eqref{eq:Initial_state} propagate toward a single-, double- or triple-slit barrier. Figure~\ref{fig:slit_setup} displays the three different barriers.
 Each slit has an aperture \(a\) (opening width) and any two adjacent slits are separated by a distance \(d\) in the \(y\)-direction.
 The barrier is placed at \(x=0\), and the slits are centered symmetrically around \(y=0.5\). 
 We denote the barrier thickness in the \(x\)-direction by \(s_x\).
@@ -581,21 +581,22 @@ Both simulations are run over a time interval \(t\in[0,8\times 10^{-3}]\) with \
 The deviation begins at approximately \(10^{-15}\) and increases to about \(10^{-14}\) by the end of the simulation. 
 The total probability should theoretically remain equal to one, and a deviation of order \(10^{-14}\) is only one order of magnitude larger than the numerical noise level (\(\sim 10^{-15}\)) associated with double-precision floating-point computations. 
 \begin{figure}[h!]
-    \includegraphics{results/problem_7/problem_7.pdf}
+    \includegraphics[width=1\linewidth]{results/problem_7/problem_7.pdf}
     \caption{Deviation from total probability as a function of time for both the absence (blue) and the presence (green) of a double slit. Mathematically, the figure displays \(|1 - p(x,y;t)|\), where \(p(x,y;t)\) is the probability density given in \eqref{eq:Born_rule}.}
     \label{fig:devation_from_probability}
 \end{figure}
 
-
+\begin{widetext}
 \subsection{Evolution of wave function in double slit experiment}   \label{sec:evolution_wave_function}
 In Figure~\ref{fig:evolution_wave_func_0}, Figure~\ref{fig:evolution_wave_func_1} and Figure~\ref{fig:evolution_wave_func_2} we have displayed the wave function \(u(x,y,t)\) at times \(t=0,\ 0.001\) and \(0.002\), respectively.  
 All figures show the absolute value squared (a), real (b) and imaginary (c) value of \(u(x,y,t)\). 
 The simulations producing these figures were performed with \(\sigma_y=0.20\) and the default parameters of the initial state described in the beginning of Section \ref{sec:results_discussion}.
 
-\begin{widetext}
+
 At \(t=0\) (Fig.~\ref{fig:evolution_wave_func_0}), the magnitude squared of the wave function exhibits a Gaussian profile centered around \((x,y)=(0.25, 0.5)\), consistent with the chosen initial state.
 The real and imaginary parts exhibit oscillatory wave fronts that are out of phase with one another.
-From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms, \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them.
+From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms, \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them. 
+
 % \_
 \begin{figure}[h!]
     \centering
@@ -614,11 +615,13 @@ From \eqref{eq:Initial_state}, the real and imaginary components consist of a Ga
     \label{fig:evolution_wave_func_0}
 \end{figure}
 
-At \(t=0.001\) (Fig.~\ref{fig:evolution_wave_func_1}), the wave packet has reached the double-slit barrier and propagated through.
-Since the transverse width \(\sigma_y = 0.20\) is greater than the length of the two slits and the barrier between them, \(2a+d=0.015\), a substantial portion of the wave packet should be reflected.
+At \(t=0.001\) (Fig.~\ref{fig:evolution_wave_func_1}), the wave packet has reached the double-slit barrier and part of it has begun to propagate through the slits.
+Since the transverse width \(\sigma_y = 0.20\) is significantly greater than the length of the two slits and the barrier between them, \(2a+d=0.015\), a substantial portion of the wave packet should be reflected.
 Indeed, the magnitude squared, i.e. the probability of detecting the particle (within a grid cell of size \(h^2\)), shows that the most probable evolution is backward reflection from the barrier.
+
 Nevertheless, a significant portion of the wave function passes through the double slit and interferes with itself on the other side.
-The interference between contributions from the upper and lower slits are especially evident when viewing the real and imaginary components of the wave function separately.
+This interference is especially evident when viewing the real and imaginary components of the wave function separately, which display clear oscillatory wavefronts as overlapping superpositions of waves. 
+On the other hand, the magnitude squared appears on the right-hand side of the barrier as two relatively diffuse regions, beginning to spread outwards.
 \begin{figure}[h!]
     \centering
 
@@ -637,7 +640,7 @@ The interference between contributions from the upper and lower slits are especi
 \end{figure}
 
 At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function that has passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
-The real and imaginary components show clear interference patterns; five noticeable wavefront-patterns, emerging from the double slit, separated by regions where destructive interference occurs.
+The real and imaginary components show clear interference patterns; five noticeable wavefront-patterns, away from the double slit, separated by regions where destructive interference occurs.
 However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2\).
 \begin{figure}[h!]
     \centering
@@ -661,18 +664,55 @@ In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected
 Here we clearly observe a pattern resembling five distinct wave packets emerging from the double slit.
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.90\linewidth]{results/problem_8/absolute_value0.002_ignored.pdf}
+    \includegraphics[width=1\linewidth]{results/problem_8/absolute_value0.002_ignored.pdf}
     \caption{The magnitude squared of the wave function at time \(t=0.002\), ignoring the reflected portion appearing at \(x\approx 0.2\) in Figure~\ref{fig:evolution_wave_func_2}.}
     \label{fig:evolution_wave_func_2_ignored}
 \end{figure}
 
 \subsection{Interference pattern}
-The previous section showed how the initial state in \eqref{eq:Initial_state} emerged from the double slit and appeared as several wave packets approaching \(x=0.8\) towards the end of the simulation.
-In Figure~\ref{fig:probability_x0p8} we have displayed a one-dimensional probability distribution \(p(y;x=0.8; t=0.002)\) for three different cases: a single-, double- and triple-slit simulation, appearing from left to right, respectively.
-This distribution is obtained by taking \(|u(0.8,y,0.002)|^2\) and
+The previous section showed how the initial state in \eqref{eq:Initial_state} emerged from the double slit and appeared as several wave packets approaching \(x=0.8\) towards the end of the simulation (\(t=0.002\)).
+In Figure~\ref{fig:probability_x0p8} we have displayed a one-dimensional probability distribution, \({p(y;x=0.8; t=0.002)}\), for three different cases: a single-, double- and triple-slit simulation, appearing from left to right, respectively.
+This distribution is obtained by taking \(|u(x=0.8,y,t=0.002)|^2\) and
 normalizing it with respect to \(y\) at fixed \(x = 0.8\) and
 \(t = 0.002\).
 The simulation parameters are chosen identical to those described in Section \ref{sec:evolution_wave_function}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{results/problem_9/probability_x0p8.pdf}
+    \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(t=0.002\) and \(x=0.8\). The cases of a single, double and triple slit are displayed in blue, green and orange, respectively. The curves \(p(y;x=0.8;t=0.002)\) are obtained by normalizing  \({|u(y;x=0.8; t=0.002)|^2}\) with respect to the \(y\)-coordinate.}
+    \label{fig:probability_x0p8}
+\end{figure}
+
+The number of peaks varies between the three different simulations.
+For the single-slit simulation we find a single peak, whereas for the double- and triple-slit we see three and four peaks, respectively.
+We have tabulated where these peaks appear and their values in Table~\ref{tab:peaks}.
+% \begin{widetext}
+% \begin{table}[h!]
+% \centering
+% \begin{tabular}{|l|c|c|c|}
+% \hline
+% Scenario & \# Peaks & $y$ & $p$ \\ 
+% \hline
+% Single slit 
+%   & 1 
+%   & 0.505 
+%   & 0.024 \\
+% \hline
+% Double slit 
+%   & 3 
+%   & 0.365, 0.505, 0.640
+%   & 0.017, 0.031, 0.017 \\
+% \hline
+% Triple slit 
+%   & 4 
+%   & 0.355, 0.455, 0.555, 0.650
+%   & 0.015, 0.039, 0.038, 0.015 \\
+% \hline
+% \end{tabular}
+% \caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
+% \label{tab:peaks}
+% \end{table}
 
 \begin{table}[h!]
 \centering
@@ -701,56 +741,25 @@ Triple slit
 \caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
 \label{tab:peaks}
 \end{table}
-The number of peaks varies between the three different simulations.
-For the single-slit simulation we find a single peak, whereas for the double- and triple-slit we see three and four peaks, respectively.
-We have tabulated where these peaks appear and their values in Table~\ref{tab:peaks}.
-\begin{widetext}
-% \begin{table}[h!]
-% \centering
-% \begin{tabular}{|l|c|c|c|}
-% \hline
-% Scenario & \# Peaks & $y$ & $p$ \\ 
-% \hline
-% Single slit 
-%   & 1 
-%   & 0.505 
-%   & 0.024 \\
-% \hline
-% Double slit 
-%   & 3 
-%   & 0.365, 0.505, 0.640
-%   & 0.017, 0.031, 0.017 \\
-% \hline
-% Triple slit 
-%   & 4 
-%   & 0.355, 0.455, 0.555, 0.650
-%   & 0.015, 0.039, 0.038, 0.015 \\
-% \hline
-% \end{tabular}
-% \caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
-% \label{tab:peaks}
-% \end{table}
-If we imagine placing a detector at \(x=0.8\), these peaks will correspond to the most probable positions to detect a particle hitting the detector at, or before, \(t=0.002\). 
-The 
 
+If we imagine placing a detector at \(x=0.8\), these peaks will correspond to the most probable positions (within a \(h^2=2.5\times 10^{-6}\) grid cell) to detect a particle hitting the detector at \(t=0.002\). 
+That being said, the values in Table~\ref{tab:peaks} do not take into account the possibility of detecting the particle prior to \(t=0.002\).
+% \begin{figure}[h!]
+%     \centering
 
-
-\begin{figure}[h!]
-    \centering
-
-    \subfloat[]{%
-        \includegraphics[width=0.33\linewidth]{results/problem_9/probability_x0p8_single.pdf}%
-    }\hfill
-    \subfloat[]{%
-        \includegraphics[width=0.33\linewidth]{results/problem_9/probability_x0p8_double.pdf}%
-    }\hfill
-    \subfloat[]{%
-        \includegraphics[width=0.33\linewidth]{results/problem_9/probability_x0p8_triple.pdf}%
-    }
-    \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(t=0.002\) and \(x=0.8\). The cases of a single, double and triple slit are displayed in (a), (b) and (c), respectively. The curves \(p(y;x=0.8;t=0.002)\) are obtained by normalizing  \(|u(y;x=0.8; t=0.002)|^2\) with respect to the \(y\)-coordinate.}
-    \label{fig:probability_x0p8}
-\end{figure}
-\end{widetext}
+%     \subfloat[]{%
+%         \includegraphics[width=0.33\linewidth]{results/problem_9/probability_x0p8_single.pdf}%
+%     }\hfill
+%     \subfloat[]{%
+%         \includegraphics[width=0.33\linewidth]{results/problem_9/probability_x0p8_double.pdf}%
+%     }\hfill
+%     \subfloat[]{%
+%         \includegraphics[width=0.33\linewidth]{results/problem_9/probability_x0p8_triple.pdf}%
+%     }
+%     \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(t=0.002\) and \(x=0.8\). The cases of a single, double and triple slit are displayed in (a), (b) and (c), respectively. The curves \(p(y;x=0.8;t=0.002)\) are obtained by normalizing  \(|u(y;x=0.8; t=0.002)|^2\) with respect to the \(y\)-coordinate.}
+%     \label{fig:probability_x0p8}
+% \end{figure}
+% \end{widetext}
 
 
 
