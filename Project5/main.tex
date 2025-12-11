@@ -148,12 +148,7 @@
 \noaffiliation                            % ignore this, but keep it.
 
 \begin{abstract}
-    Using a Crank-Nicolson scheme, we numerically solve the time-dependent Schrödinger equation in two spatial dimensions, simulating a single particle propagating towards a barrier with single-, double- and triple-slit apertures.
-    The Crank-Nicolson scheme is found to very well suited for simulations of this type, motivating its use also for more complex quantum systems.
-    For this reason, we also suggest further research on efficient sparse-matrix solvers for future work.
-    In particular, we expect that different classes of Hamiltonians may benefit from different strategies when solving the sparse linear systems arising in the Crank-Nicolson scheme.
-    %The resulting interference patterns are discussed and compared with theoretical and experimental results. 
-    %\\{\color{red}(TODO)}\\
+    Using a Crank-Nicolson scheme, we numerically solve the dimensionless time-dependent Schrödinger equation in two spatial dimensions, simulating a single particle propagating towards a barrier located at \(x=0.5\) with either a single, double or triple slit centered symmetrically around \(y=0.5\). We visualize the evolution of an initial Gaussian wave packet, and observe an interference pattern for the double- and triple-slit configuration. By considering the magnitude squared of the wave function at \(t=0.002\) and \(x=0.8\), we obtain a probability distribution for detecting the particle at a point on the \(y\)-axis. The single-, double- and triple-slit barriers display one, three and four peaks in this distribution, respectively. 
 \end{abstract}
 \maketitle
 
@@ -185,10 +180,11 @@ This approach has the benefit of being accurate to second order in both space an
 %In this report, we will do this using a Crank-Nicolson scheme to discretize and numerically solve the time-dependent Schr\"odinger equation in two spatial dimensions.
 
 The remainder of this report is organized as follows. 
-In Sec.~\ref{sec:theory_and_method}, we introduce the dimensionless Schr\"odinger equation, specify the potential and initial state, and derive the Crank--Nicolson scheme used to solve it numerically. 
-We also provide an explanation of our numerical algorithm using the Crank--Nicolson scheme, as well as a declaration of the various tools we have used.
-In Sec.~\ref{sec:results_discussion}, we present and discuss our numerical results, including snapshots of the evolving wave function, as well as interference patterns for different slit geometries.
-Finally, in Sec.~\ref{sec:conclusion}, we summarize our findings and suggest directions for future research.
+In Section~\ref{sec:theory_and_method}, we introduce the dimensionless Schr\"odinger equation, specify the potential and initial state, and derive the Crank--Nicolson scheme used to solve it numerically. 
+We also provide a brief explanation of the expected interference pattern, an explanation of our numerical algorithm using the Crank--Nicolsen scheme, and a declaration of the various tools we have used.
+In Section~\ref{sec:results_discussion}, we present our numerical results and an discussion along the way. 
+Here we analyze the deviation from total probability, include snapshots of the evolving wave function, and interference patterns for different slit geometries. Lastly, in Section~\ref{sec:conclusion}, we conclude with a brief summary of our results and interpretations, and mention possible future optimizations and interests.
+
 
 \section{Theory and Method} \label{sec:theory_and_method}
 
@@ -321,10 +317,10 @@ We denote the discretized wave function at time step \(n\) as
     u_{ij}^n = u(x_{i}, y_{j}, t_n), \quad i,j = 0, 1, \ldots, M-1.
 \end{align}
 
-Since the boundary points remain zero for all \(n\), only the interior points, \(u_{ij}^{n}\) for \(i,j=1,\ldots M-2\), represents actual degrees of freedom.
+Since the boundary points remain zero for all \(n\), only the interior points, \(u_{ij}^{n}\) for \(i,j=1,\ldots M-2\), represent actual degrees of freedom.
 We therefore collect these values into a one-dimensional vector \(\vec{u}^{\,n}\) of size \((M-2)^2\), with components
 \begin{align}
-    (\vec{u}^n)_k = u^n_{i+1j+1}, \quad k = i\cdot(M-2) + j,
+    (\vec{u}^n)_k = u^n_{i+1,j+1}, \quad k = i\cdot(M-2) + j,
 \end{align} 
 for \(i,j=0,1,\ldots M-3\).
 
@@ -350,7 +346,7 @@ as the probability of detecting the particle within the grid cell of area \(h^2\
 In our simulations, the initial state \eqref{eq:Initial_state} is normalized by computing
 \(\sum_{i,j} |u_{ij}^0|^2\) and rescaled accordingly.
 
-We let the initial wave packet \eqref{eq:Initial_state} propagate towards single-, double- or triple-slit barriers. Figure~\ref{fig:slit_setup} displays the three different barriers.
+We let the initial wave packet \eqref{eq:Initial_state} propagate toward a single-, double- or triple-slit barriers. Figure~\ref{fig:slit_setup} displays the three different barriers.
 Each slit has an aperture \(a\) (opening width) and any two adjacent slits are separated by a distance \(d\) in the \(y\)-direction.
 The barrier is placed at \(x=0\), and the slits are centered symmetrically around \(y=0.5\). 
 We denote the barrier thickness in the \(x\)-direction by \(s_x\).
@@ -444,15 +440,15 @@ These geometric parameters are illustrated for the double-slit case in Figure~\r
 
 
 \subsection{Interference patterns}
-As the wave packet propagates through the slits, we generally expect to observe some form of interference pattern as the wave packet reaches the far side of the barrier.
-This can be understood classically from Huygens' principle, which states that each point on a wavefront may be considered the source of a spherical wavelet.
+As the wave packet propagates through the slits, we expect to observe some form of interference pattern as the wave packet reaches the far side of the barrier.
+This can be understood classically from Huygens' principle, which states that each point on a wavefront may be considered the source of a spherical wavelet (see e.g. \cite[421]{vistnes2018physics}).
 As the wave passes the barrier, we may then think of each slit as sourcing such wavelets.
 As these propagate throughout the right side of the barrier, one naturally expects the wavelets to interfere constructively and destructively at different points in space, leading to an interference pattern (as long as multiple slits are present).
 Due to the wave properties of matter in quantum mechanics, we should expect a similar phenomenon to occur as the wave function passes through the slits, leading to an interference pattern in the probability density \(|u(x,y,t)|^2\) on the far side of the barrier.
 
 \subsection{The Crank-Nicolson scheme}  \label{sec:Crank_Nicolson}
 \subsubsection{Deriving the scheme}
-Using respectively a forward and backwards difference scheme for the time derivative, we obtain the following discretizations of equation \eqref{eq:schrodinger_equation}:
+Using forward and backwards difference scheme for the time derivative, we obtain the following discretizations of equation \eqref{eq:schrodinger_equation}:
 \begin{align}
     \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} &= -i F_{ij}^{n},
     \\
@@ -527,9 +523,9 @@ Rearranging this, we see that each time step in the Crank-Nicolson scheme corres
     }
     u^{n}
 \end{align}
-In particular, given that the Hamiltonian \(\hat{H}\) indeed is Hermitian, one may verify that the operator $U_{\text{CN}}$ is unitary.
+Since the Hamiltonian \(\hat{H}\) is Hermitian, it follows that the operator $U_{\text{CN}}$ is unitary \footnote{We get \({U_{\text{CN}}^{\dag} = \left( 1 - \frac{i \Delta t}{2} \hat{H} \right)\left( 1 - \frac{i \Delta t}{2} \hat{H} \right)^{-1}}\). Showing that \({I=U_{\text{CN}}^{\dag}U_{\text{CN}} = U_{\text{CN}} U_{\text{CN}}^{\dag}}\) follows straightforwardly by commuting terms in the expression.}.
 This means that the Crank-Nicolson scheme should in principle conserve the total probability exactly.
-Of course, this conservation will be slightly broken in practice, due to errors inherent to floating-point arithmetic such as rounding errors.
+Although, of course, this observation may not hold perfectly in a numerical implementation, due to errors inherent to floating-point arithmetic, such as rounding errors.
 %Yet, we still observed the total probability start to increase slightly beyond that of the numerical noise level at \(\sim 10^{-15}\) as the simulation progressed.
 %This can likely be attributed to the step-by-step accumulation of rounding errors and other imperfections inherent to floating-point arithmetic.
 
@@ -559,12 +555,11 @@ We therefore store $A$ and $B$ as sparse matrices and employ a sparse matrix sol
 Specifically, we employ the \texttt{SuperLU} library via the function \texttt{spsolve} in the C++ library \texttt{armadillo}.
 
 \subsection{Tools}  \label{sec:tools}
-\color{red}Needs to be double checked\color{black}.
 The simulations in this report are produced in \textit{C++}, while figures and some minor data manipulation are handled in \textit{Python}.
 The code used in this project can be found in \cite{FYS4150Project5} and relies on the following libraries: \textsc{NumPy}~\cite{numpy}, \textsc{Matplotlib}~\cite{matplotlib} and \textsc{Armadillo}~\cite{armadillo}. 
 We have used \textsc{Doxygen}~\cite{doxygen} to create a thorough documentation of our code, see~\cite{FYS4150Project5_doc}. 
 Throughout this project we have occasionally consulted the language-model tools ChatGPT and GitHub Copilot. 
-All analysis, code and material presented in this report is produced independently by ourselves.
+All analysis, code and material presented in this report are produced independently by us.
 
 \section{Results and discussion}    \label{sec:results_discussion}
 Here we present various results from running our simulation of a single-, double- and triple-slit configuration, as well as a reference simulation without any barrier present.
@@ -596,12 +591,12 @@ The total probability should theoretically remain equal to one, and a deviation 
 In Figure~\ref{fig:evolution_wave_func_0}, Figure~\ref{fig:evolution_wave_func_1} and Figure~\ref{fig:evolution_wave_func_2} we have displayed the wave function \(u(x,y,t)\) at times \(t=0,\ 0.001\) and \(0.002\), respectively.  
 All figures show the absolute value squared (a), real (b) and imaginary (c) value of \(u(x,y,t)\). 
 The simulations producing these figures were performed with \(\sigma_y=0.20\) and the default parameters of the initial state described in the beginning of Section \ref{sec:results_discussion}.
+
 \begin{widetext}
-
 At \(t=0\) (Fig.~\ref{fig:evolution_wave_func_0}), the magnitude squared of the wave function exhibits a Gaussian profile centered around \((x,y)=(0.25, 0.5)\), consistent with the chosen initial state.
-The real and imaginary parts, exhibit oscillatory wave fronts that are out of phase with one another.
+The real and imaginary parts exhibit oscillatory wave fronts that are out of phase with one another.
 From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms, \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them.
-
+% \_
 \begin{figure}[h!]
     \centering
 
@@ -620,7 +615,7 @@ From \eqref{eq:Initial_state}, the real and imaginary components consist of a Ga
 \end{figure}
 
 At \(t=0.001\) (Fig.~\ref{fig:evolution_wave_func_1}), the wave packet has reached the double-slit barrier and propagated through.
-Since the transverse width \(\sigma_y = 0.20\) is greater then the length of the two slits and the barrier between them, \(2a+d=0.015\), a substantial portion of the wave packet should be reflected.
+Since the transverse width \(\sigma_y = 0.20\) is greater than the length of the two slits and the barrier between them, \(2a+d=0.015\), a substantial portion of the wave packet should be reflected.
 Indeed, the magnitude squared, i.e. the probability of detecting the particle (within a grid cell of size \(h^2\)), shows that the most probable evolution is backward reflection from the barrier.
 Nevertheless, a significant portion of the wave function passes through the double slit and interferes with itself on the other side.
 The interference between contributions from the upper and lower slits are especially evident when viewing the real and imaginary components of the wave function separately.
@@ -641,7 +636,7 @@ The interference between contributions from the upper and lower slits are especi
     \label{fig:evolution_wave_func_1}
 \end{figure}
 
-At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function which passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
+At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function that has passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
 The real and imaginary components show clear interference patterns; five noticeable wavefront-patterns, emerging from the double slit, separated by regions where destructive interference occurs.
 However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2\).
 \begin{figure}[h!]
@@ -660,51 +655,81 @@ However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2
     \caption{The magnitude squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.002\).}
     \label{fig:evolution_wave_func_2}
 \end{figure}
-\end{widetext}
 
+\end{widetext}
 In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected portion of the magnitude squared, seen at approximately \(x=0.2\) in Figure~\ref{fig:evolution_wave_func_2}. 
 Here we clearly observe a pattern resembling five distinct wave packets emerging from the double slit.
 \begin{figure}[h!]
     \centering
-    \includegraphics{results/problem_8/absolute_value0.002_ignored.pdf}
+    \includegraphics[width=0.90\linewidth]{results/problem_8/absolute_value0.002_ignored.pdf}
     \caption{The magnitude squared of the wave function at time \(t=0.002\), ignoring the reflected portion appearing at \(x\approx 0.2\) in Figure~\ref{fig:evolution_wave_func_2}.}
     \label{fig:evolution_wave_func_2_ignored}
 \end{figure}
 
 \subsection{Interference pattern}
-The previous section presented how the initial state in \eqref{eq:Initial_state} emerged out of the double slit, and showed what looked like five wave packets approaching \(x=0.8\) towards the end of the simulation.
-In Figure~\ref{fig:probability_x0p8} we have displayed the normalized probability \({p(y)=|u(x=0.8,y,t=0.002)}|^2\) for three different cases: a single-, double- and triple-slit simulation, appearing from left to right, respectively. 
+The previous section showed how the initial state in \eqref{eq:Initial_state} emerged from the double slit and appeared as several wave packets approaching \(x=0.8\) towards the end of the simulation.
+In Figure~\ref{fig:probability_x0p8} we have displayed a one-dimensional probability distribution \(p(y;x=0.8; t=0.002)\) for three different cases: a single-, double- and triple-slit simulation, appearing from left to right, respectively.
+This distribution is obtained by taking \(|u(0.8,y,0.002)|^2\) and
+normalizing it with respect to \(y\) at fixed \(x = 0.8\) and
+\(t = 0.002\).
 The simulation parameters are chosen identical to those described in Section \ref{sec:evolution_wave_function}.
 
-\begin{widetext}
-The number of peaks varies between the three different simulations.
-For the single-slit simulation we find a single peak, whereas for the double- and triple-slit we see three and four peaks, respectively.
-We have tabulated where these peaks appear and their values in Table~\ref{tab:peaks}.
 \begin{table}[h!]
 \centering
+\scalebox{0.95}{
 \begin{tabular}{|l|c|c|c|}
 \hline
 Scenario & \# Peaks & $y$ & $p$ \\ 
 \hline
 Single slit 
   & 1 
-  & 0.505 
-  & 0.024 \\
+  & 0.51 
+  & 0.02 \\
 \hline
 Double slit 
   & 3 
-  & 0.365, 0.505, 0.640
-  & 0.017, 0.031, 0.017 \\
+  & 0.37, 0.51, 0.64
+  & 0.02, 0.03, 0.02 \\
 \hline
 Triple slit 
   & 4 
-  & 0.355, 0.455, 0.555, 0.650
-  & 0.015, 0.039, 0.038, 0.015 \\
+  & 0.36, 0.46, 0.56, 0.65
+  & 0.02, 0.04, 0.04, 0.02 \\
 \hline
 \end{tabular}
+}
 \caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
 \label{tab:peaks}
 \end{table}
+The number of peaks varies between the three different simulations.
+For the single-slit simulation we find a single peak, whereas for the double- and triple-slit we see three and four peaks, respectively.
+We have tabulated where these peaks appear and their values in Table~\ref{tab:peaks}.
+\begin{widetext}
+% \begin{table}[h!]
+% \centering
+% \begin{tabular}{|l|c|c|c|}
+% \hline
+% Scenario & \# Peaks & $y$ & $p$ \\ 
+% \hline
+% Single slit 
+%   & 1 
+%   & 0.505 
+%   & 0.024 \\
+% \hline
+% Double slit 
+%   & 3 
+%   & 0.365, 0.505, 0.640
+%   & 0.017, 0.031, 0.017 \\
+% \hline
+% Triple slit 
+%   & 4 
+%   & 0.355, 0.455, 0.555, 0.650
+%   & 0.015, 0.039, 0.038, 0.015 \\
+% \hline
+% \end{tabular}
+% \caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
+% \label{tab:peaks}
+% \end{table}
 If we imagine placing a detector at \(x=0.8\), these peaks will correspond to the most probable positions to detect a particle hitting the detector at, or before, \(t=0.002\). 
 The 
 
@@ -722,38 +747,10 @@ The
     \subfloat[]{%
         \includegraphics[width=0.33\linewidth]{results/problem_9/probability_x0p8_triple.pdf}%
     }
-    \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(x=0.8\). The case of a single, double and triple slit are displayed in (a), (b) and (c), respectively.}
+    \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(t=0.002\) and \(x=0.8\). The cases of a single, double and triple slit are displayed in (a), (b) and (c), respectively. The curves \(p(y;x=0.8;t=0.002)\) are obtained by normalizing  \(|u(y;x=0.8; t=0.002)|^2\) with respect to the \(y\)-coordinate.}
     \label{fig:probability_x0p8}
 \end{figure}
 \end{widetext}
-
-% \begin{table}[h!]
-% \centering
-% \scalebox{0.95}{
-% \begin{tabular}{|l|c|c|c|}
-% \hline
-% Scenario & \# Peaks & $y$ & $p$ \\ 
-% \hline
-% Single slit 
-%   & 1 
-%   & 0.51 
-%   & 0.02 \\
-% \hline
-% Double slit 
-%   & 3 
-%   & 0.37, 0.51, 0.64
-%   & 0.02, 0.03, 0.02 \\
-% \hline
-% Triple slit 
-%   & 4 
-%   & 0.36, 0.46, 0.56, 0.65
-%   & 0.02, 0.04, 0.04, 0.02 \\
-% \hline
-% \end{tabular}
-% }
-% \caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
-% \label{tab:peaks}
-% \end{table}
 
 
 
@@ -769,15 +766,15 @@ The magnitude squared of the wave function, here interpreted as the probability 
 At \(t=0.002\) and \(x=0.8\), we extracted the resulting probability distribution for the case of a single-, double- and triple-slit barrier. 
 In all three cases, we observed distinct peaks: one peak for the single slit, three peaks for the double slit, and four peaks for the triple slit.
 
-Overall, our simulations illustrates the wave-like behavior of particles in quantum mechanics and, in particular, the appearance of interference patterns in the double-slit experiment.
+Overall, our simulations illustrate the wave-like behavior of particles in quantum mechanics and, in particular, the appearance of interference patterns in the double-slit experiment.
 
 A notable limitation of our numerical simulation is the choice of grid-spacing. 
 The Crank-Nicolson scheme involves solving a sparse system of $(M-2)^{2}$ linear equations at each time step.
-For our purposes of simulating a single particle propagating towards a slit-barrier in two dimensions, neither run time nor memory usage posed a significant challenge.
-However, extending the simulation to three dimensions, or perhaps include multiple particles and more complex potentials, would make computational cost and memory access much more demanding.
+For our purposes of simulating a single particle propagating towards a slit-barrier in two dimensions, neither runtime nor memory usage posed a significant challenge.
+However, extending the simulation to three dimensions, or perhaps including multiple particles and more complex potentials, would make computational cost and memory access much more demanding.
 In any case, the use of a sparse matrix solver and effective preconditioners is a significant source of potential optimization for these simulations.
-For instance, we may in principle imagine that different classes of Hamiltonians benefit from different strategies for solving the sparse linear systems in Crank-Nicolson.
-One may also benefit from a more specified algorithm than the algorithm we used here.
+For instance, different classes of Hamiltonians may benefit from different strategies for solving the sparse linear systems arising in Crank-Nicolson.
+One may also benefit from a more specialized algorithm than the one used here.
 
 For future outlooks, a three-dimensional simulation would be an interesting extension, although many experimental setups can effectively be modeled in two dimensions by an appropriate choice of geometry.
 It would be compelling to include several particles and corresponding interaction terms in the Hamiltonian, though this quickly leads to a significantly more complex problem.

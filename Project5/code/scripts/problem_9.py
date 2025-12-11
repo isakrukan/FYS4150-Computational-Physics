@@ -28,7 +28,7 @@ for data, data_name in zip(datas, data_names):
 
     plt.plot(y, p)
     plt.xlabel("y")
-    plt.ylabel(r"$|u(x=0.8, y, t=0.002)|^2$")
+    plt.ylabel(r"$|p(y;x=0.8,t=0.002|^2$")
     # plt.legend()
     plt.savefig(f"../results/problem_9/probability_x0p8_{data_name}.pdf")
     plt.show()
