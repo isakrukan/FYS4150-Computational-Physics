@@ -1,0 +1,11 @@
+% doxygenfixes.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{doxygenfixes}[2025/12/11 Fixes for Doxygen LaTeX output]
+
+\makeatletter
+% Only define if it's not already defined
+\@ifundefined{tabulinesep}{%
+  \newlength{\tabulinesep}
+  \setlength{\tabulinesep}{1mm}%
+}{}
+\makeatother

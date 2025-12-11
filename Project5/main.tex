@@ -140,7 +140,7 @@
 
 \begin{document}
 
-\title{Simulating the Schr\"odinger equation using the Crank-Nicolson scheme to visualize the slit experiment\\[0.5em]
+\title{Visualizing the slit experiment using the Crank-Nicolson scheme to evolve the Schr\"odinger equation \\[0.5em]
   \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project5}{\texttt{github.uio.no/icrukan/FYS4150/Project5}}
 }
 \author{Isak Cecil Onsager Rukan and Magnus Axelsen} % self-explanatory
@@ -596,8 +596,8 @@ The simulations producing these figures were performed with \(\sigma_y=0.20\) an
 
 
 At \(t=0\) (Fig.~\ref{fig:evolution_wave_func_0}), the magnitude squared of the wave function exhibits a Gaussian profile centered around \((x,y)=(0.25, 0.5)\), consistent with the chosen initial state.
-The real and imaginary parts exhibit oscillatory wave fronts that are out of phase with one another.
-From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms, \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them. 
+The real and imaginary parts, exhibit oscillatory wave fronts that are out of phase with one another.
+From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms, \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them.
 
 % \_
 \begin{figure}[h!]
@@ -615,9 +615,17 @@ From \eqref{eq:Initial_state}, the real and imaginary components consist of a Ga
 
     \caption{The absolute value squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0\).}
     \label{fig:evolution_wave_func_0}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[hbt!]
+At \(t=0.001\) (Fig.~\ref{fig:evolution_wave_func_1}), the wave packet has reached the double-slit barrier and part of it has begun to propagate through the slits.
+Since the transverse width \(\sigma_y = 0.20\) is significantly greater than the length of the two slits and the barrier between them, \(2a+d=0.015\), a substantial portion of the wave packet should be reflected.
+Indeed, the magnitude squared, i.e. the probability of detecting the particle (within a grid cell of size \(h^2\)), shows that the most probable evolution is backward reflection from the barrier.
+
+Nevertheless, a significant portion of the wave function passes through the double slit and interferes with itself on the other side.
+This interference is especially evident when viewing the real and imaginary components of the wave function separately, which display clear oscillatory wavefronts as overlapping superpositions of waves. 
+On the other hand, the magnitude squared appears on the right-hand side of the barrier as two relatively diffuse regions, beginning to spread outwards.
+
+\begin{figure}[h!]
     \centering
 
     \subfloat[]{%
@@ -632,9 +640,13 @@ From \eqref{eq:Initial_state}, the real and imaginary components consist of a Ga
 
     \caption{The magnitude squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.001\).}
     \label{fig:evolution_wave_func_1}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[hbt!]
+At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function that has passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
+The real and imaginary components show clear interference patterns; five noticeable wavefront-patterns, away from the double slit, separated by regions where destructive interference occurs.
+However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2\).
+
+\begin{figure}[h!]
     \centering
 
     \subfloat[]{%
@@ -649,40 +661,9 @@ From \eqref{eq:Initial_state}, the real and imaginary components consist of a Ga
 
     \caption{The magnitude squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.002\).}
     \label{fig:evolution_wave_func_2}
-\end{figure*}
-
-
-\subsection{Total probability deviation}
-Figure~\ref{fig:devation_from_probability} displays the (absolute) deviation from total probability for two simulations: one one with a double slit and one without.
-Both simulations are run over a time interval \(t\in[0,8\times 10^{-3}]\) with \(h=0.005\) and \(\Delta t=2.5\times 10^{-5}\).
-The deviation begins at approximately \(10^{-15}\) and increases to about \(10^{-14}\) by the end of the simulation. 
-The total probability should theoretically remain equal to one, and a deviation of order \(10^{-14}\) is only one order of magnitude larger than the numerical noise level (\(\sim 10^{-15}\)) associated with double-precision floating-point computations. 
-\begin{figure}[h!]
-    \includegraphics[width=1\linewidth]{results/problem_7/problem_7.pdf}
-    \caption{Deviation from total probability as a function of time for both the absence (blue) and the presence (green) of a double slit. Mathematically, the figure displays \(|1 - p(x,y;t)|\), where \(p(x,y;t)\) is the probability density given in \eqref{eq:Born_rule}.}
-    \label{fig:devation_from_probability}
 \end{figure}
 
-\subsection{Evolution of wave function in double slit experiment}   \label{sec:evolution_wave_function}
-In Figure~\ref{fig:evolution_wave_func_0}, Figure~\ref{fig:evolution_wave_func_1} and Figure~\ref{fig:evolution_wave_func_2} we have displayed the wave function \(u(x,y,t)\) at times \(t=0,\ 0.001\) and \(0.002\), respectively.  
-All figures show the absolute value squared (a), real (b) and imaginary (c) value of \(u(x,y,t)\). 
-The simulations producing these figures were performed with \(\sigma_y=0.20\) and the default parameters of the initial state described in the beginning of Section \ref{sec:results_discussion}.
-
-At \(t=0\) (Fig.~\ref{fig:evolution_wave_func_0}), the magnitude squared of the wave function exhibits a Gaussian profile centered around \((x,y)=(0.25, 0.5)\), consistent with the chosen initial state.
-The real and imaginary parts, exhibit oscillatory wave fronts that are out of phase with one another.
-From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms, \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them.
-
-At \(t=0.001\) (Fig.~\ref{fig:evolution_wave_func_1}), the wave packet has reached the double-slit barrier and part of it has begun to propagate through the slits.
-Since the transverse width \(\sigma_y = 0.20\) is significantly greater than the length of the two slits and the barrier between them, \(2a+d=0.015\), a substantial portion of the wave packet should be reflected.
-Indeed, the magnitude squared, i.e. the probability of detecting the particle (within a grid cell of size \(h^2\)), shows that the most probable evolution is backward reflection from the barrier.
-
-Nevertheless, a significant portion of the wave function passes through the double slit and interferes with itself on the other side.
-This interference is especially evident when viewing the real and imaginary components of the wave function separately, which display clear oscillatory wavefronts as overlapping superpositions of waves. 
-On the other hand, the magnitude squared appears on the right-hand side of the barrier as two relatively diffuse regions, beginning to spread outwards.
-
-At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function that has passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
-The real and imaginary components show clear interference patterns; five noticeable wavefront-patterns, away from the double slit, separated by regions where destructive interference occurs.
-However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2\).
+\end{widetext}
 
 In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected portion of the magnitude squared, seen at approximately \(x=0.2\) in Figure~\ref{fig:evolution_wave_func_2}. 
 Here we clearly observe a pattern resembling five distinct wave packets emerging from the double slit.

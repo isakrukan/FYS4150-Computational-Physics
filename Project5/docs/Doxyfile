@@ -42,7 +42,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "Obtaining the critical temperature of the Ising model using the Markov chain Monte Carlo"
+PROJECT_NAME           = "Visualizing the slit experiment using the Crank-Nicolson scheme to evolve the Schrodinger equation"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -2130,7 +2130,7 @@ PAPER_TYPE             = a4
 # If left blank no extra packages will be included.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-EXTRA_PACKAGES         = pbox ragged2e varwidth # CHANGED FROM DEFAULT (NONE)
+EXTRA_PACKAGES         = pbox ragged2e varwidth  # CHANGED FROM DEFAULT (NONE)
 
 # The LATEX_HEADER tag can be used to specify a user-defined LaTeX header for
 # the generated LaTeX document. The header should contain everything until the
@@ -2147,7 +2147,7 @@ EXTRA_PACKAGES         = pbox ragged2e varwidth # CHANGED FROM DEFAULT (NONE)
 # description of the possible markers and block names see the documentation.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-LATEX_HEADER           = doxy_header.tex
+LATEX_HEADER           = 
 
 # The LATEX_FOOTER tag can be used to specify a user-defined LaTeX footer for
 # the generated LaTeX document. The footer should contain everything after the
@@ -2170,7 +2170,7 @@ LATEX_FOOTER           =
 # list).
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-LATEX_EXTRA_STYLESHEET = doxy_fixes.sty
+LATEX_EXTRA_STYLESHEET = doxy_fixes.sty doxygenfixes.sty
 
 # The LATEX_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the LATEX_OUTPUT output
