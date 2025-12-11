@@ -578,7 +578,8 @@ All analysis, code and material presented in this report is produced independent
 
 \section{Results and discussion}    \label{sec:results_discussion}
 Here we present various results from running our simulation of a single-, double- and triple-slit configuration, as well as a reference simulation without any barrier present.
-Throughout, the initial state \eqref{eq:Initial_state} is initialized with center position \((x_c, y_c) = (0.25, 0.5)\), momentum components \((p_x, p_y) = (200, 0)\), and spatial width \(\sigma_x = 0.005\) in the x-direction.
+To see these results as animations, navigate to the \textit{animations} directory in \cite{FYS4150Project5}.
+Throughout, we initialized the initial state \eqref{eq:Initial_state} with center position \((x_c, y_c) = (0.25, 0.5)\), momentum components \((p_x, p_y) = (200, 0)\), and spatial width \(\sigma_x = 0.005\) in the x-direction.
 The width in the \(y\)-direction, \(\sigma_y\), is set to \(\sigma_y=0.05\) for simulations without a barrier, while for simulations containing a barrier we use a broader packet with \(\sigma_y = 0.20\). 
 
 
@@ -590,13 +591,13 @@ The barrier height is set to \(v_0=1\times 10^{10}\) for all simulations, expect
 
 
 \subsection{Total probability deviation}
-Figure~\ref{fig:devation_from_probability} displays the deviation from total probability for two simulations: one one with a double slit and one without.
+Figure~\ref{fig:devation_from_probability} displays the (absolute) deviation from total probability for two simulations: one one with a double slit and one without.
 Both simulations are run over a time interval \(t\in[0,8\times 10^{-3}]\) with \(h=0.005\) and \(\Delta t=2.5\times 10^{-5}\).
 The deviation begins at approximately \(10^{-15}\) and increases to about \(10^{-14}\) by the end of the simulation. 
 The total probability should theoretically remain equal to one, and a deviation of order \(10^{-14}\) is only one order of magnitude larger than the numerical noise level (\(\sim 10^{-15}\)) associated with double-precision floating-point computations. 
 \begin{figure}[h!]
     \includegraphics{results/problem_7/problem_7.pdf}
-    \caption{Deviation from total probability as a function of time for both the absence (blue) and the presence (green) of a double slit. Mathematically, the figure displays \(1 - p(x,y;t)\), where \(p(x,y;t)\) is the probability density given in \eqref{eq:Born_rule}.}
+    \caption{Deviation from total probability as a function of time for both the absence (blue) and the presence (green) of a double slit. Mathematically, the figure displays \(|1 - p(x,y;t)|\), where \(p(x,y;t)\) is the probability density given in \eqref{eq:Born_rule}.}
     \label{fig:devation_from_probability}
 \end{figure}
 
@@ -672,7 +673,7 @@ However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2
 \end{widetext}
 
 In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected portion of the magnitude squared, seen at approximately \(x=0.2\) in Figure~\ref{fig:evolution_wave_func_2}. 
-Here we clearly observe a pattern resembling six distinct wave packets emerging from the double slit.
+Here we clearly observe a pattern resembling five distinct wave packets emerging from the double slit.
 \begin{figure}[h!]
     \centering
     \includegraphics{results/problem_8/absolute_value0.002_ignored.pdf}
@@ -681,7 +682,7 @@ Here we clearly observe a pattern resembling six distinct wave packets emerging 
 \end{figure}
 
 \subsection{Interference pattern}
-The previous section presented how the initial state in \eqref{eq:Initial_state} emerged out of the double slit, and showed what looked like six wave packets approaching \(x=0.8\) towards the end of the simulation.
+The previous section presented how the initial state in \eqref{eq:Initial_state} emerged out of the double slit, and showed what looked like five wave packets approaching \(x=0.8\) towards the end of the simulation.
 In Figure~\ref{fig:probability_x0p8} we have displayed the normalized probability \({p(y)=|u(x=0.8,y,t=0.002)}|^2\) for three different cases: a single-, double- and triple-slit simulation, appearing from left to right, respectively. 
 The simulation parameters are chosen identical to those described in Section \ref{sec:evolution_wave_function}.
 
@@ -764,19 +765,34 @@ The
 % \label{tab:peaks}
 % \end{table}
 
+
+
 \section{Conclusion}    \label{sec:conclusion}
-We have numerically solved the Schrödinger equation, simulating the time evolution of a single particle wave function propagating towards a barrier with a single, double and triple slits.
-Our results and visualizations may for instance be used pedagogically to illustrate wave-like behavior of particles in quantum mechanics, and in particular, the appearance of interference patterns in the double-slit experiment.
-The predicted interference patterns could also be used as benchmarks for experimental tests of the theory.
+We have numerically solved the Schrödinger equation, simulating the time evolution of a single-particle wave function propagating towards a barrier with either a single-, double- or triple-slit opening.
+The simulations were performed in two spatial dimensions, using a Crank-Nicolson scheme to discretize and solve the Schrödinger equation implicitly in time.
+The Crank-Nicolson scheme has the benefit of being (in principle) exactly unitary, ensuring stability and the conservation of total probability up to numerical precision.
+Indeed, for the double-slit and no-slit simulations, we saw a deviation from total probability which remained only one order of magnitude above the numerical noise level (\(\sim 10^{-15}\)).
+All in all, this made the Crank-Nicolson scheme a quite successful choice for our simulations of the Schrödinger equation.
 
-The simulations themselves were performed in two spatial dimensions, using a Crank-Nicolson scheme to discretize and solve the Schrödinger equation implicitly in time.
-In particular, the Crank-Nicolson scheme has the benefit of being (in principle) exactly unitary, ensuring stability and the conservation of total probability up to numerical precision.
-All in all, this made the Crank-Nicolson scheme a quite successful choice for our simulations of the Schrödinger equation, something one may expect holds for more complex quantum systems as well.
+Our double-slit simulation demonstrated the expected behavior: the wave function propagated through the double slit, interfered with itself on the other side, and produced a clear interference pattern. 
+The magnitude squared of the wave function, here interpreted as the probability of detecting a particle within a small grid cell, divided into several wave packets propagating away from the double slit.
+At \(t=0.002\) and \(x=0.8\), we extracted the resulting probability distribution for the case of a single-, double- and triple-slit barrier. 
+In all three cases, we observed distinct peaks: one peak for the single slit, three peaks for the double slit, and four peaks for the triple slit.
 
-A relevant issue here is the scaling of the method to larger systems.
-In particular, the Crank-Nicolson scheme in $n$ spatial dimensions involves a sparse system of $(M-2)^{n}$ linear equations to solve at each time step, where $M$ is the number of grid points in each spatial direction.
-Especially as one moves to larger grid sizes and higher dimensions, this motivates further research on sparse matrix solvers and preconditioners to efficiently solve such systems.
+Overall, our simulations illustrates the wave-like behavior of particles in quantum mechanics and, in particular, the appearance of interference patterns in the double-slit experiment.
+
+A notable limitation of our numerical simulation is the choice of grid-spacing. 
+The Crank-Nicolson scheme involves solving a sparse system of $(M-2)^{2}$ linear equations at each time step.
+For our purposes of simulating a single particle propagating towards a slit-barrier in two dimensions, neither run time nor memory usage posed a significant challenge.
+However, extending the simulation to three dimensions, or perhaps include multiple particles and more complex potentials, would make computational cost and memory access much more demanding.
+In any case, the use of a spare matrix solver and effective preconditioners is a significant source of potential optimization for these simulations.
 For instance, we may in principle imagine that different classes of Hamiltonians benefit from different strategies for solving the sparse linear systems in Crank-Nicolson.
+One may also benefit from a more specified algorithm than the algorithm we used here.
+
+For future outlooks, a three-dimensional simulation would be an interesting extension, although many experimental setups can effectively be modeled in two dimensions by an appropriate choice of geometry.
+It would be compelling to include several particles and corresponding interaction terms in the Hamiltonian, though this quickly leads to a significantly more complex problem.
+
+% The predicted interference patterns could also be used as benchmarks for experimental tests of the theory.
 
 % \newpage
 % \clearpage
