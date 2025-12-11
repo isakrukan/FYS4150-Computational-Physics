@@ -19,7 +19,7 @@ Results include predictions for the resulting interference patterns.
 
     - [Python scripts](#python-scripts) (TODO)
 
-- [Animations](#results)
+- [Animations](#animations)
 
 - [Authors](#authors)
 
@@ -116,8 +116,34 @@ make project
 TODO
 
 # Animations
+
+<details>
+<summary> No slit </summary>
+
+![hippo](https://github.uio.no/icrukan/FYS4150/blob/master/Project5/animations/no_slit.gif)
+
+</details>
+
+<details>
+<summary> Single-slit </summary>
+
 ![hippo](https://github.uio.no/icrukan/FYS4150/blob/master/Project5/animations/double_slit.gif)
 
+</details>
+
+<details>
+<summary> Double-slit </summary>
+
+![hippo](https://github.uio.no/icrukan/FYS4150/blob/master/Project5/animations/double_slit.gif)
+
+</details>
+
+<details>
+<summary> Triple-slit </summary>
+
+![hippo](https://github.uio.no/icrukan/FYS4150/blob/master/Project5/animations/triple_slit.gif)
+
+</details>
 
 ## Authors 
 - Magnus Axelsen
