@@ -26,12 +26,12 @@ for data, data_name in zip(datas, data_names):
     p = np.abs(u[index_t][:,index_x])**2
     p /= np.sum(p)
 
-    plt.plot(y, p)
+    plt.plot(y, p, label=data_name)
     plt.xlabel("y")
-    plt.ylabel(r"$|u(x=0.8, y, t=0.002)|^2$")
+    plt.ylabel(r"$p(y;x=0.8,t=0.002)$")
     # plt.legend()
-    plt.savefig(f"../results/problem_9/probability_x0p8_{data_name}.pdf")
-    plt.show()
+    # plt.savefig(f"../results/problem_9/probability_x0p8_{data_name}.pdf")
+    # plt.show()
 
 
     peaks, props = find_peaks(p, height=0.005, prominence=None)
@@ -42,4 +42,6 @@ for data, data_name in zip(datas, data_names):
     print(s)
 
 
-
+plt.legend()
+plt.savefig(f"../results/problem_9/probability_x0p8.pdf")
+plt.show()

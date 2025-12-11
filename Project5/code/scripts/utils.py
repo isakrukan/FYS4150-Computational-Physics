@@ -84,7 +84,7 @@ def generate_animation(ax:Axes, fig:Figure, data:dict):
 
     # Add a colourbar
     cbar = fig.colorbar(img, ax=ax)
-    cbar.set_label("z(x,y,t)", fontsize=fontsize)
+    cbar.set_label("u(x,y,t)", fontsize=fontsize)
     cbar.ax.tick_params(labelsize=fontsize)
 
     # Add a text element showing the time
