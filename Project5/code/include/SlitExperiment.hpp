@@ -10,8 +10,8 @@ public:
 //**** Public variables ****//
 unsigned int M; ///< Space points. 
 double h; ///< Space separation. 
-arma::vec x;
-arma::vec y;
+arma::vec x; ///< x-coordinates.
+arma::vec y; ///< y-coordinates.
 arma::cx_mat V; ///< Potential.
 arma::cx_vec u_initial; ///< Initial wave function.
 double v0; ///< Potential height of slit wall.

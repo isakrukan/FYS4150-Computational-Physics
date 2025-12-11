@@ -1,0 +1,90 @@
+\doxysection{Evolver\+Algorithm.\+hpp}
+\hypertarget{_evolver_algorithm_8hpp_source}{}\label{_evolver_algorithm_8hpp_source}\index{EvolverAlgorithm.hpp@{EvolverAlgorithm.hpp}}
+\mbox{\hyperlink{_evolver_algorithm_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once\ }}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <armadillo>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_evolver_algorithm_ae3d09b9526f4b062a802dc67f27445ef}{EvolverAlgorithm}}\{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//***\ Constructor(s)\ ***/}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \mbox{\hyperlink{class_evolver_algorithm_ae3d09b9526f4b062a802dc67f27445ef}{EvolverAlgorithm}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00017\ \mbox{\hyperlink{class_evolver_algorithm_a362297cc46cb5c71ae34a5db1cf51d5a}{EvolverAlgorithm}}(\textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42}{h}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420}{dt}});}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_evolver_algorithm_a46e3df1140375d105c269a440029ef50}{\string~EvolverAlgorithm}}()\ =\ \textcolor{keywordflow}{default};\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//**********\ Public\ methods\ **********//}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{virtual}\ arma::cx\_vec\ \mbox{\hyperlink{class_evolver_algorithm_a349605781a4e800dcba2dc9ebc5a74a0}{update\_u}}(arma::cx\_vec\ \&u\_internal)\ =\ 0;\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_evolver_algorithm_ad35fabe8f954c6716f69f0602d71349f}{set\_potential}}(arma::cx\_mat\ \&\mbox{\hyperlink{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb}{V}})\ =\ 0;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_evolver_algorithm_a4095309295637b0f109732838e86ea4f}{set\_grid\_size}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_evolver_algorithm_a82f47552cf17a3ccbdef3707af3d7258}{M}})\ =\ 0;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//***\ Protected\ variables\ ***/}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{const}\ arma::cx\_double\ \mbox{\hyperlink{class_evolver_algorithm_a82a03e249e2f40a8a1ebe64795d6f495}{i\_unit}}\ =\ arma::cx\_double(0,1);\ }
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_evolver_algorithm_a82f47552cf17a3ccbdef3707af3d7258}{M}};\ }
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42}{h}};\ }
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420}{dt}};\ }
+\DoxyCodeLine{00050\ arma::cx\_mat\ \mbox{\hyperlink{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb}{V}};\ }
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_evolver_algorithm_aa10b83c186d8ff7b12dd581bd2d93024}{V\_set}}\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_evolver_algorithm_a901be3fa6b8c8e3d362438b9b8df0993}{M\_set}}\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_evolver_algorithm_ad158d9727345a5ac5f15f9b3e4b8f07c}{dt\_set}}\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_crank_nicolson_a515f560a8551305d4ff812b37152002c}{CrankNicolson}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_evolver_algorithm_ae3d09b9526f4b062a802dc67f27445ef}{EvolverAlgorithm}}\{}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//***\ Constructor(s)\ ***/}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00074\ \mbox{\hyperlink{class_crank_nicolson_a515f560a8551305d4ff812b37152002c}{CrankNicolson}}(arma::cx\_mat\ \&\mbox{\hyperlink{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb}{V}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42}{h}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420}{dt}});}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00082\ \mbox{\hyperlink{class_crank_nicolson_a69d048a29bfb0f0b78b132da9b9b472d}{CrankNicolson}}(\textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42}{h}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420}{dt}});}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{comment}{//**********\ Public\ methods\ **********//}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{virtual}\ arma::cx\_vec\ \mbox{\hyperlink{class_crank_nicolson_ae4bc174fa780f925f19585b3f37db4da}{update\_u}}(arma::cx\_vec\ \&u\_internal)\ \textcolor{keyword}{override};\ }
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00097\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_crank_nicolson_a62677f217d82f89cbee0d8297b49f3d9}{set\_potential}}(arma::cx\_mat\ \&\mbox{\hyperlink{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb}{V}})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_crank_nicolson_a38f7e892a3cbdf1546189ad2d2c92751}{set\_grid\_size}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_evolver_algorithm_a82f47552cf17a3ccbdef3707af3d7258}{M}})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{const}\ arma::sp\_cx\_mat\&\ \mbox{\hyperlink{class_crank_nicolson_a0ec7a55f7573df128be672f8b3652431}{get\_A\_matrix}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_crank_nicolson_a805a3626bb9eff68c3a70f77911a73d7}{A}};\ \}\ \ }
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{const}\ arma::sp\_cx\_mat\&\ \mbox{\hyperlink{class_crank_nicolson_a6ca7f05934b77ffebdc73365f7c9880d}{get\_B\_matrix}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_crank_nicolson_a90607327677ed07279641c022a9b989a}{B}};\ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{comment}{//***\ Private\ variables\ ***/}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_crank_nicolson_a789340e72fb8366e32a5be7056183cbb}{initialized}}\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ arma::cx\_vec\ \mbox{\hyperlink{class_crank_nicolson_af4ca7c902a47df9a35ae05af687212f9}{a}};\ }
+\DoxyCodeLine{00122\ arma::cx\_vec\ \mbox{\hyperlink{class_crank_nicolson_a59e202ca49cb02a97e632e69ff0b322c}{b}};\ }
+\DoxyCodeLine{00123\ arma::cx\_double\ \mbox{\hyperlink{class_crank_nicolson_ae1b4c990c83d28d2d4fbdcdf70acc453}{r}};\ }
+\DoxyCodeLine{00124\ arma::cx\_vec\ \mbox{\hyperlink{class_crank_nicolson_aec110db520b419bdb836389b0fe8fe3d}{b\_result}};\ }
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ arma::sp\_cx\_mat\ \mbox{\hyperlink{class_crank_nicolson_a805a3626bb9eff68c3a70f77911a73d7}{A}};\ }
+\DoxyCodeLine{00127\ arma::sp\_cx\_mat\ \mbox{\hyperlink{class_crank_nicolson_a90607327677ed07279641c022a9b989a}{B}};\ }
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{comment}{//**********\ Private\ methods\ **********//}}
+\DoxyCodeLine{00136\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_crank_nicolson_afb7c7c4d3676241e7e1bf88ecda86ba7}{create\_matrix}}(arma::sp\_cx\_mat\ \&C,\ arma::cx\_vec\ \&c,\ arma::cx\_double\ r\_);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00141\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_crank_nicolson_ab4b6bcbc70b48a7133a81bcf66953101}{create\_A\_matrix}}();}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00146\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_crank_nicolson_a4ffe9a84546a65f992d8bae1ebb81e61}{create\_B\_matrix}}();}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00151\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_crank_nicolson_a1a19172f6193e8cbe34da23af17eecb4}{initialize}}();}
+\DoxyCodeLine{00152\ \};}
+
+\end{DoxyCode}

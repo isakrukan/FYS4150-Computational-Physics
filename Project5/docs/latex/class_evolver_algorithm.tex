@@ -1,0 +1,233 @@
+\doxysection{Evolver\+Algorithm Class Reference}
+\hypertarget{class_evolver_algorithm}{}\label{class_evolver_algorithm}\index{EvolverAlgorithm@{EvolverAlgorithm}}
+
+
+Abstract base class for wave function evolution algorithms.  
+
+
+
+
+{\ttfamily \#include $<$Evolver\+Algorithm.\+hpp$>$}
+
+
+
+Inheritance diagram for Evolver\+Algorithm\+:
+% FIG 0
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_evolver_algorithm_ae3d09b9526f4b062a802dc67f27445ef}{Evolver\+Algorithm}} ()=default
+\item 
+\mbox{\hyperlink{class_evolver_algorithm_a362297cc46cb5c71ae34a5db1cf51d5a}{Evolver\+Algorithm}} (double \mbox{\hyperlink{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42}{h}}, double \mbox{\hyperlink{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420}{dt}})
+\item 
+virtual \mbox{\hyperlink{class_evolver_algorithm_a46e3df1140375d105c269a440029ef50}{\texorpdfstring{$\sim$}{\string~}\+Evolver\+Algorithm}} ()=default
+\begin{DoxyCompactList}\small\item\em Destructor needed since we deal with polymorphism. \end{DoxyCompactList}\item 
+virtual arma\+::cx\+\_\+vec \mbox{\hyperlink{class_evolver_algorithm_a349605781a4e800dcba2dc9ebc5a74a0}{update\+\_\+u}} (arma\+::cx\+\_\+vec \&u\+\_\+internal)=0
+\begin{DoxyCompactList}\small\item\em Computes the next time step of wave function evolution. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_evolver_algorithm_ad35fabe8f954c6716f69f0602d71349f}{set\+\_\+potential}} (arma\+::cx\+\_\+mat \&\mbox{\hyperlink{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb}{V}})=0
+\begin{DoxyCompactList}\small\item\em Sets the potential matrix. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_evolver_algorithm_a4095309295637b0f109732838e86ea4f}{set\+\_\+grid\+\_\+size}} (unsigned int \mbox{\hyperlink{class_evolver_algorithm_a82f47552cf17a3ccbdef3707af3d7258}{M}})=0
+\begin{DoxyCompactList}\small\item\em Sets the grid size. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const arma\+::cx\+\_\+double \mbox{\hyperlink{class_evolver_algorithm_a82a03e249e2f40a8a1ebe64795d6f495}{i\+\_\+unit}} = arma\+::cx\+\_\+double(0,1)
+\begin{DoxyCompactList}\small\item\em Imaginary unit. \end{DoxyCompactList}\item 
+unsigned int \mbox{\hyperlink{class_evolver_algorithm_a82f47552cf17a3ccbdef3707af3d7258}{M}}
+\begin{DoxyCompactList}\small\item\em Grid size. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42}{h}}
+\begin{DoxyCompactList}\small\item\em Space separation. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420}{dt}}
+\begin{DoxyCompactList}\small\item\em Time separation. \end{DoxyCompactList}\item 
+arma\+::cx\+\_\+mat \mbox{\hyperlink{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb}{V}}
+\begin{DoxyCompactList}\small\item\em Potential. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_evolver_algorithm_aa10b83c186d8ff7b12dd581bd2d93024}{V\+\_\+set}} = false
+\begin{DoxyCompactList}\small\item\em Whether potential has been set. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_evolver_algorithm_a901be3fa6b8c8e3d362438b9b8df0993}{M\+\_\+set}} = false
+\begin{DoxyCompactList}\small\item\em Whether grid size has been set. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_evolver_algorithm_ad158d9727345a5ac5f15f9b3e4b8f07c}{dt\+\_\+set}} = false
+\begin{DoxyCompactList}\small\item\em Whether time separation has been set. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract base class for wave function evolution algorithms. 
+
+\label{doc-constructors}
+\Hypertarget{class_evolver_algorithm_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_evolver_algorithm_ae3d09b9526f4b062a802dc67f27445ef}\index{EvolverAlgorithm@{EvolverAlgorithm}!EvolverAlgorithm@{EvolverAlgorithm}}
+\index{EvolverAlgorithm@{EvolverAlgorithm}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{EvolverAlgorithm()}{EvolverAlgorithm()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_ae3d09b9526f4b062a802dc67f27445ef} 
+Evolver\+Algorithm\+::\+Evolver\+Algorithm (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_evolver_algorithm_a362297cc46cb5c71ae34a5db1cf51d5a}\index{EvolverAlgorithm@{EvolverAlgorithm}!EvolverAlgorithm@{EvolverAlgorithm}}
+\index{EvolverAlgorithm@{EvolverAlgorithm}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{EvolverAlgorithm()}{EvolverAlgorithm()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a362297cc46cb5c71ae34a5db1cf51d5a} 
+Evolver\+Algorithm\+::\+Evolver\+Algorithm (\begin{DoxyParamCaption}\item[{double}]{h}{, }\item[{double}]{dt}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_evolver_algorithm_a46e3df1140375d105c269a440029ef50}\index{EvolverAlgorithm@{EvolverAlgorithm}!````~EvolverAlgorithm@{\texorpdfstring{$\sim$}{\string~}EvolverAlgorithm}}
+\index{````~EvolverAlgorithm@{\texorpdfstring{$\sim$}{\string~}EvolverAlgorithm}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}EvolverAlgorithm()}{\string~EvolverAlgorithm()}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a46e3df1140375d105c269a440029ef50} 
+virtual Evolver\+Algorithm\+::\texorpdfstring{$\sim$}{\string~}\+Evolver\+Algorithm (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+
+
+Destructor needed since we deal with polymorphism. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_evolver_algorithm_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_evolver_algorithm_a4095309295637b0f109732838e86ea4f}\index{EvolverAlgorithm@{EvolverAlgorithm}!set\_grid\_size@{set\_grid\_size}}
+\index{set\_grid\_size@{set\_grid\_size}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{set\_grid\_size()}{set\_grid\_size()}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a4095309295637b0f109732838e86ea4f} 
+virtual void Evolver\+Algorithm\+::set\+\_\+grid\+\_\+size (\begin{DoxyParamCaption}\item[{unsigned int}]{M}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Sets the grid size. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em M} & Grid size. \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_crank_nicolson_a38f7e892a3cbdf1546189ad2d2c92751}{Crank\+Nicolson}}.
+
+\Hypertarget{class_evolver_algorithm_ad35fabe8f954c6716f69f0602d71349f}\index{EvolverAlgorithm@{EvolverAlgorithm}!set\_potential@{set\_potential}}
+\index{set\_potential@{set\_potential}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{set\_potential()}{set\_potential()}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_ad35fabe8f954c6716f69f0602d71349f} 
+virtual void Evolver\+Algorithm\+::set\+\_\+potential (\begin{DoxyParamCaption}\item[{arma\+::cx\+\_\+mat \&}]{V}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Sets the potential matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em V} & Potential matrix. \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_crank_nicolson_a62677f217d82f89cbee0d8297b49f3d9}{Crank\+Nicolson}}.
+
+\Hypertarget{class_evolver_algorithm_a349605781a4e800dcba2dc9ebc5a74a0}\index{EvolverAlgorithm@{EvolverAlgorithm}!update\_u@{update\_u}}
+\index{update\_u@{update\_u}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{update\_u()}{update\_u()}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a349605781a4e800dcba2dc9ebc5a74a0} 
+virtual arma\+::cx\+\_\+vec Evolver\+Algorithm\+::update\+\_\+u (\begin{DoxyParamCaption}\item[{arma\+::cx\+\_\+vec \&}]{u\+\_\+internal}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Computes the next time step of wave function evolution. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Time index. \\
+\hline
+{\em u\+\_\+internal} & Wave function excluding boundary points at time index n. \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_crank_nicolson_ae4bc174fa780f925f19585b3f37db4da}{Crank\+Nicolson}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{class_evolver_algorithm_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420}\index{EvolverAlgorithm@{EvolverAlgorithm}!dt@{dt}}
+\index{dt@{dt}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{dt}{dt}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_ae91cc4e1f3e52c42cd5747d2321bd420} 
+double Evolver\+Algorithm\+::dt\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Time separation. 
+
+\Hypertarget{class_evolver_algorithm_ad158d9727345a5ac5f15f9b3e4b8f07c}\index{EvolverAlgorithm@{EvolverAlgorithm}!dt\_set@{dt\_set}}
+\index{dt\_set@{dt\_set}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{dt\_set}{dt\_set}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_ad158d9727345a5ac5f15f9b3e4b8f07c} 
+bool Evolver\+Algorithm\+::dt\+\_\+set = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Whether time separation has been set. 
+
+\Hypertarget{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42}\index{EvolverAlgorithm@{EvolverAlgorithm}!h@{h}}
+\index{h@{h}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{h}{h}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_afe40a39069d739cffa5c96cc45569b42} 
+double Evolver\+Algorithm\+::h\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Space separation. 
+
+\Hypertarget{class_evolver_algorithm_a82a03e249e2f40a8a1ebe64795d6f495}\index{EvolverAlgorithm@{EvolverAlgorithm}!i\_unit@{i\_unit}}
+\index{i\_unit@{i\_unit}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{i\_unit}{i\_unit}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a82a03e249e2f40a8a1ebe64795d6f495} 
+const arma\+::cx\+\_\+double Evolver\+Algorithm\+::i\+\_\+unit = arma\+::cx\+\_\+double(0,1)\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Imaginary unit. 
+
+\Hypertarget{class_evolver_algorithm_a82f47552cf17a3ccbdef3707af3d7258}\index{EvolverAlgorithm@{EvolverAlgorithm}!M@{M}}
+\index{M@{M}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{M}{M}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a82f47552cf17a3ccbdef3707af3d7258} 
+unsigned int Evolver\+Algorithm\+::M\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Grid size. 
+
+\Hypertarget{class_evolver_algorithm_a901be3fa6b8c8e3d362438b9b8df0993}\index{EvolverAlgorithm@{EvolverAlgorithm}!M\_set@{M\_set}}
+\index{M\_set@{M\_set}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{M\_set}{M\_set}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a901be3fa6b8c8e3d362438b9b8df0993} 
+bool Evolver\+Algorithm\+::\+M\+\_\+set = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Whether grid size has been set. 
+
+\Hypertarget{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb}\index{EvolverAlgorithm@{EvolverAlgorithm}!V@{V}}
+\index{V@{V}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{V}{V}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_a30d3b8bc2f4f6abbf98378c4607934eb} 
+arma\+::cx\+\_\+mat Evolver\+Algorithm\+::V\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Potential. 
+
+\Hypertarget{class_evolver_algorithm_aa10b83c186d8ff7b12dd581bd2d93024}\index{EvolverAlgorithm@{EvolverAlgorithm}!V\_set@{V\_set}}
+\index{V\_set@{V\_set}!EvolverAlgorithm@{EvolverAlgorithm}}
+\doxysubsubsection{\texorpdfstring{V\_set}{V\_set}}
+{\footnotesize\ttfamily \label{class_evolver_algorithm_aa10b83c186d8ff7b12dd581bd2d93024} 
+bool Evolver\+Algorithm\+::\+V\+\_\+set = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Whether potential has been set. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_evolver_algorithm_8hpp}{Evolver\+Algorithm.\+hpp}}\end{DoxyCompactItemize}

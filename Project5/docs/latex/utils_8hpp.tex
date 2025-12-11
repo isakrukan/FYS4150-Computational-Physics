@@ -1,0 +1,86 @@
+\doxysection{utils.\+hpp File Reference}
+\hypertarget{utils_8hpp}{}\label{utils_8hpp}\index{utils.hpp@{utils.hpp}}
+{\ttfamily \#include "{}arg\+\_\+parser.\+hpp"{}}\newline
+{\ttfamily \#include $<$armadillo$>$}\newline
+Include dependency graph for utils.\+hpp\+:
+% FIG 0
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+const arma\+::cx\+\_\+double \mbox{\hyperlink{utils_8hpp_a27269b08adcdcb1fbf4da2a96e4f3179}{I}} (0.\+0, 1.\+0)
+\item 
+arma\+::cx\+\_\+double \mbox{\hyperlink{utils_8hpp_ab3844d473597cfe09b389e7cd6ac6d1b}{gaussian\+\_\+wave\+\_\+packet}} (double x, double y, double x\+\_\+c, double y\+\_\+c, double sigma\+\_\+x, double sigma\+\_\+y, double p\+\_\+x, double p\+\_\+y)
+\begin{DoxyCompactList}\small\item\em Returns a Gaussian wave packet. \end{DoxyCompactList}\item 
+arma\+::cx\+\_\+double \mbox{\hyperlink{utils_8hpp_a463e47b259bc965838c747598840c447}{gaussian\+\_\+wave\+\_\+packet}} (double x, double y, \mbox{\hyperlink{struct_args}{Args}} args)
+\begin{DoxyCompactList}\small\item\em Returns a Gaussian wave packet using \doxylink{struct_args}{Args} struct. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{utils_8hpp_a44ac267e017b852acfcec885d574ceb4}{get\+\_\+flat\+\_\+index}} (int i, int j, unsigned int M)
+\begin{DoxyCompactList}\small\item\em Converts 2D indices to flat index for a MxM grid. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{utils_8hpp_ae27afde5e46cab735b90fe86bea3579f}{print\+\_\+sp\+\_\+matrix\+\_\+structure}} (const arma\+::sp\+\_\+cx\+\_\+mat \&A)
+\begin{DoxyCompactList}\small\item\em Prints the structure of a sparse complex matrix. Code found here\+: \href{https://anderkve.github.io/FYS3150/book/projects/project5.html}{\texttt{https\+://anderkve.\+github.\+io/\+FYS3150/book/projects/project5.\+html}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const double \mbox{\hyperlink{utils_8hpp_afac850cb74d127564285dca2540e311a}{V\+\_\+0}} = 1e14
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{utils_8hpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{utils_8hpp_a463e47b259bc965838c747598840c447}\index{utils.hpp@{utils.hpp}!gaussian\_wave\_packet@{gaussian\_wave\_packet}}
+\index{gaussian\_wave\_packet@{gaussian\_wave\_packet}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{gaussian\_wave\_packet()}{gaussian\_wave\_packet()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{utils_8hpp_a463e47b259bc965838c747598840c447} 
+arma\+::cx\+\_\+double gaussian\+\_\+wave\+\_\+packet (\begin{DoxyParamCaption}\item[{double}]{x}{, }\item[{double}]{y}{, }\item[{\mbox{\hyperlink{struct_args}{Args}}}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Returns a Gaussian wave packet using \doxylink{struct_args}{Args} struct. 
+
+\Hypertarget{utils_8hpp_ab3844d473597cfe09b389e7cd6ac6d1b}\index{utils.hpp@{utils.hpp}!gaussian\_wave\_packet@{gaussian\_wave\_packet}}
+\index{gaussian\_wave\_packet@{gaussian\_wave\_packet}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{gaussian\_wave\_packet()}{gaussian\_wave\_packet()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{utils_8hpp_ab3844d473597cfe09b389e7cd6ac6d1b} 
+arma\+::cx\+\_\+double gaussian\+\_\+wave\+\_\+packet (\begin{DoxyParamCaption}\item[{double}]{x}{, }\item[{double}]{y}{, }\item[{double}]{x\+\_\+c}{, }\item[{double}]{y\+\_\+c}{, }\item[{double}]{sigma\+\_\+x}{, }\item[{double}]{sigma\+\_\+y}{, }\item[{double}]{p\+\_\+x}{, }\item[{double}]{p\+\_\+y}{}\end{DoxyParamCaption})}
+
+
+
+Returns a Gaussian wave packet. 
+
+\Hypertarget{utils_8hpp_a44ac267e017b852acfcec885d574ceb4}\index{utils.hpp@{utils.hpp}!get\_flat\_index@{get\_flat\_index}}
+\index{get\_flat\_index@{get\_flat\_index}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{get\_flat\_index()}{get\_flat\_index()}}
+{\footnotesize\ttfamily \label{utils_8hpp_a44ac267e017b852acfcec885d574ceb4} 
+int get\+\_\+flat\+\_\+index (\begin{DoxyParamCaption}\item[{int}]{i}{, }\item[{int}]{j}{, }\item[{unsigned int}]{M}{}\end{DoxyParamCaption})}
+
+
+
+Converts 2D indices to flat index for a MxM grid. 
+
+\Hypertarget{utils_8hpp_a27269b08adcdcb1fbf4da2a96e4f3179}\index{utils.hpp@{utils.hpp}!I@{I}}
+\index{I@{I}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{I()}{I()}}
+{\footnotesize\ttfamily \label{utils_8hpp_a27269b08adcdcb1fbf4da2a96e4f3179} 
+const arma\+::cx\+\_\+double I (\begin{DoxyParamCaption}\item[{0.}]{0}{, }\item[{1.}]{0}{}\end{DoxyParamCaption})}
+
+\Hypertarget{utils_8hpp_ae27afde5e46cab735b90fe86bea3579f}\index{utils.hpp@{utils.hpp}!print\_sp\_matrix\_structure@{print\_sp\_matrix\_structure}}
+\index{print\_sp\_matrix\_structure@{print\_sp\_matrix\_structure}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{print\_sp\_matrix\_structure()}{print\_sp\_matrix\_structure()}}
+{\footnotesize\ttfamily \label{utils_8hpp_ae27afde5e46cab735b90fe86bea3579f} 
+void print\+\_\+sp\+\_\+matrix\+\_\+structure (\begin{DoxyParamCaption}\item[{const arma\+::sp\+\_\+cx\+\_\+mat \&}]{A}{}\end{DoxyParamCaption})}
+
+
+
+Prints the structure of a sparse complex matrix. Code found here\+: \href{https://anderkve.github.io/FYS3150/book/projects/project5.html}{\texttt{https\+://anderkve.\+github.\+io/\+FYS3150/book/projects/project5.\+html}}. 
+
+
+
+\label{doc-var-members}
+\Hypertarget{utils_8hpp_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{utils_8hpp_afac850cb74d127564285dca2540e311a}\index{utils.hpp@{utils.hpp}!V\_0@{V\_0}}
+\index{V\_0@{V\_0}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{V\_0}{V\_0}}
+{\footnotesize\ttfamily \label{utils_8hpp_afac850cb74d127564285dca2540e311a} 
+const double V\+\_\+0 = 1e14}
+

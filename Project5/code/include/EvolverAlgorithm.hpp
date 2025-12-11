@@ -42,6 +42,7 @@ virtual void set_grid_size(unsigned int M) = 0;
 protected:
 
 //*** Protected variables ***/
+
 const arma::cx_double i_unit = arma::cx_double(0,1); ///< Imaginary unit.
 unsigned int M; ///< Grid size.
 double h; ///< Space separation.
@@ -54,31 +55,31 @@ bool dt_set = false; ///< Whether time separation has been set.
 };
 
 /**
- * @brief Class implementing the Crank-Nicolsen algorithm for wave function evolution, inheriting from \ref EvolverAlgorithm "EvolverAlgorithm".
+ * @brief Class implementing the Crank-Nicolson algorithm for wave function evolution, inheriting from \ref EvolverAlgorithm "EvolverAlgorithm".
  * 
  */
-class CrankNicolsen : public EvolverAlgorithm{
+class CrankNicolson : public EvolverAlgorithm{
 
 public:
 
 //*** Constructor(s) ***/
 
 /**
- * @brief Construct a new Crank Nicolsen object.
+ * @brief Construct a new Crank Nicolson object.
  * 
  * @param V Potential.
  * @param h Space separation.
  * @param dt Time separation.
  */
-CrankNicolsen(arma::cx_mat &V, double h, double dt);
+CrankNicolson(arma::cx_mat &V, double h, double dt);
 
 /**
- * @brief Construct a new Crank Nicolsen object.
+ * @brief Construct a new Crank Nicolson object.
  * 
  * @param h Space separation.
  * @param dt Time separation.
  */
-CrankNicolsen(double h, double dt);
+CrankNicolson(double h, double dt);
 
 //********** Public methods **********//
 
@@ -89,11 +90,27 @@ CrankNicolsen(double h, double dt);
  */
 virtual arma::cx_vec update_u(arma::cx_vec &u_internal) override; 
 
+/**
+ * @brief Sets the potential matrix.
+ * @param V Potential matrix.
+ */
 virtual void set_potential(arma::cx_mat &V) override;
+
+/**
+ * @brief Sets the grid size.
+ * @param M Grid size.
+ */
 virtual void set_grid_size(unsigned int M) override;
 
-const arma::sp_cx_mat& get_A_matrix() const { return A; }  ///< Returns matrix A (for testing purposes).
-const arma::sp_cx_mat& get_B_matrix() const { return B; }  ///< Returns matrix B (for testing purposes).
+/**
+ * @brief Returns matrix A (for testing purposes).
+ */
+const arma::sp_cx_mat& get_A_matrix() const { return A; }  
+
+/**
+ * @brief Returns matrix B (for testing purposes).
+ */
+const arma::sp_cx_mat& get_B_matrix() const { return B; }
 
 private:
 
@@ -119,17 +136,17 @@ arma::sp_cx_mat B; ///< Sparse matrix B.
 void create_matrix(arma::sp_cx_mat &C, arma::cx_vec &c, arma::cx_double r_);
 
 /**
- * @brief Creates matrix A for Crank-Nicolsen algorithm.
+ * @brief Creates matrix A for Crank-Nicolson algorithm.
  */
 void create_A_matrix();
 
 /**
- * @brief Creates matrix B for Crank-Nicolsen algorithm.
+ * @brief Creates matrix B for Crank-Nicolson algorithm.
  */
 void create_B_matrix();
 
 /**
- * @brief Initializes matrices and vectors for Crank-Nicolsen algorithm.
+ * @brief Initializes matrices and vectors for Crank-Nicolson algorithm.
  */
 void initialize();
 };

@@ -7,12 +7,15 @@
 const arma::cx_double I(0.0, 1.0);
 const double V_0 = 1e14;
 
+/** @brief Returns a Gaussian wave packet. */
 arma::cx_double gaussian_wave_packet(double x, double y, double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y);
 
+/** @brief Returns a Gaussian wave packet using Args struct. */
 arma::cx_double gaussian_wave_packet(double x, double y, Args args);
 
-
+/** @brief Converts 2D indices to flat index for a MxM grid. */
 int get_flat_index(int i, int j, unsigned int M);
 
+/** @brief Prints the structure of a sparse complex matrix. Code found here: https://anderkve.github.io/FYS3150/book/projects/project5.html*/
 void print_sp_matrix_structure(const arma::sp_cx_mat& A);
 #endif

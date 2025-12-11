@@ -1,5 +1,5 @@
 #include "arg_parser.hpp"
-#include "DoubleSlit.hpp"
+#include "SlitExperiment.hpp"
 #include "Solver.hpp"
 #include "utils.hpp"
 
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
         doubleSlit.add_single_slit( args.v0,
                                 args.wc, 
                                 args.wt, 
-                                args.dy);
+                                args.d);
     }
 
     if (args.double_slit){ // If true, adds double slit
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
                                 args.wc, 
                                 args.wt, 
                                 args.d, 
-                                args.dy);
+                                args.d);
     }
 
     if (args.triple_slit){ // If true, adds triple slit
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
                                 args.wc, 
                                 args.wt, 
                                 args.d, 
-                                args.dy);
+                                args.d);
     }
 
     doubleSlit.add_wave_packet({args.center_x, args.center_y}, {args.sigma_x, args.sigma_y}, {args.momentum_x, args.momentum_y});

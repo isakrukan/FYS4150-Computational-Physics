@@ -140,7 +140,7 @@
 
 \begin{document}
 
-\title{PROJECT 5 NAME\\[0.5em]
+\title{Simulating the Schr\"odinger equation using the Crank-Nicolson scheme to visualize the slit experiment\\[0.5em]
   \small \href{https://github.uio.no/icrukan/FYS4150/tree/master/Project5}{\texttt{github.uio.no/icrukan/FYS4150/Project5}}
 }
 \author{Isak Cecil Onsager Rukan and Magnus Axelsen} % self-explanatory
@@ -181,7 +181,7 @@ This approach has the benefit of being accurate to second order in both space an
 
 The remainder of this report is organized as follows. 
 In Section~\ref{sec:theory_and_method}, we introduce the dimensionless Schr\"odinger equation, specify the potential and initial state, and derive the Crank--Nicolson scheme used to solve it numerically. 
-We also provide a brief explanation of the expected interference pattern, an explanation of our numerical algorithm using the Crank--Nicolsen scheme, and a declaration of the various tools we have used.
+We also provide a brief explanation of the expected interference pattern, an explanation of our numerical algorithm using the Crank--Nicolson scheme, and a declaration of the various tools we have used.
 In Section~\ref{sec:results_discussion}, we present our numerical results and a discussion along the way. 
 Here we analyze the deviation from total probability, include snapshots of the evolving wave function, and interference patterns for different slit geometries. Lastly, in Section~\ref{sec:conclusion}, we conclude with a brief summary of our results and interpretations, and mention possible future optimizations and interests.
 
@@ -567,14 +567,40 @@ Here we present various results from running our simulation of a single-, double
 Animations of all the simulations presented here can be found in the \emph{animations} section of the \texttt{README} of \cite{FYS4150Project5}.
 %To see these results as animations, navigate to the \textit{animations} directory in \cite{FYS4150Project5}.
 Throughout each simulation, the initial state \eqref{eq:Initial_state} has been initialized with center position \((x_c, y_c) = (0.25, 0.5)\), momentum components \((p_x, p_y) = (200, 0)\), and spatial width \(\sigma_x = 0.005\) in the x-direction.
-The width in the \(y\)-direction, \(\sigma_y\), is set to \(\sigma_y=0.05\) for simulations without a barrier, while for simulations containing a barrier we use a broader packet with \(\sigma_y = 0.20\). 
+The width in the \(y\)-direction is set to \(\sigma_y=0.05\) for simulations without a barrier, while for simulations containing a barrier we use a broader packet with \(\sigma_y = 0.20\). 
 
 
 For all results presented here, we have placed the barrier at \(x=0.5\), with a thickness \(s_x=0.002\) in the \(x\)-direction, and let the system be symmetric about \(y=0.5\) (see Figure~\ref{fig:slit_setup_detailed}).
 The distance between any two slits is set to \(d=0.005\) and we have given all slits an aperture of \(a=0.005\).
 The barrier height is set to \(v_0=1\times 10^{10}\) for all simulations, expect the ones without any slit at all. 
 
-\begin{figure*}[hbt!]
+
+
+
+\subsection{Total probability deviation}
+Figure~\ref{fig:devation_from_probability} displays the (absolute) deviation from total probability for two simulations: one one with a double slit and one without.
+Both simulations are run over a time interval \(t\in[0,8\times 10^{-3}]\) with \(h=0.005\) and \(\Delta t=2.5\times 10^{-5}\).
+The deviation begins at approximately \(10^{-15}\) and increases to about \(10^{-14}\) by the end of the simulation. 
+The total probability should theoretically remain equal to one, and a deviation of order \(10^{-14}\) is only one order of magnitude larger than the numerical noise level (\(\sim 10^{-15}\)) associated with double-precision floating-point computations. 
+\begin{figure}[h!]
+    \includegraphics[width=0.9\linewidth]{results/problem_7/problem_7.pdf}
+    \caption{Deviation from total probability as a function of time for both the absence (blue) and the presence (green) of a double slit. Mathematically, the figure displays \(|1 - p(x,y;t)|\), where \(p(x,y;t)\) is the probability density given in \eqref{eq:Born_rule}.}
+    \label{fig:devation_from_probability}
+\end{figure}
+
+\begin{widetext}
+\subsection{Evolution of wave function in double slit experiment}   \label{sec:evolution_wave_function}
+In Figure~\ref{fig:evolution_wave_func_0}, Figure~\ref{fig:evolution_wave_func_1} and Figure~\ref{fig:evolution_wave_func_2} we have displayed the wave function \(u(x,y,t)\) at times \(t=0,\ 0.001\) and \(0.002\), respectively.  
+All figures show the absolute value squared (a), real (b) and imaginary (c) value of \(u(x,y,t)\). 
+The simulations producing these figures were performed with \(\sigma_y=0.20\) and the default parameters of the initial state described in the beginning of Section \ref{sec:results_discussion}.
+
+
+At \(t=0\) (Fig.~\ref{fig:evolution_wave_func_0}), the magnitude squared of the wave function exhibits a Gaussian profile centered around \((x,y)=(0.25, 0.5)\), consistent with the chosen initial state.
+The real and imaginary parts exhibit oscillatory wave fronts that are out of phase with one another.
+From \eqref{eq:Initial_state}, the real and imaginary components consist of a Gaussian envelope multiplied by the oscillatory terms, \(\cos(p_x x + p_y y)\) and \(\sin(p_x x + p_y y)\), respectively, explaining the apparent phase shift between them. 
+
+% \_
+\begin{figure}[h!]
     \centering
 
     \subfloat[]{%
@@ -662,7 +688,7 @@ In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected
 Here we clearly observe a pattern resembling five distinct wave packets emerging from the double slit.
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\linewidth]{results/problem_8/absolute_value0.002_ignored.pdf}
+    \includegraphics[width=0.9\linewidth]{results/problem_8/absolute_value0.002_ignored.pdf}
     \caption{The magnitude squared of the wave function at time \(t=0.002\), ignoring the reflected portion appearing at \(x\approx 0.2\) in Figure~\ref{fig:evolution_wave_func_2}.}
     \label{fig:evolution_wave_func_2_ignored}
 \end{figure}
@@ -677,7 +703,7 @@ The simulation parameters are chosen identical to those described in Section \re
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\linewidth]{results/problem_9/probability_x0p8.pdf}
+    \includegraphics[width=0.9\linewidth]{results/problem_9/probability_x0p8.pdf}
     \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(t=0.002\) and \(x=0.8\). The cases of a single, double and triple slit are displayed in blue, green and orange, respectively. The curves \(p(y;x=0.8;t=0.002)\) are obtained by normalizing  \({|u(y;x=0.8; t=0.002)|^2}\) with respect to the \(y\)-coordinate.}
     \label{fig:probability_x0p8}
 \end{figure}

@@ -1,0 +1,258 @@
+\doxysection{Slit\+Experiment Class Reference}
+\hypertarget{class_slit_experiment}{}\label{class_slit_experiment}\index{SlitExperiment@{SlitExperiment}}
+
+
+{\ttfamily \#include $<$Slit\+Experiment.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_slit_experiment_a647b6d62503c697f5ea83d0edc5b1b09}{Slit\+Experiment}} (unsigned int \mbox{\hyperlink{class_slit_experiment_a7b4ea12c103b751d8893a594400544ca}{M}})
+\begin{DoxyCompactList}\small\item\em Default constructor, sets up the space environment using the number of points. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_slit_experiment_a6e0a0649ce9729612f7597d7342d25e1}{Slit\+Experiment}} (double \mbox{\hyperlink{class_slit_experiment_aac513b8ca37674dffb7d32459627c3c7}{h}})
+\begin{DoxyCompactList}\small\item\em Default constructor, sets up the space environment using the spacing. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_slit_experiment_acf2e77db90272523ffd04ad96e6485f3}{Slit\+Experiment}} ()=default
+\item 
+void \mbox{\hyperlink{class_slit_experiment_a68c05d78e0cfa430fbe2407ebbfb4023}{add\+\_\+wave\+\_\+packet}} (std\+::vector$<$ double $>$ xy\+\_\+c, std\+::vector$<$ double $>$ sigma\+\_\+xy, std\+::vector$<$ double $>$ p\+\_\+xy)
+\begin{DoxyCompactList}\small\item\em Adds Gaussian wave packet to desired location. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_slit_experiment_a5ce59df54323a9f30405eefb8d70b8f7}{add\+\_\+double\+\_\+slit}} (double \mbox{\hyperlink{class_slit_experiment_a135bb9b48b9283a7f1f1074980d70cfd}{v0}}=1e10, double cx=0.\+5, double wt=0.\+02, double a=0.\+05, double d=0.\+05, double cy=0.\+5)
+\begin{DoxyCompactList}\small\item\em Adds a (symmetric) double slit to the experiment. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_slit_experiment_aaa830e23c5ec1901acf77129b351dbe0}{add\+\_\+single\+\_\+slit}} (double \mbox{\hyperlink{class_slit_experiment_a135bb9b48b9283a7f1f1074980d70cfd}{v0}}=1e10, double cx=0.\+5, double wt=0.\+02, double d=0.\+1, double cy=0.\+5)
+\begin{DoxyCompactList}\small\item\em Adds a (symmetric) single slit to the experiment. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_slit_experiment_a00ec43c932235ba152b7024edb625a9c}{add\+\_\+triple\+\_\+slit}} (double \mbox{\hyperlink{class_slit_experiment_a135bb9b48b9283a7f1f1074980d70cfd}{v0}}=1e10, double cx=0.\+5, double wt=0.\+02, double a=0.\+05, double d=0.\+05, double cy=0.\+5)
+\begin{DoxyCompactList}\small\item\em Adds a (symmetric) triple slit to the experiment. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{class_slit_experiment_a7b4ea12c103b751d8893a594400544ca}{M}}
+\begin{DoxyCompactList}\small\item\em Space points. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_slit_experiment_aac513b8ca37674dffb7d32459627c3c7}{h}}
+\begin{DoxyCompactList}\small\item\em Space separation. \end{DoxyCompactList}\item 
+arma\+::vec \mbox{\hyperlink{class_slit_experiment_a7a71aa8d8559477383137759fb7272fa}{x}}
+\begin{DoxyCompactList}\small\item\em x-\/coordinates. \end{DoxyCompactList}\item 
+arma\+::vec \mbox{\hyperlink{class_slit_experiment_a291d074110984d72148d5b97ba22d9f3}{y}}
+\begin{DoxyCompactList}\small\item\em y-\/coordinates. \end{DoxyCompactList}\item 
+arma\+::cx\+\_\+mat \mbox{\hyperlink{class_slit_experiment_a351898d52ecd8a5207c7f183abaa9478}{V}}
+\begin{DoxyCompactList}\small\item\em Potential. \end{DoxyCompactList}\item 
+arma\+::cx\+\_\+vec \mbox{\hyperlink{class_slit_experiment_aaec0a833efbdce4350dc265ac934b5a5}{u\+\_\+initial}}
+\begin{DoxyCompactList}\small\item\em Initial wave function. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_slit_experiment_a135bb9b48b9283a7f1f1074980d70cfd}{v0}}
+\begin{DoxyCompactList}\small\item\em Potential height of slit wall. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{class_slit_experiment_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_slit_experiment_a647b6d62503c697f5ea83d0edc5b1b09}\index{SlitExperiment@{SlitExperiment}!SlitExperiment@{SlitExperiment}}
+\index{SlitExperiment@{SlitExperiment}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{SlitExperiment()}{SlitExperiment()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a647b6d62503c697f5ea83d0edc5b1b09} 
+Slit\+Experiment\+::\+Slit\+Experiment (\begin{DoxyParamCaption}\item[{unsigned int}]{M}{}\end{DoxyParamCaption})}
+
+
+
+Default constructor, sets up the space environment using the number of points. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em M} & Number of space points. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_slit_experiment_a6e0a0649ce9729612f7597d7342d25e1}\index{SlitExperiment@{SlitExperiment}!SlitExperiment@{SlitExperiment}}
+\index{SlitExperiment@{SlitExperiment}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{SlitExperiment()}{SlitExperiment()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a6e0a0649ce9729612f7597d7342d25e1} 
+Slit\+Experiment\+::\+Slit\+Experiment (\begin{DoxyParamCaption}\item[{double}]{h}{}\end{DoxyParamCaption})}
+
+
+
+Default constructor, sets up the space environment using the spacing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em h} & Interval between space points. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_slit_experiment_acf2e77db90272523ffd04ad96e6485f3}\index{SlitExperiment@{SlitExperiment}!SlitExperiment@{SlitExperiment}}
+\index{SlitExperiment@{SlitExperiment}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{SlitExperiment()}{SlitExperiment()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_slit_experiment_acf2e77db90272523ffd04ad96e6485f3} 
+Slit\+Experiment\+::\+Slit\+Experiment (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_slit_experiment_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_slit_experiment_a5ce59df54323a9f30405eefb8d70b8f7}\index{SlitExperiment@{SlitExperiment}!add\_double\_slit@{add\_double\_slit}}
+\index{add\_double\_slit@{add\_double\_slit}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{add\_double\_slit()}{add\_double\_slit()}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a5ce59df54323a9f30405eefb8d70b8f7} 
+void Slit\+Experiment\+::add\+\_\+double\+\_\+slit (\begin{DoxyParamCaption}\item[{double}]{v0}{ = {\ttfamily 1e10}, }\item[{double}]{cx}{ = {\ttfamily 0.5}, }\item[{double}]{wt}{ = {\ttfamily 0.02}, }\item[{double}]{a}{ = {\ttfamily 0.05}, }\item[{double}]{d}{ = {\ttfamily 0.05}, }\item[{double}]{cy}{ = {\ttfamily 0.5}}\end{DoxyParamCaption})}
+
+
+
+Adds a (symmetric) double slit to the experiment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v0} & Potential of slit "{}wall"{}. \\
+\hline
+{\em cx} & Centre position of wall in the x-\/direction. \\
+\hline
+{\em wt} & Wall thickness in the x-\/direction. \\
+\hline
+{\em a} & Distance between the two slits. \\
+\hline
+{\em d} & Height of slits (y-\/direction). \\
+\hline
+{\em cy} & Centre position of the two slits in the y-\/direction, defaults to 0.\+5 (middle of grid). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_slit_experiment_aaa830e23c5ec1901acf77129b351dbe0}\index{SlitExperiment@{SlitExperiment}!add\_single\_slit@{add\_single\_slit}}
+\index{add\_single\_slit@{add\_single\_slit}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{add\_single\_slit()}{add\_single\_slit()}}
+{\footnotesize\ttfamily \label{class_slit_experiment_aaa830e23c5ec1901acf77129b351dbe0} 
+void Slit\+Experiment\+::add\+\_\+single\+\_\+slit (\begin{DoxyParamCaption}\item[{double}]{v0}{ = {\ttfamily 1e10}, }\item[{double}]{cx}{ = {\ttfamily 0.5}, }\item[{double}]{wt}{ = {\ttfamily 0.02}, }\item[{double}]{d}{ = {\ttfamily 0.1}, }\item[{double}]{cy}{ = {\ttfamily 0.5}}\end{DoxyParamCaption})}
+
+
+
+Adds a (symmetric) single slit to the experiment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v0} & Potential of slit "{}wall"{}. \\
+\hline
+{\em cx} & Centre position of wall in the x-\/direction. \\
+\hline
+{\em wt} & Wall thickness in the x-\/direction. \\
+\hline
+{\em d} & Height of slit (y-\/direction). \\
+\hline
+{\em cy} & Centre position of the slit in the y-\/direction, defaults to 0.\+5 (middle of grid). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_slit_experiment_a00ec43c932235ba152b7024edb625a9c}\index{SlitExperiment@{SlitExperiment}!add\_triple\_slit@{add\_triple\_slit}}
+\index{add\_triple\_slit@{add\_triple\_slit}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{add\_triple\_slit()}{add\_triple\_slit()}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a00ec43c932235ba152b7024edb625a9c} 
+void Slit\+Experiment\+::add\+\_\+triple\+\_\+slit (\begin{DoxyParamCaption}\item[{double}]{v0}{ = {\ttfamily 1e10}, }\item[{double}]{cx}{ = {\ttfamily 0.5}, }\item[{double}]{wt}{ = {\ttfamily 0.02}, }\item[{double}]{a}{ = {\ttfamily 0.05}, }\item[{double}]{d}{ = {\ttfamily 0.05}, }\item[{double}]{cy}{ = {\ttfamily 0.5}}\end{DoxyParamCaption})}
+
+
+
+Adds a (symmetric) triple slit to the experiment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v0} & Potential of slit "{}wall"{}. \\
+\hline
+{\em cx} & Centre position of wall in the x-\/direction. \\
+\hline
+{\em wt} & Wall thickness in the x-\/direction. \\
+\hline
+{\em a} & Distance between the three slits. \\
+\hline
+{\em d} & Height of slits (y-\/direction). \\
+\hline
+{\em cy} & Centre position of the three slits in the y-\/direction, defaults to 0.\+5 (middle of grid). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_slit_experiment_a68c05d78e0cfa430fbe2407ebbfb4023}\index{SlitExperiment@{SlitExperiment}!add\_wave\_packet@{add\_wave\_packet}}
+\index{add\_wave\_packet@{add\_wave\_packet}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{add\_wave\_packet()}{add\_wave\_packet()}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a68c05d78e0cfa430fbe2407ebbfb4023} 
+void Slit\+Experiment\+::add\+\_\+wave\+\_\+packet (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{xy\+\_\+c}{, }\item[{std\+::vector$<$ double $>$}]{sigma\+\_\+xy}{, }\item[{std\+::vector$<$ double $>$}]{p\+\_\+xy}{}\end{DoxyParamCaption})}
+
+
+
+Adds Gaussian wave packet to desired location. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em xy\+\_\+c} & Center of Gaussian. \\
+\hline
+{\em sigma\+\_\+xy} & Initial width of Gaussian. \\
+\hline
+{\em p\+\_\+xy} & Wave packet momentum. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-variable-members}
+\Hypertarget{class_slit_experiment_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_slit_experiment_aac513b8ca37674dffb7d32459627c3c7}\index{SlitExperiment@{SlitExperiment}!h@{h}}
+\index{h@{h}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{h}{h}}
+{\footnotesize\ttfamily \label{class_slit_experiment_aac513b8ca37674dffb7d32459627c3c7} 
+double Slit\+Experiment\+::h}
+
+
+
+Space separation. 
+
+\Hypertarget{class_slit_experiment_a7b4ea12c103b751d8893a594400544ca}\index{SlitExperiment@{SlitExperiment}!M@{M}}
+\index{M@{M}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{M}{M}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a7b4ea12c103b751d8893a594400544ca} 
+unsigned int Slit\+Experiment\+::M}
+
+
+
+Space points. 
+
+\Hypertarget{class_slit_experiment_aaec0a833efbdce4350dc265ac934b5a5}\index{SlitExperiment@{SlitExperiment}!u\_initial@{u\_initial}}
+\index{u\_initial@{u\_initial}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{u\_initial}{u\_initial}}
+{\footnotesize\ttfamily \label{class_slit_experiment_aaec0a833efbdce4350dc265ac934b5a5} 
+arma\+::cx\+\_\+vec Slit\+Experiment\+::u\+\_\+initial}
+
+
+
+Initial wave function. 
+
+\Hypertarget{class_slit_experiment_a351898d52ecd8a5207c7f183abaa9478}\index{SlitExperiment@{SlitExperiment}!V@{V}}
+\index{V@{V}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{V}{V}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a351898d52ecd8a5207c7f183abaa9478} 
+arma\+::cx\+\_\+mat Slit\+Experiment\+::V}
+
+
+
+Potential. 
+
+\Hypertarget{class_slit_experiment_a135bb9b48b9283a7f1f1074980d70cfd}\index{SlitExperiment@{SlitExperiment}!v0@{v0}}
+\index{v0@{v0}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{v0}{v0}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a135bb9b48b9283a7f1f1074980d70cfd} 
+double Slit\+Experiment\+::v0}
+
+
+
+Potential height of slit wall. 
+
+\Hypertarget{class_slit_experiment_a7a71aa8d8559477383137759fb7272fa}\index{SlitExperiment@{SlitExperiment}!x@{x}}
+\index{x@{x}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{x}{x}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a7a71aa8d8559477383137759fb7272fa} 
+arma\+::vec Slit\+Experiment\+::x}
+
+
+
+x-\/coordinates. 
+
+\Hypertarget{class_slit_experiment_a291d074110984d72148d5b97ba22d9f3}\index{SlitExperiment@{SlitExperiment}!y@{y}}
+\index{y@{y}!SlitExperiment@{SlitExperiment}}
+\doxysubsubsection{\texorpdfstring{y}{y}}
+{\footnotesize\ttfamily \label{class_slit_experiment_a291d074110984d72148d5b97ba22d9f3} 
+arma\+::vec Slit\+Experiment\+::y}
+
+
+
+y-\/coordinates. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_slit_experiment_8hpp}{Slit\+Experiment.\+hpp}}\end{DoxyCompactItemize}

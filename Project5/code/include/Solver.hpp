@@ -34,13 +34,36 @@ std::vector<arma::cx_vec> u; ///< Wave function in time and space, u(time index)
 
 //********** Constructor(s) **********//
 
+/**
+ * @brief Construct a new Solver object.
+ * 
+ * @param h Space separation.
+ * @param dt Time separation.
+ * @param solvertype Type of solver to use, defaults to "CrankNicolsen".
+ */
 Solver(double h=0.005, double dt=2.5*1e-5, std::string solvertype="CrankNicolsen");
 
 //********** Public methods **********//
+
+/**
+ * @brief Adds slit experiment to solver.
+ * 
+ * @param slitExperiment Instance of \ref SlitExperiment "SlitExperiment".
+ */
 void add_SlitExperiment(SlitExperiment &slitExperiment);
 
+/**
+ * @brief Evolves the wave function over time T.
+ * 
+ * @param T Total time to evolve wave function.
+ */
 void evolve(double T);
 
+/**
+ * @brief Saves the wave function and potential to output directory (as a .hd5 file).
+ * 
+ * @param out_dir Output directory.
+ */
 void save(const std::string &out_dir) const;
 
 private:

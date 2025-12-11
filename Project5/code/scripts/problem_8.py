@@ -62,7 +62,7 @@ for t0, xy_lim in zip(times, xy_lims):
     # plt.show()
     # exit()
 
- # Absolute value ignoring a portion
+# Absolute value ignoring a portion of the previous t=0.002, |u|^2 plot
 
 x = np.linspace(0,1,data["M"])
 away_from_the_barrier = x <= 0.5

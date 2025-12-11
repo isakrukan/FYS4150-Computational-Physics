@@ -4,7 +4,7 @@ from scipy.signal import find_peaks
 data_single = read_hd5_data("out/single_Slit_problem9_data.h5")
 data_double = read_hd5_data("out/double_Slit_problem8_data.h5")
 data_triple = read_hd5_data("out/triple_Slit_problem9_data.h5")
-data_names = ["single", "double", "triple"]
+data_names = ["Single", "Double", "Triple"]
 
 latex_fonts()
 
@@ -43,5 +43,6 @@ for data, data_name in zip(datas, data_names):
 
 
 plt.legend()
+plt.grid(visible=True, which='major', color='gray', linestyle='--', linewidth=0.5, alpha=0.5)
 plt.savefig(f"../results/problem_9/probability_x0p8.pdf")
-plt.show()
+# plt.show()

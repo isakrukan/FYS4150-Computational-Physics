@@ -21,11 +21,12 @@ fig, ax = plt.subplots()
 ax.plot(t, p_noSlit, label="No slit")
 ax.plot(t, p_Slit, label="Double slit")
 
-ax.set_xlabel(r"time")
-ax.set_ylabel(r"deviation from total probability")  # or r"$1-p(t)$"
+ax.set_xlabel(r"Time")
+ax.set_ylabel(r"Deviation from total probability")  # or r"$1-p(t)$"
 ax.set_yscale("log")
 ax.legend()
 
 plt.tight_layout(pad=0.5)
+# plt.grid(visible=True, which='major', color='gray', linestyle='--', linewidth=0.5, alpha=0.5)
 plt.savefig("../results/problem_7/problem_7.pdf")
-plt.show()
+# plt.show()
