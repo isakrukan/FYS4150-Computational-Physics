@@ -1,6 +1,5 @@
 # TODO
-- Finish report
-- Finish this README (e.g. *Python scripts* section at the botto,)
+- Finish this README (e.g. *Python scripts* section at the bottom)
 
 # Project 5
 This repository contains the code and documentation for Project 5 in the course *Computational Physics (FYS4150)* at the University of Oslo.
@@ -116,7 +115,7 @@ make project
 TODO
 
 # Animations
-
+Animations of simulations with 0-3 slits can be seen below:
 <details>
 <summary> No slit </summary>
 
