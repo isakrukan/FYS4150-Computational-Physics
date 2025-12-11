@@ -785,7 +785,7 @@ A notable limitation of our numerical simulation is the choice of grid-spacing.
 The Crank-Nicolson scheme involves solving a sparse system of $(M-2)^{2}$ linear equations at each time step.
 For our purposes of simulating a single particle propagating towards a slit-barrier in two dimensions, neither run time nor memory usage posed a significant challenge.
 However, extending the simulation to three dimensions, or perhaps include multiple particles and more complex potentials, would make computational cost and memory access much more demanding.
-In any case, the use of a spare matrix solver and effective preconditioners is a significant source of potential optimization for these simulations.
+In any case, the use of a sparse matrix solver and effective preconditioners is a significant source of potential optimization for these simulations.
 For instance, we may in principle imagine that different classes of Hamiltonians benefit from different strategies for solving the sparse linear systems in Crank-Nicolson.
 One may also benefit from a more specified algorithm than the algorithm we used here.
 
