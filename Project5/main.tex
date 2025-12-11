@@ -479,7 +479,7 @@ Fully writing out each term, one then obtains the expression
     \notag \\
     &- r \left[ u_{i,j+1}^{n+1} - 2u_{ij}^{n+1} + u_{i,j-1}^{n+1} \right]
     % \\
-    + \frac{i \Delta t}{2} v_{i,j}^{n+1} u_{i,j}^{n+1}
+    + \frac{i \Delta t}{2} v_{ij}^{n+1} u_{ij}^{n+1}
     \notag \\
     =
     u_{ij}^{n}
@@ -487,7 +487,7 @@ Fully writing out each term, one then obtains the expression
     \notag \\
     &+ r \left[ u_{i,j+1}^{n} - 2u_{ij}^{n} + u_{i,j-1}^{n} \right]
     % \\
-    - \frac{i \Delta t}{2} v_{i,j}^n u_{i,j}^n.
+    - \frac{i \Delta t}{2} v_{ij}^n u_{ij}^n.
 \end{align}
 The above may in turn be expressed in matrix form as
 \begin{align}
@@ -501,7 +501,7 @@ where $\vec{u}$ once again denotes the vector of interior grid points of the wav
 %Indeed, this is smaller than what one would expect from naively applying the second order error estimates expected for the Crank-Nicolson scheme.
 %To understand this, we may recall the update rule given by the Crank-Nicolson scheme, being
 Part of why the Crank-Nicolson scheme is particularly well-suited for solving the Schrödinger equation is that the update rule \eqref{eq:update_rule} is \emph{unitary}, ensuring stability.
-This is best seen by rewriting the update rule \eqref{eq:crank_nicolson} in terms of the Hamiltonian operator \(\hat{H}\) acting on the wave function:
+This is best seen by rewriting the update rule \eqref{eq:crank_nicolson} in terms of the Hamiltonian operator \(\hat{H}\) acting on the wave function (ignoring the spatial indices):
 \begin{align}
     \frac{u^{n+1} - u^{n}}{\Delta t} 
     &= 
@@ -510,7 +510,7 @@ This is best seen by rewriting the update rule \eqref{eq:crank_nicolson} in term
     &=
     -\frac{i}{2} \left( \hat{H} u^{n+1} + \hat{H} u^{n} \right),
 \end{align}
-Rearranging this, we see that each time step in the Crank-Nicolson scheme corresponds to applying the following operator to the wave function at each time step:
+Rearranging the above, we see that each time step in the Crank-Nicolson scheme corresponds to applying the following operator to the wave function at each time step:
 \begin{align}
     u^{n+1} 
     &=
@@ -526,7 +526,7 @@ Rearranging this, we see that each time step in the Crank-Nicolson scheme corres
 \end{align}
 Since the Hamiltonian \(\hat{H}\) is Hermitian, it follows that the operator $U_{\text{CN}}$ is unitary \footnote{We get \({U_{\text{CN}}^{\dag} = \left( 1 - \frac{i \Delta t}{2} \hat{H} \right)\left( 1 - \frac{i \Delta t}{2} \hat{H} \right)^{-1}}\). Showing that \({I=U_{\text{CN}}^{\dag}U_{\text{CN}} = U_{\text{CN}} U_{\text{CN}}^{\dag}}\) follows straightforwardly by commuting terms in the expression.}.
 This means that the Crank-Nicolson scheme should in principle conserve the total probability exactly.
-Although, of course, this observation may not hold perfectly in a numerical implementation, due to errors inherent to floating-point arithmetic, such as rounding errors.
+Although, of course, this observation may not hold perfectly in a numerical implementation due to errors inherent to floating-point arithmetic, such as rounding errors.
 %Yet, we still observed the total probability start to increase slightly beyond that of the numerical noise level at \(\sim 10^{-15}\) as the simulation progressed.
 %This can likely be attributed to the step-by-step accumulation of rounding errors and other imperfections inherent to floating-point arithmetic.
 
