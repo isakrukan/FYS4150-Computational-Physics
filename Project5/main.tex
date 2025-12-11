@@ -440,9 +440,23 @@ These geometric parameters are illustrated for the double-slit case in Figure~\r
 \end{figure}
 
 
+\subsection{Interference patterns}
+As the wave packet propagates through the slits, we expect in general to observe some form of interference pattern as the wave packet reaches the far side of the barrier.
+This can be understood classically from Huygens' principle, which states that each point on a wavefront may be considered the source of a spherical wavelet.
+As the wave passes the barrier, we may then think of each slit as sourcing such wavelets.
+As these propagate throughout the right side of the barrier, one naturally expects the wavelets to interfere constructively and destructively at different points in space, leading to an interference pattern.
+
+A specific example of this is given by a classical monochromatic wave passing through a double-slit barrier.
+In this case one may find specific analytical expressions for the resulting intensity pattern \(I(\theta)\), with \(\theta\) is the angle relative to the center line perpendicular to the barrier.
+In particular, for the far-field we have an intensity pattern \cite{jenkins1957}
+\begin{align}
+    I( \theta )
+    &= I_0 \cos ^{2}\left[{\frac {\pi d\sin \theta }{\lambda }}\right]~\mathrm {sinc} ^{2}\left[{\frac {\pi a\sin \theta }{\lambda }}\right],
+\end{align}
+in which \(I_0\) is the maximum intensity, and \(\lambda\) is the wavelength of the incoming wave.
 
 \subsection{The Crank-Nicolson scheme}  \label{sec:Crank_Nicolsen}
-
+\subsubsection{Deriving the scheme}
 Using respectively a forward and backwards difference scheme for the time derivative, we obtain the following discretizations of equation \eqref{eq:schrodinger_equation}:
 \begin{align}
     \frac{u_{ij}^{n+1} - u_{ij}^n}{\Delta t} &= -i F_{ij}^{n},
@@ -467,7 +481,7 @@ These are combined to form the Crank-Nicolson scheme by taking the following lin
     -\frac{i}{2} \left( F_{ij}^{n+1} + F_{ij}^{n} \right).
 \end{align}
 We now collect all terms at time step $n+1$ on the left-hand side and all terms at time step $n$ on the right-hand side, yielding
-\begin{align}
+\begin{align}\label{eq:update_rule}
     u_{ij}^{n+1} 
     &- r \left[ u_{i+1,j}^{n+1} - 2u_{ij}^{n+1} + u_{i-1,j}^{n+1} \right]
     \notag \\
@@ -489,6 +503,55 @@ The expression above can be expressed in matrix form as
 \end{align}
 %where $\vec{u}^n$ is now the $(M-2)^2$-dimensional vector of the flattened wave function at time step $n$, and $A$ and $B$ are sparse matrices of dimension $(M-2)^2 \times (M-2)^2$.
 where $A$ and $B$ are sparse matrices of size $(M-2)^2 \times (M-2)^2$.
+
+\subsubsection{Unitarity}  \label{sec:Unitarity_Crank_Nicolson}
+%An interesting result, seen in Figure~\ref{fig:devation_from_probability}, was that the deviation from total probability only on the level of the numerical noise from doing floating-point arithmetic.
+%Indeed, this is smaller than what one would expect from naively applying the second order error estimates expected for the Crank-Nicolson scheme.
+%To understand this, we may recall the update rule given by the Crank-Nicolson scheme, being
+Part of why the Crank-Nicolson scheme is particularly well-suited for solving the Schrödinger equation is that the update rule \eqref{eq:update_rule} is \emph{unitary}, ensuring stability.
+This is best seen by rewriting the update rule \eqref{eq:crank_nicolson} in terms of the Hamiltonian operator \(\hat{H}\) acting on the wave function:
+\begin{align}
+    \frac{u^{n+1} - u^{n}}{\Delta t} 
+    &= 
+    -\frac{i}{2} \left( F^{n+1} + F^{n} \right). 
+    \\
+    &=
+    -\frac{i}{2} \left( \hat{H} u^{n+1} + \hat{H} u^{n} \right),
+\end{align}
+Rearranging this, we see that each time step in the Crank-Nicolson scheme corresponds to applying the following operator to the wave function at each time step:
+\begin{align}
+    u^{n+1} 
+    &=
+    \textcolor{gray!70}{
+        \underbrace{
+        \textcolor{black}{
+            \left( 1 + \frac{i \Delta t}{2} \hat{H} \right)^{-1}
+            \left( 1 - \frac{i \Delta t}{2} \hat{H} \right)
+            \vphantom{\rule{0pt}{1.4em}}
+        }}_{\raisebox{-3pt}{$\equiv U_{\text{CN}}$}} 
+    }
+    u^{n}
+\end{align}
+In particular, given that the Hamiltonian \(\hat{H}\) indeed is Hermitian, one may verify that the operator $U_{\text{CN}}$ is unitary.
+This means that the Crank-Nicolson scheme should in principle conserve the total probability exactly.
+Of course, this conservation will be slightly broken in practice, due to errors inherent to floating-point arithmetic such as rounding errors.
+%Yet, we still observed the total probability start to increase slightly beyond that of the numerical noise level at \(\sim 10^{-15}\) as the simulation progressed.
+%This can likely be attributed to the step-by-step accumulation of rounding errors and other imperfections inherent to floating-point arithmetic.
+
+The fact that Crank-Nicolson is unitary is indeed \emph{not} a general property of numerical schemes for the Schrödinger equation.
+For an example of a scheme that is neither unitary nor stable, we may for instance consider the forward Euler method, which corresponds to the update rule
+\begin{align}
+    u^{n+1} 
+    &=
+    \textcolor{gray!70}{
+        \underbrace{
+        \textcolor{black}{
+        \left( 1 - i \Delta t \hat{H} \right)    
+        }}_{\raisebox{-3pt}{$\equiv U_{\text{CN}}$}} 
+    }
+    u^{n}
+\end{align}
+In this case, one may immediately verify that the operator \(U_{\text{FE}}\) is generally not unitary.
 
 \subsection{The algorithm}  \label{sec:Algorithm}
 To evolve our system using \eqref{eq:A_B_eq}, we first compute the right-hand side, $\vec{b}\equiv B\vec{u}^n$, and then proceed to solve the equation $A \vec{u}^{n+1} = \vec{b}$ for $\vec{u}^{n+1}$.
@@ -632,42 +695,6 @@ If we imagine a detector at \(x=0.8\), we should thus expect an interference pat
 
 
 \section{Discussion}    \label{sec:discussion}
-
-
-\subsection{Total probability deviation}
-{\color{red}Possibly move this to method or rewrite it?}
-\\
-An interesting result, seen in Figure~\ref{fig:devation_from_probability}, was that the deviation from total probability only on the level of the numerical noise from doing floating-point arithmetic.
-Indeed, this is smaller than what one would expect from naively applying the second order error estimates expected for the Crank-Nicolson scheme.
-To understand this, we may recall the update rule given by the Crank-Nicolson scheme, being
-\begin{align}
-    \frac{u^{n+1} - u^{n}}{\Delta t} 
-    &= 
-    -\frac{i}{2} \left( F^{n+1} + F^{n} \right). 
-    \\
-    &=
-    -\frac{i}{2} \left( \hat{H} u^{n+1} + \hat{H} u^{n} \right),
-\end{align}
-where we have now written the right-hand side in terms of the Hamiltonian operator \(\hat{H}\) acting on the wave function.
-Rearranging this, we see that each time step in the Crank-Nicolson scheme corresponds to applying the following operator to the wave function at each time step:
-\begin{align}
-    u^{n+1} 
-    &=
-    \left( 1 + \frac{i \Delta t}{2} \hat{H} \right)^{-1}
-    \left( 1 - \frac{i \Delta t}{2} \hat{H} \right) u^{n}.
-\end{align}
-In particular, given that the Hamiltonian \(\hat{H}\) indeed is Hermitian, one may verify that this operator is unitary.
-This means that we should in principle expect the Crank-Nicolson scheme to conserve total probability exactly.
-Yet, we still observed the total probability start to increase slightly beyond that of the numerical noise level at \(\sim 10^{-15}\) as the simulation progressed.
-This can likely be attributed to the step-by-step accumulation of rounding errors and other imperfections inherent to floating-point arithmetic.
-
-In any case, we might think of the unitarity of Crank-Nicolson scheme as reflecting its unconditional stability.
-For an example of an unstable scheme, we may for instance consider the forward Euler method, which corresponds to the update rule
-\begin{align}
-    u^{n+1} = \left( 1 - i \Delta t \hat{H} \right) u^{n}.
-\end{align}
-In particular, one may verify that this operator is generally not unitary, so that the total probability will not be conserved.
-
 
 \section{Conclusion}
 We have numerically solved the Schrödinger equation, simulating the time evolution of a single particle wave function propagating towards a barrier with a single, double and triple slits.
