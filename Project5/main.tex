@@ -155,7 +155,7 @@
 \section{Introduction}
 %At the core of quantum mechanics lies the principle of superposition, together with the construction of multipartite systems via the tensor product.
 At the core of quantum mechanics lies the principle of superposition, from which the theory's most characteristic features arise.
-Among these is that of entanglement, which appears as we superpose states of a multipartite system.
+Among these is entanglement, which appears as we superpose states of a multipartite system.
 Another, present already at the level of a unipartite system, is that of wave-particle duality.
 %This further gives rise to two of the most characteristic features of quantum mechanics, being entanglement when applied to a multipartite system, and wave-particle duality, which already manifests at the single-particle level.
 Conceptually, these are nonetheless two quite different phenomena:
@@ -188,7 +188,7 @@ Here we analyze the deviation from total probability, include snapshots of the e
 
 \section{Theory and Method} \label{sec:theory_and_method}
 
-Here, we present the Schr\"odinger equation for a single non-relativistic particle in two spatial dimensions (Section~\ref{sec:QM_double_slit}), explain our discretized setup of the slit experiment (Section~\ref{sec:Setup_and_initial_state}), describe the Crank--Nicolson scheme (Section~\ref{sec:Crank_Nicolson}), outline our algorithm (Section~\ref{sec:Algorithm}), and summarize the tools used in this project (Section~\ref{sec:tools}).
+Here, we present the Schr\"odinger equation for a single non-relativistic particle in two spatial dimensions (Section~\ref{sec:QM_double_slit}), explain our discretized setup of the slit experiment (Section~\ref{sec:Setup_and_initial_state}), the expected interference pattern (Section~\ref{sec:interference}), describe the Crank--Nicolson scheme (Section~\ref{sec:Crank_Nicolson}), outline our algorithm (Section~\ref{sec:Algorithm}), and summarize the tools used in this project (Section~\ref{sec:tools}).
 
 
 \subsection{The Schr\"odinger equation and the wave function} \label{sec:QM_double_slit}
@@ -313,7 +313,7 @@ Additionally, we impose homogeneous Dirichlet boundary conditions
 \end{align}
 \end{subequations}
 throughout, so that the wave function vanishes on the boundary.
-We denote the discretized wave function at time step \(n\) as
+We denote the discretized wave function at time step \(n\) by
 \begin{align}
     u_{ij}^n = u(x_{i}, y_{j}, t_n), \quad i,j = 0, 1, \ldots, M-1.
 \end{align}
@@ -440,7 +440,7 @@ These geometric parameters are illustrated for the double-slit case in Figure~\r
 \end{figure}
 
 
-\subsection{Interference patterns}
+\subsection{Interference patterns}  \label{sec:interference}
 As the wave packet propagates through the slits, we expect to observe some form of interference pattern as it reaches the far side of the barrier.
 This can be understood classically from Huygens' principle, which states that each point on a wavefront may be considered the source of a spherical wavelet (see e.g. \cite[421]{vistnes2018physics}).
 As the wave passes the barrier, we may then think of each slit as sourcing such wavelets.
@@ -550,7 +550,7 @@ To evolve our system using \eqref{eq:A_B_eq}, we first compute the right-hand si
 A challenge here is that the matrices \(A\) and \(B\) will grow rapidly in size as \(M\) increases. 
 % The caveat here is that the matrices $A$ and $B$ will quite quickly grow too large to use a dense matrix solver.
 Even for modest grid sizes $M=100$, the matrices will contain on the order of \(10^8\) entries.
-Storing both real and imaginary parts as double-precision floating point numbers would then require roughly $1.6$ GB of memory per matrix.
+If the matrices were stored densely, storing both real and imaginary parts as double-precision floating point numbers would then require roughly $1.6$ GB of memory per matrix.
 % We emphasize that this is just to store the matrices themselves, and does not include any overhead from the solver itself.
 We therefore store $A$ and $B$ as sparse matrices and employ a sparse matrix solver.
 Specifically, we employ the \texttt{SuperLU} library via the function \texttt{spsolve} in the C++ library \texttt{armadillo}.
@@ -578,12 +578,12 @@ The barrier height is set to \(v_0=1\times 10^{10}\) for all simulations, expect
 
 
 \subsection{Total probability deviation}
-Figure~\ref{fig:devation_from_probability} displays the (absolute) deviation from total probability for two simulations: one one with a double slit and one without.
+Figure~\ref{fig:devation_from_probability} displays the deviation from total probability for two simulations: one one with a double slit and one without.
 Both simulations are run over a time interval \(t\in[0,8\times 10^{-3}]\) with \(h=0.005\) and \(\Delta t=2.5\times 10^{-5}\).
 The deviation begins at approximately \(10^{-15}\) and increases to about \(10^{-14}\) by the end of the simulation. 
 The total probability should theoretically remain equal to one, and a deviation of order \(10^{-14}\) is only one order of magnitude larger than the numerical noise level (\(\sim 10^{-15}\)) associated with double-precision floating-point computations. 
 \begin{figure}[h!]
-    \includegraphics[width=0.9\linewidth]{results/problem_7/problem_7.pdf}
+    \includegraphics[width=0.81\linewidth]{results/problem_7/problem_7.pdf}
     \caption{Deviation from total probability as a function of time for both the absence (blue) and the presence (green) of a double slit. Mathematically, the figure displays \(|1 - p(x,y;t)|\), where \(p(x,y;t)\) is the probability density given in \eqref{eq:Born_rule}.}
     \label{fig:devation_from_probability}
 \end{figure}
@@ -613,7 +613,7 @@ From \eqref{eq:Initial_state}, the real and imaginary components consist of a Ga
         \includegraphics[width=0.33\linewidth]{results/problem_8/imag_value0.pdf}%
     }
 
-    \caption{The absolute value squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0\).}
+    \caption{Initial state (\(t=0\)) for simulation of a Gaussian wave packet propagating towards a double slit. The three figures show the absolute value squared (a), the real (b) and imaginary (c) value of the wave function, from left to right. }
     \label{fig:evolution_wave_func_0}
 \end{figure}
 
@@ -638,12 +638,12 @@ On the other hand, the magnitude squared appears on the right-hand side of the b
         \includegraphics[width=0.33\linewidth]{results/problem_8/imag_value0.001.pdf}%
     }
 
-    \caption{The magnitude squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.001\).}
+    \caption{Snapshot at \(t=0.001\) for simulation of a Gaussian wave packet propagating towards a double slit. The wave function has reached the double slit and parts of it has barely propagated through the slits. The three figures show the absolute value squared (a), the real (b) and imaginary (c) value of the wave function, from left to right. }
     \label{fig:evolution_wave_func_1}
 \end{figure}
 
 At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function that has passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
-The real and imaginary components show clear interference patterns; five noticeable wavefront-patterns, away from the double slit, separated by regions where destructive interference occurs.
+The real and imaginary components show clear interference patterns: five noticeable wavefront-patterns, away from the double slit, separated by regions where destructive interference occurs.
 However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2\).
 
 \begin{figure}[h!]
@@ -659,7 +659,7 @@ However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2
         \includegraphics[width=0.33\linewidth]{results/problem_8/imag_value0.002.pdf}%
     }
 
-    \caption{The magnitude squared (a), as well as the real (b) and imaginary (c) value, of the wave function at \(t=0.002\).}
+    \caption{Snapshot at \(t=0.002\) for simulation of a Gaussian wave packet propagating towards a double slit. Much of the wave function has reflected of the barrier, though a significant portion has propagated through the slits. The three figures show the absolute value squared (a), the real (b) and imaginary (c) value of the wave function, from left to right.}
     \label{fig:evolution_wave_func_2}
 \end{figure}
 
@@ -667,9 +667,9 @@ However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2
 
 In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected portion of the magnitude squared, seen at approximately \(x=0.2\) in Figure~\ref{fig:evolution_wave_func_2}. 
 Here we clearly observe a pattern resembling five distinct wave packets emerging from the double slit.
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{results/problem_8/absolute_value0.002_ignored.pdf}
+    \includegraphics[width=0.81\linewidth]{results/problem_8/absolute_value0.002_ignored.pdf}
     \caption{The magnitude squared of the wave function at time \(t=0.002\), ignoring the reflected portion appearing at \(x\approx 0.2\) in Figure~\ref{fig:evolution_wave_func_2}.}
     \label{fig:evolution_wave_func_2_ignored}
 \end{figure}
@@ -684,7 +684,7 @@ The simulation parameters are chosen identical to those described in Section \re
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\linewidth]{results/problem_9/probability_x0p8.pdf}
+    \includegraphics[width=0.75\linewidth]{results/problem_9/probability_x0p8.pdf}
     \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(t=0.002\) and \(x=0.8\). The cases of a single, double and triple slit are displayed in blue, green and orange, respectively. The curves \(p(y;x=0.8;t=0.002)\) are obtained by normalizing  \({|u(y;x=0.8; t=0.002)|^2}\) with respect to the \(y\)-coordinate.}
     \label{fig:probability_x0p8}
 \end{figure}
@@ -782,7 +782,7 @@ In all three cases, we observed distinct peaks: one peak for the single slit, th
 
 Overall, our simulations illustrate the wave-like behavior of particles in quantum mechanics and, in particular, the appearance of interference patterns in the double-slit experiment.
 
-A notable limitation of our numerical simulation is the choice of grid-spacing. 
+A notable limitation of our numerical simulation is the grid spacing. 
 The Crank-Nicolson scheme involves solving a sparse system of $(M-2)^{2}$ linear equations at each time step.
 For our purposes of simulating a single particle propagating towards a slit-barrier in two dimensions, neither runtime nor memory usage posed a significant challenge.
 However, extending the simulation to three dimensions, or perhaps including multiple particles and more complex potentials, would make computational cost and memory access much more demanding.
