@@ -1,5 +1,5 @@
 from utils import * 
-
+from scipy.signal import find_peaks
 
 data_single = read_hd5_data("out/single_Slit_problem9_data.h5")
 data_double = read_hd5_data("out/double_Slit_problem8_data.h5")
@@ -28,10 +28,18 @@ for data, data_name in zip(datas, data_names):
 
     plt.plot(y, p)
     plt.xlabel("y")
-    plt.ylabel(r"$|u(x=0.8, y, t)|^2$")
-    plt.legend()
+    plt.ylabel(r"$|u(x=0.8, y, t=0.002)|^2$")
+    # plt.legend()
     plt.savefig(f"../results/problem_9/probability_x0p8_{data_name}.pdf")
     plt.show()
+
+
+    peaks, props = find_peaks(p, height=0.005, prominence=None)
+    s = f"{data_name}-slit: peaks (y,p):"
+
+    for peak in peaks:
+        s += f"({y[peak]:.3f}, {p[peak]:.3f}), "
+    print(s)
 
 
 

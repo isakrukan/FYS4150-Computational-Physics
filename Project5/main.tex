@@ -533,7 +533,7 @@ The total probability should theoretically remain equal to one, and a deviation 
 \end{figure}
 
 
-\subsection{Evolution of wave function in double slit experiment}
+\subsection{Evolution of wave function in double slit experiment}   \label{sec:evolution_wave_function}
 In Figure~\ref{fig:evolution_wave_func_0}, Figure~\ref{fig:evolution_wave_func_1} and Figure~\ref{fig:evolution_wave_func_2} we have displayed the wave function \(u(x,y,t)\) at times \(t=0,\ 0.001\) and \(0.002\), respectively.  
 All figures show the absolute value squared (a), real (b) and imaginary (c) value of \(u(x,y,t)\). 
 The simulations producing these figures were performed with \(\sigma_y=0.20\) and the default parameters of the initial state described in the beginning of Section \ref{sec:results_discussion}.
@@ -583,8 +583,8 @@ The interference between contributions from the upper and lower slits are especi
 \end{figure}
 
 At \(t=0.002\) (Fig.~\ref{fig:evolution_wave_func_2}), the part of the wave function which passed through the double slit has reached approximately \(x=0.8\), while the reflection part approximately \(x=0.2\).
-The real and imaginary components show clear interference patterns; five noticeable wavefronts separated by a small distance. 
-The magnitude squared is somewhat dimmer at \(x=0.8\) than at \(x=0.2\).
+The real and imaginary components show clear interference patterns; five noticeable wavefront-patterns, emerging from the double slit, separated by regions where destructive interference occurs.
+However, the magnitude squared is noticeably dimmer at \(x=0.8\) than at \(x=0.2\).
 \begin{figure}[h!]
     \centering
 
@@ -602,9 +602,10 @@ The magnitude squared is somewhat dimmer at \(x=0.8\) than at \(x=0.2\).
     \label{fig:evolution_wave_func_2}
 \end{figure}
 \end{widetext}
+
 In Figure~\ref{fig:evolution_wave_func_2_ignored} we have excluded the reflected portion of the magnitude squared, seen at approximately \(x=0.2\) in Figure~\ref{fig:evolution_wave_func_2}. 
-Here we can see what looks like six wave packets emitted from the double slit. 
-If we imagine a detector at \(x=0.8\), we should thus expect an interference pattern emerging. \color{red}Putte noe i teori delen om interferens??\color{black}
+Here we clearly observe a pattern resembling six distinct wave packets emerging from the double slit.
+\color{red}Putte noe i teori delen om interferens??\color{black}
 \begin{figure}[h!]
     \centering
     \includegraphics{results/problem_8/absolute_value0.002_ignored.pdf}
@@ -613,7 +614,45 @@ If we imagine a detector at \(x=0.8\), we should thus expect an interference pat
 \end{figure}
 
 \subsection{Interference pattern}
-\begin{figure*}[h!]
+The previous section presented how the initial state in \eqref{eq:Initial_state} emerged out of the double slit, and showed what looked like six wave packets approaching \(x=0.8\) towards the end of the simulation.
+In Figure~\ref{fig:probability_x0p8} we have displayed the normalized probability \({p(y)=|u(x=0.8,y,t=0.002)}|^2\) for three different cases: a single-, double- and triple-slit simulation, appearing from left to right, respectively. 
+The simulation parameters are chosen identical to those described in Section \ref{sec:evolution_wave_function}.
+
+\begin{widetext}
+The number of peaks varies between the three different simulations.
+For the single-slit simulation we find a single peak, whereas for the double- and triple-slit we see three and four peaks, respectively.
+We have tabulated where these peaks appear and their values in Table~\ref{tab:peaks}.
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+Scenario & \# Peaks & $y$ & $p$ \\ 
+\hline
+Single slit 
+  & 1 
+  & 0.505 
+  & 0.024 \\
+\hline
+Double slit 
+  & 3 
+  & 0.365, 0.505, 0.640
+  & 0.017, 0.031, 0.017 \\
+\hline
+Triple slit 
+  & 4 
+  & 0.355, 0.455, 0.555, 0.650
+  & 0.015, 0.039, 0.038, 0.015 \\
+\hline
+\end{tabular}
+\caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
+\label{tab:peaks}
+\end{table}
+If we imagine placing a detector at \(x=0.8\), these peaks will correspond to the most probable positions to detect a particle hitting the detector at, or before, \(t=0.002\). 
+The 
+
+
+
+\begin{figure}[h!]
     \centering
 
     \subfloat[]{%
@@ -627,7 +666,36 @@ If we imagine a detector at \(x=0.8\), we should thus expect an interference pat
     }
     \caption{The probability of detecting a particle along the \(y\)-axis, assuming a detection takes place at \(x=0.8\). The case of a single, double and triple slit are displayed in (a), (b) and (c), respectively.}
     \label{fig:probability_x0p8}
-\end{figure*}
+\end{figure}
+\end{widetext}
+
+% \begin{table}[h!]
+% \centering
+% \scalebox{0.95}{
+% \begin{tabular}{|l|c|c|c|}
+% \hline
+% Scenario & \# Peaks & $y$ & $p$ \\ 
+% \hline
+% Single slit 
+%   & 1 
+%   & 0.51 
+%   & 0.02 \\
+% \hline
+% Double slit 
+%   & 3 
+%   & 0.37, 0.51, 0.64
+%   & 0.02, 0.03, 0.02 \\
+% \hline
+% Triple slit 
+%   & 4 
+%   & 0.36, 0.46, 0.56, 0.65
+%   & 0.02, 0.04, 0.04, 0.02 \\
+% \hline
+% \end{tabular}
+% }
+% \caption{Number of peaks, together with their positions and values, for the single-, double- and triple-slit simulation appearing in Figure~\ref{fig:probability_x0p8}.}
+% \label{tab:peaks}
+% \end{table}
 
 
 
@@ -682,11 +750,11 @@ A relevant issue here is the scaling of the method to larger systems.
 In particular, the Crank-Nicolson scheme in $n$ spatial dimensions involves a sparse system of $(M-2)^{n}$ linear equations to solve at each time step, where $M$ is the number of grid points in each spatial direction.
 Especially as one moves to larger grid sizes and higher dimensions, this motivates further research on sparse matrix solvers and preconditioners to efficiently solve such systems.
 
-\newpage
-\clearpage
-\onecolumngrid
-\appendix
-\section{Appendix} \label{sec:code_excerpts}
+% \newpage
+% \clearpage
+% \onecolumngrid
+% \appendix
+% \section{Appendix} \label{sec:code_excerpts}
 
 \newpage
 
